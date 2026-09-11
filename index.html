@@ -1,2342 +1,2020 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#000000">
-    <meta name="description" content="Aegis Bank — modern banking built around security, simplicity and control.">
-
-    <title>Aegis Bank — Banking, Protected.</title>
-
-    <style>
-        /* =========================================================
-           AEGIS BANK — SINGLE FILE DESIGN SYSTEM
-           Black / White / Minimal / Premium
-        ========================================================= */
-
-        :root {
-            --black: #000000;
-            --white: #ffffff;
-            --soft-white: #f7f7f7;
-            --gray-50: #fafafa;
-            --gray-100: #f1f1f1;
-            --gray-200: #e5e5e5;
-            --gray-400: #999999;
-            --gray-600: #555555;
-            --gray-800: #202020;
-
-            --max-width: 1240px;
-            --radius: 24px;
-            --transition: 260ms ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family:
-                Inter,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                Helvetica,
-                Arial,
-                sans-serif;
-
-            background: var(--white);
-            color: var(--black);
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
-
-        button,
-        a {
-            font: inherit;
-        }
-
-        button {
-            border: none;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        /* =========================================================
-           NAVIGATION
-        ========================================================= */
-
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .nav-container {
-            width: min(var(--max-width), calc(100% - 40px));
-            height: 76px;
-            margin: 0 auto;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-        }
-
-        .logo-mark {
-            width: 30px;
-            height: 34px;
-
-            position: relative;
-
-            border: 2px solid var(--black);
-
-            clip-path: polygon(
-                50% 0%,
-                92% 18%,
-                86% 65%,
-                50% 100%,
-                14% 65%,
-                8% 18%
-            );
-        }
-
-        .logo-mark::after {
-            content: "";
-            position: absolute;
-
-            width: 7px;
-            height: 7px;
-
-            border: 2px solid var(--black);
-            border-radius: 50%;
-
-            top: 50%;
-            left: 50%;
-
-            transform: translate(-50%, -50%);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 34px;
-
-            margin-left: auto;
-            margin-right: 34px;
-        }
-
-        .nav-links a {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--gray-600);
-
-            transition: color var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--black);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .language-button {
-            min-width: 42px;
-            height: 40px;
-
-            padding: 0 12px;
-
-            background: transparent;
-            color: var(--black);
-
-            border: 1px solid var(--gray-200);
-            border-radius: 999px;
-
-            cursor: pointer;
-
-            font-size: 12px;
-            font-weight: 700;
-
-            transition:
-                background var(--transition),
-                border-color var(--transition);
-        }
-
-        .language-button:hover {
-            background: var(--gray-100);
-            border-color: var(--black);
-        }
-
-        .login-button {
-            height: 42px;
-
-            padding: 0 19px;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
-            background: var(--black);
-            color: var(--white);
-
-            border-radius: 999px;
-
-            font-size: 13px;
-            font-weight: 700;
-
-            transition:
-                transform var(--transition),
-                background var(--transition);
-        }
-
-        .login-button:hover {
-            transform: translateY(-2px);
-            background: var(--gray-800);
-        }
-
-        .menu-button {
-            display: none;
-
-            width: 42px;
-            height: 42px;
-
-            border-radius: 50%;
-            background: var(--black);
-            color: var(--white);
-
-            cursor: pointer;
-
-            font-size: 20px;
-        }
-
-        /* =========================================================
-           HERO
-        ========================================================= */
-
-        .hero {
-            min-height: 100vh;
-
-            padding: 150px 20px 80px;
-
-            display: flex;
-            align-items: center;
-
-            position: relative;
-            overflow: hidden;
-
-            background:
-                radial-gradient(
-                    circle at 80% 30%,
-                    rgba(0, 0, 0, 0.055),
-                    transparent 28%
-                );
-        }
-
-        .hero-container {
-            width: min(var(--max-width), 100%);
-            margin: 0 auto;
-
-            display: grid;
-            grid-template-columns: 1.15fr 0.85fr;
-            gap: 70px;
-
-            align-items: center;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-
-            margin-bottom: 25px;
-
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-
-            color: var(--gray-600);
-        }
-
-        .eyebrow-dot {
-            width: 7px;
-            height: 7px;
-
-            background: var(--black);
-            border-radius: 50%;
-        }
-
-        .hero h1 {
-            max-width: 800px;
-
-            font-size: clamp(58px, 8vw, 112px);
-            line-height: 0.88;
-            letter-spacing: -0.075em;
-            font-weight: 800;
-        }
-
-        .hero h1 span {
-            color: var(--gray-400);
-        }
-
-        .hero-description {
-            max-width: 570px;
-
-            margin-top: 32px;
-
-            color: var(--gray-600);
-
-            font-size: 17px;
-            line-height: 1.7;
-        }
-
-        .hero-actions {
-            margin-top: 38px;
-
-            display: flex;
-            align-items: center;
-            gap: 13px;
-
-            flex-wrap: wrap;
-        }
-
-        .primary-button,
-        .secondary-button {
-            min-height: 54px;
-
-            padding: 0 25px;
-
-            border-radius: 999px;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 14px;
-            font-weight: 700;
-
-            cursor: pointer;
-
-            transition:
-                transform var(--transition),
-                background var(--transition),
-                color var(--transition),
-                border-color var(--transition);
-        }
-
-        .primary-button {
-            background: var(--black);
-            color: var(--white);
-        }
-
-        .primary-button:hover {
-            transform: translateY(-3px);
-            background: var(--gray-800);
-        }
-
-        .secondary-button {
-            background: var(--white);
-            color: var(--black);
-            border: 1px solid var(--gray-200);
-        }
-
-        .secondary-button:hover {
-            transform: translateY(-3px);
-            border-color: var(--black);
-        }
-
-        /* =========================================================
-           HERO VISUAL
-        ========================================================= */
-
-        .hero-visual {
-            position: relative;
-
-            min-height: 500px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .orbit {
-            position: absolute;
-
-            width: 430px;
-            height: 430px;
-
-            border: 1px solid var(--gray-200);
-            border-radius: 50%;
-        }
-
-        .orbit::before,
-        .orbit::after {
-            content: "";
-
-            position: absolute;
-
-            border: 1px solid var(--gray-200);
-            border-radius: 50%;
-        }
-
-        .orbit::before {
-            inset: 50px;
-        }
-
-        .orbit::after {
-            inset: 105px;
-        }
-
-        .shield {
-            width: 230px;
-            height: 270px;
-
-            position: relative;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: var(--black);
-
-            clip-path: polygon(
-                50% 0%,
-                94% 16%,
-                87% 64%,
-                50% 100%,
-                13% 64%,
-                6% 16%
-            );
-
-            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.22);
-
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .shield-inner {
-            width: 196px;
-            height: 235px;
-
-            border: 1px solid rgba(255, 255, 255, 0.35);
-
-            clip-path: polygon(
-                50% 0%,
-                94% 16%,
-                87% 64%,
-                50% 100%,
-                13% 64%,
-                6% 16%
-            );
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .shield-a {
-            color: var(--white);
-
-            font-size: 74px;
-            font-weight: 800;
-
-            letter-spacing: -0.08em;
-        }
-
-        .visual-label {
-            position: absolute;
-
-            padding: 11px 15px;
-
-            background: var(--white);
-            border: 1px solid var(--gray-200);
-
-            border-radius: 999px;
-
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-
-            text-transform: uppercase;
-
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
-        }
-
-        .label-top {
-            top: 35px;
-            right: 30px;
-        }
-
-        .label-bottom {
-            bottom: 35px;
-            left: 20px;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-14px);
-            }
-        }
-
-        /* =========================================================
-           TRUST BAR
-        ========================================================= */
-
-        .trust-bar {
-            border-top: 1px solid var(--gray-200);
-            border-bottom: 1px solid var(--gray-200);
-
-            background: var(--gray-50);
-        }
-
-        .trust-container {
-            width: min(var(--max-width), calc(100% - 40px));
-            margin: 0 auto;
-
-            min-height: 110px;
-
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            align-items: center;
-        }
-
-        .trust-item {
-            padding: 20px 35px;
-
-            border-right: 1px solid var(--gray-200);
-        }
-
-        .trust-item:last-child {
-            border-right: none;
-        }
-
-        .trust-number {
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-        }
-
-        .trust-text {
-            margin-top: 4px;
-
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-
-        /* =========================================================
-           SECTIONS
-        ========================================================= */
-
-        .section {
-            padding: 130px 20px;
-        }
-
-        .section-container {
-            width: min(var(--max-width), 100%);
-            margin: 0 auto;
-        }
-
-        .section-heading {
-            max-width: 720px;
-            margin-bottom: 65px;
-        }
-
-        .section-heading h2 {
-            font-size: clamp(42px, 6vw, 76px);
-            line-height: 0.95;
-            letter-spacing: -0.065em;
-            font-weight: 800;
-        }
-
-        .section-heading p {
-            margin-top: 22px;
-
-            max-width: 600px;
-
-            color: var(--gray-600);
-
-            font-size: 16px;
-            line-height: 1.7;
-        }
-
-        /* =========================================================
-           PRODUCTS
-        ========================================================= */
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-
-        .product-card {
-            min-height: 350px;
-
-            padding: 32px;
-
-            background: var(--gray-50);
-
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius);
-
-            display: flex;
-            flex-direction: column;
-
-            transition:
-                transform var(--transition),
-                background var(--transition),
-                border-color var(--transition);
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            background: var(--white);
-            border-color: var(--black);
-        }
-
-        .product-icon {
-            width: 50px;
-            height: 50px;
-
-            border: 1px solid var(--black);
-            border-radius: 50%;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-size: 17px;
-            font-weight: 800;
-        }
-
-        .product-card h3 {
-            margin-top: auto;
-
-            font-size: 29px;
-            line-height: 1;
-
-            letter-spacing: -0.045em;
-        }
-
-        .product-card p {
-            margin-top: 14px;
-
-            color: var(--gray-600);
-
-            font-size: 14px;
-            line-height: 1.65;
-        }
-
-        .product-link {
-            margin-top: 25px;
-
-            font-size: 13px;
-            font-weight: 800;
-
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .product-link span {
-            transition: transform var(--transition);
-        }
-
-        .product-card:hover .product-link span {
-            transform: translateX(5px);
-        }
-
-        /* =========================================================
-           SHIELD SECTION
-        ========================================================= */
-
-        .dark-section {
-            background: var(--black);
-            color: var(--white);
-        }
-
-        .dark-section .eyebrow {
-            color: #aaa;
-        }
-
-        .dark-section .eyebrow-dot {
-            background: var(--white);
-        }
-
-        .dark-section .section-heading p {
-            color: #999;
-        }
-
-        .security-layout {
-            display: grid;
-            grid-template-columns: 0.8fr 1.2fr;
-            gap: 90px;
-
-            align-items: center;
-        }
-
-        .security-visual {
-            min-height: 520px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            position: relative;
-        }
-
-        .security-circle {
-            width: 400px;
-            height: 400px;
-
-            border: 1px solid #292929;
-            border-radius: 50%;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .security-shield {
-            width: 180px;
-            height: 215px;
-
-            background: var(--white);
-
-            clip-path: polygon(
-                50% 0%,
-                94% 16%,
-                87% 64%,
-                50% 100%,
-                13% 64%,
-                6% 16%
-            );
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .security-shield::after {
-            content: "A";
-
-            color: var(--black);
-
-            font-size: 60px;
-            font-weight: 800;
-
-            letter-spacing: -0.08em;
-        }
-
-        .security-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .security-feature {
-            padding: 25px;
-
-            border: 1px solid #242424;
-            border-radius: 18px;
-
-            transition:
-                background var(--transition),
-                border-color var(--transition);
-        }
-
-        .security-feature:hover {
-            background: #111111;
-            border-color: #444444;
-        }
-
-        .security-feature-number {
-            color: #777;
-
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-        }
-
-        .security-feature h3 {
-            margin-top: 35px;
-
-            font-size: 19px;
-            letter-spacing: -0.03em;
-        }
-
-        .security-feature p {
-            margin-top: 9px;
-
-            color: #888;
-
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        /* =========================================================
-           EXPERIENCE
-        ========================================================= */
-
-        .experience {
-            background: var(--soft-white);
-        }
-
-        .experience-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 70px;
-
-            align-items: center;
-        }
-
-        .experience-copy h2 {
-            font-size: clamp(42px, 5vw, 68px);
-
-            line-height: 0.95;
-            letter-spacing: -0.065em;
-        }
-
-        .experience-copy p {
-            max-width: 510px;
-
-            margin-top: 25px;
-
-            color: var(--gray-600);
-
-            line-height: 1.75;
-        }
-
-        .experience-list {
-            margin-top: 35px;
-
-            display: flex;
-            flex-direction: column;
-        }
-
-        .experience-item {
-            padding: 19px 0;
-
-            border-top: 1px solid var(--gray-200);
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .experience-item:last-child {
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .experience-item span {
-            color: var(--gray-500);
-            font-size: 18px;
-        }
-
-        .bank-card {
-            width: min(100%, 500px);
-            aspect-ratio: 1.58;
-
-            margin-left: auto;
-
-            padding: 32px;
-
-            position: relative;
-            overflow: hidden;
-
-            border-radius: 24px;
-
-            background: var(--black);
-            color: var(--white);
-
-            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.15);
-        }
-
-        .bank-card::before {
-            content: "";
-
-            position: absolute;
-
-            width: 300px;
-            height: 300px;
-
-            border: 1px solid #292929;
-            border-radius: 50%;
-
-            right: -100px;
-            top: -100px;
-        }
-
-        .bank-card::after {
-            content: "";
-
-            position: absolute;
-
-            width: 190px;
-            height: 190px;
-
-            border: 1px solid #292929;
-            border-radius: 50%;
-
-            right: -30px;
-            top: -45px;
-        }
-
-        .card-brand {
-            position: relative;
-            z-index: 2;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-        }
-
-        .card-chip {
-            position: absolute;
-
-            left: 32px;
-            top: 42%;
-
-            width: 45px;
-            height: 34px;
-
-            border: 1px solid #555;
-            border-radius: 8px;
-        }
-
-        .card-number {
-            position: absolute;
-
-            left: 32px;
-            bottom: 62px;
-
-            font-size: clamp(17px, 2vw, 23px);
-            letter-spacing: 0.12em;
-        }
-
-        .card-name {
-            position: absolute;
-
-            left: 32px;
-            bottom: 28px;
-
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 0.13em;
-        }
-
-        /* =========================================================
-           CTA
-        ========================================================= */
-
-        .cta {
-            padding: 150px 20px;
-
-            background: var(--white);
-        }
-
-        .cta-container {
-            width: min(var(--max-width), 100%);
-            margin: 0 auto;
-
-            text-align: center;
-        }
-
-        .cta h2 {
-            max-width: 900px;
-
-            margin: 0 auto;
-
-            font-size: clamp(48px, 8vw, 100px);
-            line-height: 0.9;
-            letter-spacing: -0.075em;
-        }
-
-        .cta p {
-            max-width: 560px;
-
-            margin: 28px auto 35px;
-
-            color: var(--gray-600);
-
-            font-size: 16px;
-            line-height: 1.7;
-        }
-
-        /* =========================================================
-           FOOTER
-        ========================================================= */
-
-        footer {
-            background: var(--black);
-            color: var(--white);
-
-            padding: 70px 20px 30px;
-        }
-
-        .footer-container {
-            width: min(var(--max-width), 100%);
-            margin: 0 auto;
-        }
-
-        .footer-top {
-            display: grid;
-            grid-template-columns: 1.5fr repeat(3, 1fr);
-            gap: 50px;
-
-            padding-bottom: 70px;
-        }
-
-        .footer-brand p {
-            max-width: 280px;
-
-            margin-top: 18px;
-
-            color: #888;
-
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        .footer-column h4 {
-            margin-bottom: 17px;
-
-            color: #777;
-
-            font-size: 10px;
-            letter-spacing: 0.13em;
-            text-transform: uppercase;
-        }
-
-        .footer-column a {
-            display: block;
-
-            margin-bottom: 11px;
-
-            color: #bbb;
-
-            font-size: 13px;
-
-            transition: color var(--transition);
-        }
-
-        .footer-column a:hover {
-            color: var(--white);
-        }
-
-        .footer-bottom {
-            padding-top: 24px;
-
-            border-top: 1px solid #242424;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            color: #666;
-
-            font-size: 11px;
-        }
-
-        .footer-status {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-
-            border-radius: 50%;
-            background: var(--white);
-        }
-
-        /* =========================================================
-           MOBILE
-        ========================================================= */
-
-        @media (max-width: 900px) {
-            .nav-links {
-                display: none;
-            }
-
-            .menu-button {
-                display: block;
-            }
-
-            .nav-actions {
-                gap: 7px;
-            }
-
-            .hero-container {
-                grid-template-columns: 1fr;
-            }
-
-            .hero {
-                padding-top: 130px;
-            }
-
-            .hero-visual {
-                min-height: 430px;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .product-card {
-                min-height: 290px;
-            }
-
-            .security-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .experience-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .bank-card {
-                margin: 0 auto;
-            }
-
-            .footer-top {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .footer-brand {
-                grid-column: 1 / -1;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .nav-container {
-                width: calc(100% - 28px);
-                height: 68px;
-            }
-
-            .login-button {
-                display: none;
-            }
-
-            .hero {
-                padding: 120px 16px 60px;
-            }
-
-            .hero h1 {
-                font-size: clamp(53px, 16vw, 82px);
-            }
-
-            .hero-description {
-                font-size: 15px;
-            }
-
-            .hero-visual {
-                min-height: 340px;
-            }
-
-            .orbit {
-                width: 290px;
-                height: 290px;
-            }
-
-            .shield {
-                width: 160px;
-                height: 190px;
-            }
-
-            .shield-inner {
-                width: 136px;
-                height: 165px;
-            }
-
-            .shield-a {
-                font-size: 52px;
-            }
-
-            .label-top {
-                right: 0;
-                top: 20px;
-            }
-
-            .label-bottom {
-                left: 0;
-                bottom: 20px;
-            }
-
-            .trust-container {
-                grid-template-columns: 1fr;
-            }
-
-            .trust-item {
-                border-right: none;
-                border-bottom: 1px solid var(--gray-200);
-                padding: 22px 0;
-            }
-
-            .trust-item:last-child {
-                border-bottom: none;
-            }
-
-            .section {
-                padding: 90px 16px;
-            }
-
-            .section-heading {
-                margin-bottom: 42px;
-            }
-
-            .security-circle {
-                width: 290px;
-                height: 290px;
-            }
-
-            .security-shield {
-                width: 135px;
-                height: 165px;
-            }
-
-            .security-features {
-                grid-template-columns: 1fr;
-            }
-
-            .experience-layout {
-                gap: 50px;
-            }
-
-            .bank-card {
-                padding: 24px;
-                border-radius: 18px;
-            }
-
-            .card-chip {
-                left: 24px;
-            }
-
-            .card-number {
-                left: 24px;
-                bottom: 53px;
-                font-size: 15px;
-            }
-
-            .card-name {
-                left: 24px;
-                bottom: 22px;
-            }
-
-            .cta {
-                padding: 100px 16px;
-            }
-
-            .footer-top {
-                grid-template-columns: 1fr 1fr;
-                gap: 35px 20px;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-        }
-
-        /* =========================================================
-           SCROLL REVEAL
-        ========================================================= */
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(25px);
-
-            transition:
-                opacity 700ms ease,
-                transform 700ms ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aegis Bank — digital banking for a new digital economy.">
+<title>Aegis Bank — Digital Banking</title>
+
+<style>
+:root {
+    --black: #050505;
+    --black-soft: #0c0c0c;
+    --dark-card: #111111;
+    --white: #ffffff;
+    --gray-1: #f5f5f5;
+    --gray-2: #e8e8e8;
+    --gray-3: #b5b5b5;
+    --gray-4: #777777;
+    --border: rgba(0,0,0,.09);
+    --dark-border: rgba(255,255,255,.1);
+    --radius: 24px;
+    --radius-small: 14px;
+    --max: 1200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                 "SF Pro Text", Inter, Arial, sans-serif;
+    background: var(--white);
+    color: var(--black);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+}
+
+.container {
+    width: min(var(--max), calc(100% - 40px));
+    margin: 0 auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255,255,255,.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(0,0,0,.06);
+}
+
+.nav {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.logo-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--black);
+    color: var(--white);
+    display: grid;
+    place-items: center;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.nav-links a {
+    transition: color .2s ease;
+}
+
+.nav-links a:hover {
+    color: #000;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.lang-btn,
+.mobile-menu-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: #111;
+    border-radius: 12px;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.primary-btn {
+    border: none;
+    background: #000;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform .2s ease, opacity .2s ease;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    opacity: .88;
+}
+
+.mobile-menu-btn {
+    display: none;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    padding: 180px 0 120px;
+    background:
+        radial-gradient(circle at 70% 30%, rgba(0,0,0,.06), transparent 32%),
+        #fff;
+}
+
+.hero-content {
+    max-width: 900px;
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f1f1;
+    border: 1px solid #e5e5e5;
+    border-radius: 999px;
+    padding: 8px 13px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.eyebrow-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #000;
+}
+
+.hero h1 {
+    font-size: clamp(48px, 8vw, 92px);
+    line-height: .98;
+    letter-spacing: -5px;
+    max-width: 950px;
+    margin-bottom: 28px;
+}
+
+.hero p {
+    max-width: 650px;
+    color: #666;
+    font-size: 19px;
+    line-height: 1.65;
+    margin-bottom: 38px;
+}
+
+.hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.secondary-btn {
+    background: #f3f3f3;
+    color: #111;
+    border: 1px solid #e5e5e5;
+    padding: 12px 18px;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: transform .2s ease, background .2s ease;
+}
+
+.secondary-btn:hover {
+    transform: translateY(-2px);
+    background: #eaeaea;
+}
+
+/* =========================
+   GENERAL
+========================= */
+
+section {
+    padding: 110px 0;
+}
+
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 45px;
+}
+
+.section-head h2 {
+    font-size: clamp(34px, 5vw, 58px);
+    letter-spacing: -3px;
+    line-height: 1;
+    max-width: 700px;
+}
+
+.section-head p {
+    color: #777;
+    max-width: 390px;
+    font-size: 16px;
+    line-height: 1.65;
+}
+
+/* =========================
+   AGS
+========================= */
+
+.ags-section {
+    background: #050505;
+    color: #fff;
+}
+
+.ags-section .section-head p {
+    color: #999;
+}
+
+.ags-card {
+    border: 1px solid var(--dark-border);
+    background: linear-gradient(145deg, #161616, #090909);
+    border-radius: 32px;
+    padding: 50px;
+    display: grid;
+    grid-template-columns: 1.3fr .7fr;
+    gap: 50px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ags-card::after {
+    content: "AGS";
+    position: absolute;
+    right: -20px;
+    bottom: -70px;
+    font-size: 220px;
+    font-weight: 900;
+    letter-spacing: -15px;
+    color: rgba(255,255,255,.025);
+    pointer-events: none;
+}
+
+.ags-info h3 {
+    font-size: 42px;
+    letter-spacing: -2px;
+    margin-bottom: 18px;
+}
+
+.ags-info p {
+    color: #aaa;
+    max-width: 600px;
+    line-height: 1.7;
+}
+
+.ags-note {
+    margin-top: 25px;
+    font-size: 13px;
+    color: #777;
+}
+
+.ags-symbol {
+    min-height: 220px;
+    display: grid;
+    place-items: center;
+}
+
+.ags-circle {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18);
+    display: grid;
+    place-items: center;
+    font-size: 55px;
+    font-weight: 900;
+    letter-spacing: -3px;
+    background: radial-gradient(circle, #222, #090909);
+    box-shadow: 0 0 80px rgba(255,255,255,.05);
+}
+
+/* =========================
+   WALLET
+========================= */
+
+.wallet-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.wallet-card {
+    background: #f5f5f5;
+    border: 1px solid #e7e7e7;
+    border-radius: 28px;
+    padding: 35px;
+}
+
+.wallet-card.dark {
+    background: #080808;
+    color: #fff;
+    border-color: #151515;
+}
+
+.wallet-label {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.dark .wallet-label {
+    color: #888;
+}
+
+.balance {
+    font-size: clamp(42px, 6vw, 70px);
+    font-weight: 800;
+    letter-spacing: -4px;
+    margin-bottom: 8px;
+}
+
+.balance-unit {
+    font-size: 16px;
+    color: #777;
+    letter-spacing: 0;
+}
+
+.dark .balance-unit {
+    color: #999;
+}
+
+.wallet-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+}
+
+.wallet-actions button {
+    border-radius: 12px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.dark .wallet-actions button {
+    border-color: #333;
+    background: #151515;
+    color: #fff;
+}
+
+.activity {
+    margin-top: 25px;
+}
+
+.activity-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(127,127,127,.18);
+    font-size: 14px;
+}
+
+.activity-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.activity-name small {
+    color: #777;
+}
+
+.activity-value {
+    font-weight: 800;
+}
+
+/* =========================
+   DIGITAL ECONOMY
+========================= */
+
+.economy {
+    background: #f6f6f6;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.feature-card {
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 24px;
+    padding: 30px;
+    min-height: 270px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 45px rgba(0,0,0,.08);
+}
+
+.feature-number {
+    font-size: 12px;
+    color: #999;
+    font-weight: 800;
+}
+
+.feature-card h3 {
+    font-size: 27px;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: #777;
+    line-height: 1.6;
+}
+
+/* =========================
+   MARKETPLACE
+========================= */
+
+.marketplace-grid {
+    display: grid;
+    grid-template-columns: 1.4fr .6fr;
+    gap: 22px;
+}
+
+.market-main {
+    background: #050505;
+    color: #fff;
+    border-radius: 30px;
+    padding: 42px;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.market-main h3 {
+    font-size: 42px;
+    letter-spacing: -2px;
+    max-width: 600px;
+}
+
+.market-main p {
+    color: #999;
+    max-width: 520px;
+    line-height: 1.65;
+}
+
+.market-side {
+    background: #f2f2f2;
+    border-radius: 30px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.market-side h3 {
+    font-size: 28px;
+    letter-spacing: -1px;
+}
+
+.market-items {
+    margin-top: 20px;
+}
+
+.market-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.market-item strong {
+    white-space: nowrap;
+}
+
+/* =========================
+   BUSINESS
+========================= */
+
+.business {
+    background: #f7f7f7;
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.price-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 26px;
+    padding: 32px;
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+}
+
+.price-card.featured {
+    background: #050505;
+    color: #fff;
+    border-color: #050505;
+    transform: translateY(-8px);
+}
+
+.price-card h3 {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.price {
+    font-size: 43px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin: 15px 0 8px;
+}
+
+.price small {
+    font-size: 13px;
+    font-weight: 500;
+    color: #777;
+    letter-spacing: 0;
+}
+
+.featured .price small {
+    color: #999;
+}
+
+.price-card p {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.featured p {
+    color: #aaa;
+}
+
+.price-list {
+    list-style: none;
+    margin-top: 25px;
+    display: grid;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.price-list li::before {
+    content: "✓";
+    margin-right: 8px;
+    font-weight: 800;
+}
+
+/* =========================
+   SECURITY
+========================= */
+
+.security-grid {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+.shield {
+    width: 280px;
+    height: 320px;
+    margin: auto;
+    background: #050505;
+    color: #fff;
+    clip-path: polygon(
+        50% 0%,
+        90% 15%,
+        86% 60%,
+        70% 82%,
+        50% 100%,
+        30% 82%,
+        14% 60%,
+        10% 15%
+    );
+    display: grid;
+    place-items: center;
+    font-size: 52px;
+    font-weight: 900;
+    box-shadow: 0 30px 80px rgba(0,0,0,.12);
+}
+
+.security-copy h2 {
+    font-size: clamp(38px, 5vw, 60px);
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 22px;
+}
+
+.security-copy p {
+    color: #777;
+    line-height: 1.7;
+    max-width: 600px;
+}
+
+.security-points {
+    margin-top: 30px;
+    display: grid;
+    gap: 15px;
+}
+
+.security-point {
+    padding: 18px;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+}
+
+.security-point strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.security-point span {
+    color: #777;
+    font-size: 14px;
+}
+
+/* =========================
+   REDWALL
+========================= */
+
+.redwall {
+    background: #050505;
+    color: #fff;
+}
+
+.redwall-content {
+    text-align: center;
+    max-width: 900px;
+    margin: auto;
+}
+
+.redwall-content h2 {
+    font-size: clamp(45px, 7vw, 82px);
+    letter-spacing: -5px;
+    line-height: .95;
+    margin-bottom: 25px;
+}
+
+.redwall-content p {
+    color: #999;
+    line-height: 1.7;
+    max-width: 700px;
+    margin: auto;
+}
+
+.ecosystem {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 35px;
+}
+
+.ecosystem span {
+    border: 1px solid #292929;
+    background: #101010;
+    border-radius: 999px;
+    padding: 10px 17px;
+    font-size: 14px;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.cta {
+    padding: 130px 0;
+    text-align: center;
+}
+
+.cta h2 {
+    font-size: clamp(42px, 7vw, 78px);
+    line-height: .98;
+    letter-spacing: -4px;
+    max-width: 850px;
+    margin: 0 auto 28px;
+}
+
+.cta p {
+    color: #777;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    background: #050505;
+    color: #fff;
+    padding: 55px 0 30px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #222;
+}
+
+.footer-brand p {
+    color: #777;
+    max-width: 350px;
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-links {
+    display: flex;
+    gap: 70px;
+}
+
+.footer-column {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+}
+
+.footer-column strong {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.footer-column a {
+    color: #888;
+    font-size: 13px;
+}
+
+.footer-column a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    padding-top: 25px;
+    color: #666;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 2000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-box {
+    width: min(480px, 100%);
+    background: #fff;
+    color: #000;
+    border-radius: 25px;
+    padding: 32px;
+    box-shadow: 0 30px 100px rgba(0,0,0,.3);
+}
+
+.modal-box h3 {
+    font-size: 28px;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.modal-box p {
+    color: #777;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.close-modal {
+    background: #eee;
+    color: #111;
+}
+
+/* =========================
+   REVEAL
+========================= */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 900px) {
+    .nav-links {
+        display: none;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-actions .primary-btn {
+        display: none;
+    }
+
+    .hero {
+        padding-top: 145px;
+    }
+
+    .hero h1 {
+        letter-spacing: -3px;
+    }
+
+    .ags-card,
+    .security-grid,
+    .marketplace-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-grid,
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .price-card.featured {
+        transform: none;
+    }
+
+    .wallet-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-top {
+        flex-direction: column;
+    }
+
+    .footer-links {
+        flex-wrap: wrap;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: min(100% - 28px, var(--max));
+    }
+
+    section {
+        padding: 80px 0;
+    }
+
+    .nav {
+        height: 68px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .logo-mark {
+        width: 31px;
+        height: 31px;
+    }
+
+    .hero {
+        padding: 125px 0 85px;
+    }
+
+    .hero h1 {
+        font-size: 49px;
+        letter-spacing: -3px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .ags-card,
+    .wallet-card,
+    .market-main,
+    .market-side,
+    .price-card {
+        padding: 26px;
+        border-radius: 22px;
+    }
+
+    .ags-info h3 {
+        font-size: 34px;
+    }
+
+    .ags-circle {
+        width: 145px;
+        height: 145px;
+        font-size: 40px;
+    }
+
+    .shield {
+        width: 210px;
+        height: 245px;
+        font-size: 42px;
+    }
+
+    .footer-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+    }
+
+    .modal-box {
+        padding: 25px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-    <!-- =========================================================
-         NAVIGATION
-    ========================================================= -->
+<!-- =========================
+     HEADER
+========================= -->
 
-    <header class="navbar">
-        <div class="nav-container">
+<header>
+    <div class="container nav">
 
-            <a href="#" class="logo" aria-label="Aegis Bank">
-                <span class="logo-mark"></span>
-                <span>AEGIS BANK</span>
-            </a>
+        <a href="#" class="logo">
+            <span class="logo-mark">A</span>
+            <span>Aegis Bank</span>
+        </a>
 
-            <nav class="nav-links">
-                <a href="#products" data-i18n="nav.products">Products</a>
-                <a href="#security" data-i18n="nav.security">Security</a>
-                <a href="#experience" data-i18n="nav.experience">Experience</a>
-                <a href="#about" data-i18n="nav.about">About</a>
-            </nav>
+        <nav class="nav-links">
+            <a href="#ags" data-ru="AGS" data-en="AGS">AGS</a>
+            <a href="#wallet" data-ru="Кошелёк" data-en="Wallet">Кошелёк</a>
+            <a href="#economy" data-ru="Экономика" data-en="Economy">Экономика</a>
+            <a href="#business" data-ru="Бизнес" data-en="Business">Бизнес</a>
+            <a href="#security" data-ru="Безопасность" data-en="Security">Безопасность</a>
+        </nav>
 
-            <div class="nav-actions">
-                <button class="language-button" id="languageButton">
-                    RU
+        <div class="nav-actions">
+            <button class="lang-btn" id="langBtn">EN</button>
+            <button class="primary-btn open-wallet" data-ru="Открыть кошелёк" data-en="Open Wallet">
+                Открыть кошелёк
+            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </div>
+
+    </div>
+</header>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<main>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-content reveal">
+
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                <span data-ru="Цифровая банковская система"
+                      data-en="Digital banking system">
+                    Цифровая банковская система
+                </span>
+            </div>
+
+            <h1 data-ru="Banking for a digital economy."
+                data-en="Banking for a digital economy.">
+                Banking for a digital economy.
+            </h1>
+
+            <p
+                data-ru="Aegis Bank — концепция цифрового банка нового поколения, созданная для цифровых активов, виртуальных кошельков, бизнеса и новой интернет-экономики."
+                data-en="Aegis Bank is a next-generation digital banking concept built for digital assets, virtual wallets, businesses and the new internet economy.">
+                Aegis Bank — концепция цифрового банка нового поколения,
+                созданная для цифровых активов, виртуальных кошельков,
+                бизнеса и новой интернет-экономики.
+            </p>
+
+            <div class="hero-actions">
+                <button class="primary-btn open-wallet"
+                        data-ru="Открыть кошелёк"
+                        data-en="Open Wallet">
+                    Открыть кошелёк
                 </button>
 
-                <a href="#start" class="login-button" data-i18n="nav.login">
-                    Sign in
+                <a href="#ags" class="secondary-btn"
+                   data-ru="Узнать об AGS"
+                   data-en="Learn about AGS">
+                    Узнать об AGS
                 </a>
-
-                <button class="menu-button" id="menuButton" aria-label="Menu">
-                    ☰
-                </button>
             </div>
 
         </div>
-    </header>
-
-
-    <main>
-
-        <!-- =====================================================
-             HERO
-        ====================================================== -->
-
-        <section class="hero" id="home">
-
-            <div class="hero-container">
-
-                <div class="hero-content reveal">
-
-                    <div class="eyebrow">
-                        <span class="eyebrow-dot"></span>
-                        <span data-i18n="hero.eyebrow">
-                            A new standard in banking
-                        </span>
-                    </div>
-
-                    <h1>
-                        <span data-i18n="hero.title1">Banking.</span><br>
-                        <span data-i18n="hero.title2">Protected.</span>
-                    </h1>
-
-                    <p class="hero-description"
-                       data-i18n="hero.description">
-                        A modern banking experience built around security,
-                        simplicity and complete control over your finances.
-                    </p>
-
-                    <div class="hero-actions">
-                        <a href="#start" class="primary-button"
-                           data-i18n="hero.primary">
-                            Explore Aegis
-                        </a>
-
-                        <a href="#products" class="secondary-button"
-                           data-i18n="hero.secondary">
-                            Discover products
-                        </a>
-                    </div>
-
-                </div>
-
-
-                <div class="hero-visual reveal">
-
-                    <div class="orbit"></div>
-
-                    <div class="shield">
-                        <div class="shield-inner">
-                            <div class="shield-a">A</div>
-                        </div>
-                    </div>
-
-                    <div class="visual-label label-top"
-                         data-i18n="hero.label1">
-                        Security first
-                    </div>
-
-                    <div class="visual-label label-bottom"
-                         data-i18n="hero.label2">
-                        Aegis / 01
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             TRUST BAR
-        ====================================================== -->
-
-        <section class="trust-bar">
-
-            <div class="trust-container">
-
-                <div class="trust-item reveal">
-                    <div class="trust-number">01 / SECURITY</div>
-                    <div class="trust-text"
-                         data-i18n="trust.security">
-                        Protection built into every layer.
-                    </div>
-                </div>
-
-                <div class="trust-item reveal">
-                    <div class="trust-number">02 / CONTROL</div>
-                    <div class="trust-text"
-                         data-i18n="trust.control">
-                        Your money. Your decisions.
-                    </div>
-                </div>
-
-                <div class="trust-item reveal">
-                    <div class="trust-number">03 / SIMPLICITY</div>
-                    <div class="trust-text"
-                         data-i18n="trust.simple">
-                        Banking without unnecessary complexity.
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             PRODUCTS
-        ====================================================== -->
-
-        <section class="section" id="products">
-
-            <div class="section-container">
-
-                <div class="section-heading reveal">
-
-                    <div class="eyebrow">
-                        <span class="eyebrow-dot"></span>
-                        <span data-i18n="products.eyebrow">
-                            The Aegis ecosystem
-                        </span>
-                    </div>
-
-                    <h2 data-i18n="products.title">
-                        Everything you need.<br>
-                        Nothing you don't.
-                    </h2>
-
-                    <p data-i18n="products.description">
-                        A focused set of financial products designed
-                        to make everyday banking clear, powerful and secure.
-                    </p>
-
-                </div>
-
-
-                <div class="products-grid">
-
-                    <article class="product-card reveal">
-
-                        <div class="product-icon">01</div>
-
-                        <h3 data-i18n="product.account.title">
-                            Accounts
-                        </h3>
-
-                        <p data-i18n="product.account.text">
-                            Manage your money with a clean,
-                            transparent account experience.
-                        </p>
-
-                        <a href="#" class="product-link">
-                            <span data-i18n="product.learn">
-                                Learn more
-                            </span>
-                            →
-                        </a>
-
-                    </article>
-
-
-                    <article class="product-card reveal">
-
-                        <div class="product-icon">02</div>
-
-                        <h3 data-i18n="product.card.title">
-                            Aegis Card
-                        </h3>
-
-                        <p data-i18n="product.card.text">
-                            A minimalist card designed for
-                            modern everyday spending.
-                        </p>
-
-                        <a href="#" class="product-link">
-                            <span data-i18n="product.learn">
-                                Learn more
-                            </span>
-                            →
-                        </a>
-
-                    </article>
-
-
-                    <article class="product-card reveal">
-
-                        <div class="product-icon">03</div>
-
-                        <h3 data-i18n="product.transfer.title">
-                            Transfers
-                        </h3>
-
-                        <p data-i18n="product.transfer.text">
-                            Move money with clarity, speed and
-                            intelligent transaction protection.
-                        </p>
-
-                        <a href="#" class="product-link">
-                            <span data-i18n="product.learn">
-                                Learn more
-                            </span>
-                            →
-                        </a>
-
-                    </article>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             SECURITY
-        ====================================================== -->
-
-        <section class="section dark-section" id="security">
-
-            <div class="section-container">
-
-                <div class="section-heading reveal">
-
-                    <div class="eyebrow">
-                        <span class="eyebrow-dot"></span>
-                        <span data-i18n="security.eyebrow">
-                            Aegis Shield
-                        </span>
-                    </div>
-
-                    <h2 data-i18n="security.title">
-                        Security is not a feature.
-                        It's the foundation.
-                    </h2>
-
-                    <p data-i18n="security.description">
-                        Aegis is designed around the idea that
-                        financial security should exist at every
-                        level of the banking experience.
-                    </p>
-
-                </div>
-
-
-                <div class="security-layout">
-
-                    <div class="security-visual reveal">
-
-                        <div class="security-circle">
-
-                            <div class="security-shield"></div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="security-features">
-
-                        <article class="security-feature reveal">
-                            <div class="security-feature-number">
-                                01
-                            </div>
-
-                            <h3 data-i18n="security.device.title">
-                                Device Protection
-                            </h3>
-
-                            <p data-i18n="security.device.text">
-                                Keep control over which devices
-                                can access your account.
-                            </p>
-                        </article>
-
-
-                        <article class="security-feature reveal">
-                            <div class="security-feature-number">
-                                02
-                            </div>
-
-                            <h3 data-i18n="security.transaction.title">
-                                Transaction Protection
-                            </h3>
-
-                            <p data-i18n="security.transaction.text">
-                                Important transactions receive
-                                additional security checks.
-                            </p>
-                        </article>
-
-
-                        <article class="security-feature reveal">
-                            <div class="security-feature-number">
-                                03
-                            </div>
-
-                            <h3 data-i18n="security.alerts.title">
-                                Security Alerts
-                            </h3>
-
-                            <p data-i18n="security.alerts.text">
-                                Stay informed about important
-                                activity on your account.
-                            </p>
-                        </article>
-
-
-                        <article class="security-feature reveal">
-                            <div class="security-feature-number">
-                                04
-                            </div>
-
-                            <h3 data-i18n="security.control.title">
-                                Full Control
-                            </h3>
-
-                            <p data-i18n="security.control.text">
-                                Manage security settings directly
-                                from your banking experience.
-                            </p>
-                        </article>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             EXPERIENCE
-        ====================================================== -->
-
-        <section class="section experience" id="experience">
-
-            <div class="section-container">
-
-                <div class="experience-layout">
-
-                    <div class="experience-copy reveal">
-
-                        <div class="eyebrow">
-                            <span class="eyebrow-dot"></span>
-                            <span data-i18n="experience.eyebrow">
-                                Designed differently
-                            </span>
-                        </div>
-
-                        <h2 data-i18n="experience.title">
-                            Banking should feel simple.
-                        </h2>
-
-                        <p data-i18n="experience.description">
-                            No unnecessary screens. No confusing
-                            financial language. Just a clear interface
-                            that helps you understand and control your money.
-                        </p>
-
-                        <div class="experience-list">
-
-                            <div class="experience-item">
-                                <span data-i18n="experience.item1">
-                                    Clear financial overview
-                                </span>
-                                →
-                            </div>
-
-                            <div class="experience-item">
-                                <span data-i18n="experience.item2">
-                                    Instant transaction history
-                                </span>
-                                →
-                            </div>
-
-                            <div class="experience-item">
-                                <span data-i18n="experience.item3">
-                                    Intelligent financial insights
-                                </span>
-                                →
-                            </div>
-
-                            <div class="experience-item">
-                                <span data-i18n="experience.item4">
-                                    One place for your finances
-                                </span>
-                                →
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="reveal">
-
-                        <div class="bank-card">
-
-                            <div class="card-brand">
-                                <span>AEGIS</span>
-                                <span>BANK</span>
-                            </div>
-
-                            <div class="card-chip"></div>
-
-                            <div class="card-number">
-                                •••• &nbsp; •••• &nbsp; •••• &nbsp; 4821
-                            </div>
-
-                            <div class="card-name">
-                                AEGIS MEMBER
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =====================================================
-             CTA
-        ====================================================== -->
-
-        <section class="cta" id="start">
-
-            <div class="cta-container reveal">
-
-                <div class="eyebrow">
-                    <span class="eyebrow-dot"></span>
-                    <span data-i18n="cta.eyebrow">
-                        Welcome to Aegis
-                    </span>
-                </div>
-
-                <h2 data-i18n="cta.title">
-                    The future of banking
-                    starts with trust.
-                </h2>
-
-                <p data-i18n="cta.description">
-                    Aegis Bank is building a new approach to
-                    digital banking — focused on protection,
-                    transparency and control.
+    </div>
+</section>
+
+
+<!-- =========================
+     AGS
+========================= -->
+
+<section class="ags-section" id="ags">
+    <div class="container">
+
+        <div class="section-head reveal">
+            <h2 data-ru="AGS — внутренняя цифровая единица."
+                data-en="AGS — the internal digital unit.">
+                AGS — внутренняя цифровая единица.
+            </h2>
+
+            <p
+                data-ru="AGS используется внутри концепции Aegis для демонстрации цифровых балансов, переводов и операций."
+                data-en="AGS is used inside the Aegis concept to demonstrate digital balances, transfers and transactions.">
+                AGS используется внутри концепции Aegis для демонстрации
+                цифровых балансов, переводов и операций.
+            </p>
+        </div>
+
+        <div class="ags-card reveal">
+
+            <div class="ags-info">
+                <h3>One unit. One ecosystem.</h3>
+
+                <p
+                    data-ru="AGS объединяет кошелёк, цифровые сервисы и внутреннюю экономику Aegis в единую систему."
+                    data-en="AGS connects wallets, digital services and the internal Aegis economy into one system.">
+                    AGS объединяет кошелёк, цифровые сервисы и внутреннюю
+                    экономику Aegis в единую систему.
                 </p>
 
-                <a href="#" class="primary-button"
-                   data-i18n="cta.button">
-                    Explore Aegis Bank
-                </a>
+                <div class="ags-note"
+                     data-ru="AGS является виртуальной единицей внутри концепции и не является реальной валютой."
+                     data-en="AGS is a virtual unit inside the concept and is not real-world currency.">
+                    AGS является виртуальной единицей внутри концепции
+                    и не является реальной валютой.
+                </div>
+            </div>
+
+            <div class="ags-symbol">
+                <div class="ags-circle">AGS</div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     WALLET
+========================= -->
+
+<section id="wallet">
+    <div class="container">
+
+        <div class="section-head reveal">
+            <h2 data-ru="Твой цифровой кошелёк."
+                data-en="Your digital wallet.">
+                Твой цифровой кошелёк.
+            </h2>
+
+            <p
+                data-ru="Единое пространство для управления цифровым балансом и внутренними операциями Aegis."
+                data-en="One place to manage your digital balance and internal Aegis operations.">
+                Единое пространство для управления цифровым балансом
+                и внутренними операциями Aegis.
+            </p>
+        </div>
+
+        <div class="wallet-grid">
+
+            <div class="wallet-card dark reveal">
+                <div class="wallet-label"
+                     data-ru="Доступный баланс"
+                     data-en="Available balance">
+                    Доступный баланс
+                </div>
+
+                <div class="balance">
+                    12,480
+                    <span class="balance-unit">AGS</span>
+                </div>
+
+                <div class="wallet-label"
+                     data-ru="Демо-баланс"
+                     data-en="Demo balance">
+                    Демо-баланс
+                </div>
+
+                <div class="wallet-actions">
+                    <button class="demo-action"
+                            data-action="send"
+                            data-ru="Отправить"
+                            data-en="Send">
+                        Отправить
+                    </button>
+
+                    <button class="demo-action"
+                            data-action="receive"
+                            data-ru="Получить"
+                            data-en="Receive">
+                        Получить
+                    </button>
+
+                    <button class="demo-action"
+                            data-action="activity"
+                            data-ru="История"
+                            data-en="Activity">
+                        История
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="wallet-card reveal">
+
+                <div class="wallet-label"
+                     data-ru="Последние операции"
+                     data-en="Recent activity">
+                    Последние операции
+                </div>
+
+                <div class="activity">
+
+                    <div class="activity-row">
+                        <div class="activity-name">
+                            <strong>Marketplace</strong>
+                            <small>Today</small>
+                        </div>
+                        <div class="activity-value">−250 AGS</div>
+                    </div>
+
+                    <div class="activity-row">
+                        <div class="activity-name">
+                            <strong>Reward</strong>
+                            <small>Yesterday</small>
+                        </div>
+                        <div class="activity-value">+500 AGS</div>
+                    </div>
+
+                    <div class="activity-row">
+                        <div class="activity-name">
+                            <strong>Transfer</strong>
+                            <small>Yesterday</small>
+                        </div>
+                        <div class="activity-value">−120 AGS</div>
+                    </div>
+
+                </div>
 
             </div>
 
-        </section>
+        </div>
 
-    </main>
+    </div>
+</section>
 
 
-    <!-- =========================================================
-         FOOTER
-    ========================================================== -->
+<!-- =========================
+     DIGITAL ECONOMY
+========================= -->
 
-    <footer id="about">
+<section class="economy" id="economy">
+    <div class="container">
 
-        <div class="footer-container">
+        <div class="section-head reveal">
+            <h2 data-ru="Экономика внутри интернета."
+                data-en="An economy inside the internet.">
+                Экономика внутри интернета.
+            </h2>
 
-            <div class="footer-top">
+            <p
+                data-ru="Aegis создаёт инфраструктуру, в которой цифровые сервисы могут взаимодействовать между собой."
+                data-en="Aegis creates infrastructure where digital services can interact with each other.">
+                Aegis создаёт инфраструктуру, в которой цифровые сервисы
+                могут взаимодействовать между собой.
+            </p>
+        </div>
 
-                <div class="footer-brand">
+        <div class="feature-grid">
 
-                    <a href="#" class="logo">
-                        <span class="logo-mark"
-                              style="border-color:white;">
-                        </span>
+            <div class="feature-card reveal">
+                <div class="feature-number">01</div>
 
-                        <span>AEGIS BANK</span>
-                    </a>
+                <div>
+                    <h3 data-ru="Earn" data-en="Earn">Earn</h3>
 
-                    <p data-i18n="footer.description">
-                        Banking, protected. A modern financial
-                        experience built around security,
-                        simplicity and control.
+                    <p
+                        data-ru="Получай виртуальные вознаграждения за действия внутри экосистемы."
+                        data-en="Receive virtual rewards for activities inside the ecosystem.">
+                        Получай виртуальные вознаграждения за действия
+                        внутри экосистемы.
                     </p>
+                </div>
+            </div>
 
+            <div class="feature-card reveal">
+                <div class="feature-number">02</div>
+
+                <div>
+                    <h3 data-ru="Transfer" data-en="Transfer">Transfer</h3>
+
+                    <p
+                        data-ru="Перемещай AGS между пользователями и цифровыми сервисами."
+                        data-en="Move AGS between users and digital services.">
+                        Перемещай AGS между пользователями
+                        и цифровыми сервисами.
+                    </p>
+                </div>
+            </div>
+
+            <div class="feature-card reveal">
+                <div class="feature-number">03</div>
+
+                <div>
+                    <h3 data-ru="Spend" data-en="Spend">Spend</h3>
+
+                    <p
+                        data-ru="Используй виртуальные единицы внутри цифрового marketplace."
+                        data-en="Use virtual units inside the digital marketplace.">
+                        Используй виртуальные единицы внутри
+                        цифрового marketplace.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     MARKETPLACE
+========================= -->
+
+<section>
+    <div class="container">
+
+        <div class="section-head reveal">
+            <h2 data-ru="Marketplace."
+                data-en="Marketplace.">
+                Marketplace.
+            </h2>
+
+            <p
+                data-ru="Цифровое пространство для сервисов, продуктов и создателей."
+                data-en="A digital space for services, products and creators.">
+                Цифровое пространство для сервисов, продуктов и создателей.
+            </p>
+        </div>
+
+        <div class="marketplace-grid">
+
+            <div class="market-main reveal">
+                <div>
+                    <div class="eyebrow"
+                         style="background:#151515;color:#fff;border-color:#292929;">
+                        Aegis Marketplace
+                    </div>
+
+                    <h3
+                        data-ru="Цифровые продукты. В одном месте."
+                        data-en="Digital products. One place.">
+                        Цифровые продукты. В одном месте.
+                    </h3>
+                </div>
+
+                <p
+                    data-ru="Сервисы, подписки, цифровые товары и инструменты могут существовать внутри единой экосистемы."
+                    data-en="Services, subscriptions, digital products and tools can exist inside one ecosystem.">
+                    Сервисы, подписки, цифровые товары и инструменты
+                    могут существовать внутри единой экосистемы.
+                </p>
+            </div>
+
+
+            <div class="market-side reveal">
+
+                <h3 data-ru="Примеры" data-en="Examples">
+                    Примеры
+                </h3>
+
+                <div class="market-items">
+
+                    <div class="market-item">
+                        <span>Digital Tools</span>
+                        <strong>120 AGS</strong>
+                    </div>
+
+                    <div class="market-item">
+                        <span>Creator Pack</span>
+                        <strong>250 AGS</strong>
+                    </div>
+
+                    <div class="market-item">
+                        <span>Premium Service</span>
+                        <strong>500 AGS</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     BUSINESS
+========================= -->
+
+<section class="business" id="business">
+    <div class="container">
+
+        <div class="section-head reveal">
+            <h2 data-ru="Для людей. Для бизнеса."
+                data-en="For people. For business.">
+                Для людей. Для бизнеса.
+            </h2>
+
+            <p
+                data-ru="Aegis может развиваться от простого цифрового кошелька до полноценной инфраструктуры для компаний."
+                data-en="Aegis can evolve from a simple digital wallet into infrastructure for companies.">
+                Aegis может развиваться от простого цифрового кошелька
+                до полноценной инфраструктуры для компаний.
+            </p>
+        </div>
+
+        <div class="pricing-grid">
+
+            <div class="price-card reveal">
+
+                <h3>Free</h3>
+
+                <div class="price">
+                    0 ₽
+                    <small>/ month</small>
+                </div>
+
+                <p
+                    data-ru="Базовый доступ к цифровому кошельку."
+                    data-en="Basic access to the digital wallet.">
+                    Базовый доступ к цифровому кошельку.
+                </p>
+
+                <ul class="price-list">
+                    <li>Digital Wallet</li>
+                    <li>AGS Balance</li>
+                    <li>Basic Activity</li>
+                </ul>
+
+            </div>
+
+
+            <div class="price-card featured reveal">
+
+                <h3>Pro</h3>
+
+                <div class="price">
+                    199 ₽
+                    <small>/ month</small>
+                </div>
+
+                <p
+                    data-ru="Расширенные возможности для активных пользователей."
+                    data-en="Advanced features for active users.">
+                    Расширенные возможности для активных пользователей.
+                </p>
+
+                <ul class="price-list">
+                    <li>Everything in Free</li>
+                    <li>Advanced Wallet</li>
+                    <li>Priority Features</li>
+                    <li>Premium Services</li>
+                </ul>
+
+            </div>
+
+
+            <div class="price-card reveal">
+
+                <h3>Business</h3>
+
+                <div class="price">
+                    Custom
+                </div>
+
+                <p
+                    data-ru="Решения для компаний и цифровых проектов."
+                    data-en="Solutions for companies and digital projects.">
+                    Решения для компаний и цифровых проектов.
+                </p>
+
+                <ul class="price-list">
+                    <li>Business Tools</li>
+                    <li>Digital Infrastructure</li>
+                    <li>Custom Solutions</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     SECURITY
+========================= -->
+
+<section id="security">
+    <div class="container">
+
+        <div class="security-grid">
+
+            <div class="shield reveal">
+                A
+            </div>
+
+            <div class="security-copy reveal">
+
+                <h2
+                    data-ru="Aegis Shield."
+                    data-en="Aegis Shield.">
+                    Aegis Shield.
+                </h2>
+
+                <p
+                    data-ru="Безопасность является основой концепции Aegis. Каждый цифровой объект должен быть защищён, а каждая операция — контролируема."
+                    data-en="Security is at the core of Aegis. Every digital object should be protected and every operation controlled.">
+                    Безопасность является основой концепции Aegis.
+                    Каждый цифровой объект должен быть защищён,
+                    а каждая операция — контролируема.
+                </p>
+
+                <div class="security-points">
+
+                    <div class="security-point">
+                        <strong data-ru="Защита данных"
+                                data-en="Data protection">
+                            Защита данных
+                        </strong>
+
+                        <span
+                            data-ru="Безопасная архитектура для цифровой инфраструктуры."
+                            data-en="Secure architecture for digital infrastructure.">
+                            Безопасная архитектура для цифровой инфраструктуры.
+                        </span>
+                    </div>
+
+                    <div class="security-point">
+                        <strong data-ru="Контроль операций"
+                                data-en="Transaction control">
+                            Контроль операций
+                        </strong>
+
+                        <span
+                            data-ru="Каждая операция должна быть проверяемой и отслеживаемой."
+                            data-en="Every operation should be verifiable and traceable.">
+                            Каждая операция должна быть проверяемой
+                            и отслеживаемой.
+                        </span>
+                    </div>
+
+                    <div class="security-point">
+                        <strong data-ru="Принцип защиты"
+                                data-en="Protection by design">
+                            Принцип защиты
+                        </strong>
+
+                        <span
+                            data-ru="Безопасность закладывается в архитектуру системы с самого начала."
+                            data-en="Security is built into the system architecture from the start.">
+                            Безопасность закладывается в архитектуру системы
+                            с самого начала.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     REDWALL
+========================= -->
+
+<section class="redwall">
+    <div class="container">
+
+        <div class="redwall-content reveal">
+
+            <div class="eyebrow"
+                 style="background:#111;color:#fff;border-color:#292929;">
+                REDWALL
+            </div>
+
+            <h2
+                data-ru="Aegis — часть большой системы."
+                data-en="Aegis — part of a bigger system.">
+                Aegis — часть большой системы.
+            </h2>
+
+            <p
+                data-ru="Aegis Bank развивается внутри REDWALL — материнской технологической организации, объединяющей независимые цифровые проекты."
+                data-en="Aegis Bank is developed within REDWALL — a parent technology organization connecting independent digital projects.">
+                Aegis Bank развивается внутри REDWALL — материнской
+                технологической организации, объединяющей независимые
+                цифровые проекты.
+            </p>
+
+            <div class="ecosystem">
+                <span>REDWALL</span>
+                <span>Hoolah</span>
+                <span>Nexora</span>
+                <span>Veyra</span>
+                <span>Aegis Bank</span>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =========================
+     CTA
+========================= -->
+
+<section class="cta">
+    <div class="container reveal">
+
+        <h2
+            data-ru="The digital economy needs a shield."
+            data-en="The digital economy needs a shield.">
+            The digital economy needs a shield.
+        </h2>
+
+        <p
+            data-ru="Добро пожаловать в Aegis."
+            data-en="Welcome to Aegis.">
+            Добро пожаловать в Aegis.
+        </p>
+
+        <button class="primary-btn open-wallet"
+                data-ru="Открыть демо-кошелёк"
+                data-en="Open demo wallet">
+            Открыть демо-кошелёк
+        </button>
+
+    </div>
+</section>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+    <div class="container">
+
+        <div class="footer-top">
+
+            <div class="footer-brand">
+
+                <a href="#" class="logo">
+                    <span class="logo-mark">A</span>
+                    <span>Aegis Bank</span>
+                </a>
+
+                <p
+                    data-ru="Digital banking concept by REDWALL."
+                    data-en="Digital banking concept by REDWALL.">
+                    Digital banking concept by REDWALL.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <div class="footer-column">
+                    <strong data-ru="Product"
+                            data-en="Product">
+                        Product
+                    </strong>
+
+                    <a href="#ags">AGS</a>
+                    <a href="#wallet"
+                       data-ru="Кошелёк"
+                       data-en="Wallet">
+                        Кошелёк
+                    </a>
+
+                    <a href="#economy"
+                       data-ru="Экономика"
+                       data-en="Economy">
+                        Экономика
+                    </a>
                 </div>
 
 
                 <div class="footer-column">
-
-                    <h4 data-i18n="footer.products">
-                        Products
-                    </h4>
-
-                    <a href="#products"
-                       data-i18n="footer.accounts">
-                        Accounts
-                    </a>
-
-                    <a href="#products"
-                       data-i18n="footer.cards">
-                        Cards
-                    </a>
-
-                    <a href="#products"
-                       data-i18n="footer.transfers">
-                        Transfers
-                    </a>
-
-                </div>
-
-
-                <div class="footer-column">
-
-                    <h4 data-i18n="footer.company">
+                    <strong data-ru="Company"
+                            data-en="Company">
                         Company
-                    </h4>
+                    </strong>
 
-                    <a href="#about"
-                       data-i18n="footer.about">
-                        About Aegis
+                    <a href="#business"
+                       data-ru="Бизнес"
+                       data-en="Business">
+                        Бизнес
                     </a>
 
                     <a href="#security"
-                       data-i18n="footer.security">
-                        Security
+                       data-ru="Безопасность"
+                       data-en="Security">
+                        Безопасность
                     </a>
 
                     <a href="#"
-                       data-i18n="footer.careers">
-                        Careers
+                       data-ru="REDWALL"
+                       data-en="REDWALL">
+                        REDWALL
                     </a>
-
-                </div>
-
-
-                <div class="footer-column">
-
-                    <h4 data-i18n="footer.connect">
-                        Connect
-                    </h4>
-
-                    <a href="#">
-                        X / Twitter
-                    </a>
-
-                    <a href="#">
-                        Instagram
-                    </a>
-
-                    <a href="#">
-                        LinkedIn
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <div class="footer-bottom">
-
-                <span>
-                    © 2026 Aegis Bank
-                </span>
-
-                <div class="footer-status">
-                    <span class="status-dot"></span>
-
-                    <span data-i18n="footer.status">
-                        Aegis Bank — part of REDWALL
-                    </span>
                 </div>
 
             </div>
 
         </div>
 
-    </footer>
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 Aegis Bank
+            </span>
+
+            <span
+                data-ru="AGS — виртуальная единица внутри концепции Aegis. Aegis Bank не является лицензированным банком."
+                data-en="AGS is a virtual unit inside the Aegis concept. Aegis Bank is not a licensed bank.">
+                AGS — виртуальная единица внутри концепции Aegis.
+                Aegis Bank не является лицензированным банком.
+            </span>
+
+        </div>
+
+    </div>
+</footer>
 
 
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
+<!-- =========================
+     MODAL
+========================= -->
 
-    <script>
+<div class="modal" id="walletModal">
 
-        /* =========================================================
-           LANGUAGE SYSTEM
-        ========================================================= */
+    <div class="modal-box">
 
-        const translations = {
+        <h3
+            data-ru="Демо-кошелёк"
+            data-en="Demo Wallet">
+            Демо-кошелёк
+        </h3>
 
-            ru: {
+        <p
+            data-ru="Это демонстрационная версия Aegis Wallet. Никакие реальные деньги не списываются."
+            data-en="This is a demonstration version of Aegis Wallet. No real money is charged.">
+            Это демонстрационная версия Aegis Wallet.
+            Никакие реальные деньги не списываются.
+        </p>
 
-                "nav.products": "Продукты",
-                "nav.security": "Безопасность",
-                "nav.experience": "Возможности",
-                "nav.about": "О нас",
-                "nav.login": "Войти",
+        <div class="modal-actions">
 
-                "hero.eyebrow": "Новый стандарт банковского сервиса",
-                "hero.title1": "Банкинг.",
-                "hero.title2": "Под защитой.",
-                "hero.description":
-                    "Современный банковский опыт, построенный вокруг безопасности, простоты и полного контроля над вашими финансами.",
-                "hero.primary": "Исследовать Aegis",
-                "hero.secondary": "Наши продукты",
-                "hero.label1": "Безопасность прежде всего",
-                "hero.label2": "Aegis / 01",
+            <button class="primary-btn"
+                    id="demoContinue"
+                    data-ru="Продолжить"
+                    data-en="Continue">
+                Продолжить
+            </button>
 
-                "trust.security":
-                    "Защита встроена в каждый уровень.",
-                "trust.control":
-                    "Ваши деньги. Ваши решения.",
-                "trust.simple":
-                    "Банкинг без лишней сложности.",
+            <button class="secondary-btn close-modal"
+                    data-ru="Закрыть"
+                    data-en="Close">
+                Закрыть
+            </button>
 
-                "products.eyebrow":
-                    "Экосистема Aegis",
-                "products.title":
-                    "Всё необходимое.<br>Ничего лишнего.",
-                "products.description":
-                    "Набор финансовых продуктов, созданных для понятного, мощного и безопасного управления деньгами.",
+        </div>
 
-                "product.account.title":
-                    "Счета",
-                "product.account.text":
-                    "Управляйте своими деньгами с помощью понятного и прозрачного интерфейса.",
-                "product.card.title":
-                    "Aegis Card",
-                "product.card.text":
-                    "Минималистичная карта, созданная для современных повседневных расходов.",
-                "product.transfer.title":
-                    "Переводы",
-                "product.transfer.text":
-                    "Переводите деньги с понятностью, скоростью и интеллектуальной защитой операций.",
-                "product.learn":
-                    "Подробнее",
+    </div>
 
-                "security.eyebrow":
-                    "Aegis Shield",
-                "security.title":
-                    "Безопасность — не функция.<br>Это фундамент.",
-                "security.description":
-                    "Aegis построен вокруг идеи, что финансовая безопасность должна присутствовать на каждом уровне банковского опыта.",
+</div>
 
-                "security.device.title":
-                    "Защита устройств",
-                "security.device.text":
-                    "Контролируйте устройства, которые имеют доступ к вашему аккаунту.",
 
-                "security.transaction.title":
-                    "Защита операций",
-                "security.transaction.text":
-                    "Важные операции проходят дополнительные проверки безопасности.",
+<script>
 
-                "security.alerts.title":
-                    "Уведомления",
-                "security.alerts.text":
-                    "Будьте в курсе важных событий, происходящих с вашим аккаунтом.",
+/* =========================
+   LANGUAGE
+========================= */
 
-                "security.control.title":
-                    "Полный контроль",
-                "security.control.text":
-                    "Управляйте настройками безопасности прямо из банковского приложения.",
+let currentLang = "ru";
 
-                "experience.eyebrow":
-                    "Другой подход",
-                "experience.title":
-                    "Банкинг должен быть простым.",
-                "experience.description":
-                    "Никаких лишних экранов. Никаких непонятных финансовых терминов. Только понятный интерфейс, который помогает вам понимать и контролировать свои деньги.",
+const langBtn = document.getElementById("langBtn");
 
-                "experience.item1":
-                    "Понятный финансовый обзор",
-                "experience.item2":
-                    "Мгновенная история операций",
-                "experience.item3":
-                    "Умная финансовая аналитика",
-                "experience.item4":
-                    "Все финансы в одном месте",
+function updateLanguage() {
 
-                "cta.eyebrow":
-                    "Добро пожаловать в Aegis",
-                "cta.title":
-                    "Будущее банкинга начинается с доверия.",
-                "cta.description":
-                    "Aegis Bank создаёт новый подход к цифровому банкингу — с фокусом на защиту, прозрачность и контроль.",
-                "cta.button":
-                    "Исследовать Aegis Bank",
+    document.querySelectorAll("[data-ru][data-en]").forEach(element => {
 
-                "footer.description":
-                    "Банкинг под защитой. Современный финансовый опыт, построенный вокруг безопасности, простоты и контроля.",
-                "footer.products":
-                    "Продукты",
-                "footer.accounts":
-                    "Счета",
-                "footer.cards":
-                    "Карты",
-                "footer.transfers":
-                    "Переводы",
-                "footer.company":
-                    "Компания",
-                "footer.about":
-                    "Об Aegis",
-                "footer.security":
-                    "Безопасность",
-                "footer.careers":
-                    "Карьера",
-                "footer.connect":
-                    "Связь",
-                "footer.status":
-                    "Aegis Bank — часть REDWALL"
-            },
+        element.textContent =
+            currentLang === "ru"
+                ? element.getAttribute("data-ru")
+                : element.getAttribute("data-en");
 
-            en: {
+    });
 
-                "nav.products": "Products",
-                "nav.security": "Security",
-                "nav.experience": "Experience",
-                "nav.about": "About",
-                "nav.login": "Sign in",
+    langBtn.textContent =
+        currentLang === "ru" ? "EN" : "RU";
 
-                "hero.eyebrow":
-                    "A new standard in banking",
-                "hero.title1":
-                    "Banking.",
-                "hero.title2":
-                    "Protected.",
-                "hero.description":
-                    "A modern banking experience built around security, simplicity and complete control over your finances.",
-                "hero.primary":
-                    "Explore Aegis",
-                "hero.secondary":
-                    "Discover products",
-                "hero.label1":
-                    "Security first",
-                "hero.label2":
-                    "Aegis / 01",
+    document.documentElement.lang = currentLang;
+}
 
-                "trust.security":
-                    "Protection built into every layer.",
-                "trust.control":
-                    "Your money. Your decisions.",
-                "trust.simple":
-                    "Banking without unnecessary complexity.",
+langBtn.addEventListener("click", () => {
 
-                "products.eyebrow":
-                    "The Aegis ecosystem",
-                "products.title":
-                    "Everything you need.<br>Nothing you don't.",
-                "products.description":
-                    "A focused set of financial products designed to make everyday banking clear, powerful and secure.",
+    currentLang = currentLang === "ru" ? "en" : "ru";
 
-                "product.account.title":
-                    "Accounts",
-                "product.account.text":
-                    "Manage your money with a clean, transparent account experience.",
-                "product.card.title":
-                    "Aegis Card",
-                "product.card.text":
-                    "A minimalist card designed for modern everyday spending.",
-                "product.transfer.title":
-                    "Transfers",
-                "product.transfer.text":
-                    "Move money with clarity, speed and intelligent transaction protection.",
-                "product.learn":
-                    "Learn more",
+    updateLanguage();
 
-                "security.eyebrow":
-                    "Aegis Shield",
-                "security.title":
-                    "Security is not a feature.<br>It's the foundation.",
-                "security.description":
-                    "Aegis is designed around the idea that financial security should exist at every level of the banking experience.",
+});
 
-                "security.device.title":
-                    "Device Protection",
-                "security.device.text":
-                    "Keep control over which devices can access your account.",
 
-                "security.transaction.title":
-                    "Transaction Protection",
-                "security.transaction.text":
-                    "Important transactions receive additional security checks.",
+/* =========================
+   WALLET MODAL
+========================= */
 
-                "security.alerts.title":
-                    "Security Alerts",
-                "security.alerts.text":
-                    "Stay informed about important activity on your account.",
+const modal = document.getElementById("walletModal");
+const openWalletButtons = document.querySelectorAll(".open-wallet");
+const closeModalButtons = document.querySelectorAll(".close-modal");
 
-                "security.control.title":
-                    "Full Control",
-                "security.control.text":
-                    "Manage security settings directly from your banking experience.",
+openWalletButtons.forEach(button => {
 
-                "experience.eyebrow":
-                    "Designed differently",
-                "experience.title":
-                    "Banking should feel simple.",
-                "experience.description":
-                    "No unnecessary screens. No confusing financial language. Just a clear interface that helps you understand and control your money.",
+    button.addEventListener("click", () => {
+        modal.classList.add("active");
+    });
 
-                "experience.item1":
-                    "Clear financial overview",
-                "experience.item2":
-                    "Instant transaction history",
-                "experience.item3":
-                    "Intelligent financial insights",
-                "experience.item4":
-                    "One place for your finances",
+});
 
-                "cta.eyebrow":
-                    "Welcome to Aegis",
-                "cta.title":
-                    "The future of banking starts with trust.",
-                "cta.description":
-                    "Aegis Bank is building a new approach to digital banking — focused on protection, transparency and control.",
-                "cta.button":
-                    "Explore Aegis Bank",
+closeModalButtons.forEach(button => {
 
-                "footer.description":
-                    "Banking, protected. A modern financial experience built around security, simplicity and control.",
-                "footer.products":
-                    "Products",
-                "footer.accounts":
-                    "Accounts",
-                "footer.cards":
-                    "Cards",
-                "footer.transfers":
-                    "Transfers",
-                "footer.company":
-                    "Company",
-                "footer.about":
-                    "About Aegis",
-                "footer.security":
-                    "Security",
-                "footer.careers":
-                    "Careers",
-                "footer.connect":
-                    "Connect",
-                "footer.status":
-                    "Aegis Bank — part of REDWALL"
+    button.addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+
+});
+
+modal.addEventListener("click", event => {
+
+    if (event.target === modal) {
+        modal.classList.remove("active");
+    }
+
+});
+
+
+/* =========================
+   DEMO ACTIONS
+========================= */
+
+document.querySelectorAll(".demo-action").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const action = button.dataset.action;
+
+        let message = "";
+
+        if (currentLang === "ru") {
+
+            if (action === "send") {
+                message = "Демо-режим: отправка AGS.";
             }
-        };
 
+            if (action === "receive") {
+                message = "Демо-режим: получение AGS.";
+            }
 
-        let currentLanguage = "en";
+            if (action === "activity") {
+                message = "Демо-режим: история операций.";
+            }
 
+        } else {
 
-        function applyLanguage(language) {
+            if (action === "send") {
+                message = "Demo mode: sending AGS.";
+            }
 
-            currentLanguage = language;
+            if (action === "receive") {
+                message = "Demo mode: receiving AGS.";
+            }
 
-            document.documentElement.lang = language;
+            if (action === "activity") {
+                message = "Demo mode: transaction activity.";
+            }
 
-            document
-                .querySelectorAll("[data-i18n]")
-                .forEach(element => {
-
-                    const key = element.dataset.i18n;
-
-                    if (translations[language][key]) {
-                        element.innerHTML =
-                            translations[language][key];
-                    }
-
-                });
-
-            document.getElementById("languageButton").textContent =
-                language === "en" ? "RU" : "EN";
         }
 
+        alert(message);
 
-        document
-            .getElementById("languageButton")
-            .addEventListener("click", () => {
+    });
 
-                applyLanguage(
-                    currentLanguage === "en" ? "ru" : "en"
-                );
-
-            });
+});
 
 
-        /* =========================================================
-           SCROLL REVEAL
-        ========================================================== */
+/* =========================
+   REVEAL ANIMATION
+========================= */
 
-        const observer = new IntersectionObserver(
-            entries => {
+const observer = new IntersectionObserver(
+    entries => {
 
-                entries.forEach(entry => {
+        entries.forEach(entry => {
 
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("visible");
-                    }
-
-                });
-
-            },
-            {
-                threshold: 0.12
-            }
-        );
-
-
-        document
-            .querySelectorAll(".reveal")
-            .forEach(element => observer.observe(element));
-
-
-        /* =========================================================
-           MOBILE MENU
-        ========================================================== */
-
-        const menuButton =
-            document.getElementById("menuButton");
-
-        const navLinks =
-            document.querySelector(".nav-links");
-
-
-        menuButton.addEventListener("click", () => {
-
-            const opened =
-                navLinks.style.display === "flex";
-
-            if (opened) {
-
-                navLinks.style.display = "";
-
-            } else {
-
-                navLinks.style.display = "flex";
-
-                navLinks.style.position = "absolute";
-                navLinks.style.top = "68px";
-                navLinks.style.left = "14px";
-                navLinks.style.right = "14px";
-
-                navLinks.style.padding = "20px";
-
-                navLinks.style.flexDirection = "column";
-                navLinks.style.alignItems = "flex-start";
-                navLinks.style.gap = "18px";
-
-                navLinks.style.background =
-                    "rgba(255,255,255,.97)";
-
-                navLinks.style.border =
-                    "1px solid #e5e5e5";
-
-                navLinks.style.borderRadius =
-                    "18px";
-
-                navLinks.style.boxShadow =
-                    "0 20px 60px rgba(0,0,0,.1)";
+            if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
             }
 
         });
 
+    },
+    {
+        threshold: .12
+    }
+);
 
-        /* =========================================================
-           CLOSE MOBILE MENU AFTER CLICK
-        ========================================================== */
-
-        document
-            .querySelectorAll(".nav-links a")
-            .forEach(link => {
-
-                link.addEventListener("click", () => {
-
-                    if (window.innerWidth <= 900) {
-                        navLinks.style.display = "";
-                    }
-
-                });
-
-            });
+document.querySelectorAll(".reveal").forEach(element => {
+    observer.observe(element);
+});
 
 
-        /* =========================================================
-           INITIAL LANGUAGE
-        ========================================================== */
+/* =========================
+   MOBILE MENU
+========================= */
 
-        applyLanguage("en");
+const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+const navLinks = document.querySelector(".nav-links");
 
-    </script>
+mobileMenuBtn.addEventListener("click", () => {
+
+    const isVisible =
+        getComputedStyle(navLinks).display !== "none";
+
+    if (isVisible) {
+
+        navLinks.style.display = "none";
+
+    } else {
+
+        navLinks.style.display = "flex";
+        navLinks.style.position = "absolute";
+        navLinks.style.top = "68px";
+        navLinks.style.left = "0";
+        navLinks.style.right = "0";
+        navLinks.style.background = "#fff";
+        navLinks.style.padding = "20px";
+        navLinks.style.flexDirection = "column";
+        navLinks.style.alignItems = "flex-start";
+        navLinks.style.borderBottom = "1px solid #eee";
+
+    }
+
+});
+
+
+/* =========================
+   DEMO CONTINUE
+========================= */
+
+document.getElementById("demoContinue").addEventListener("click", () => {
+
+    modal.classList.remove("active");
+
+    if (currentLang === "ru") {
+        alert("Демо-кошелёк готов. Реальные операции пока недоступны.");
+    } else {
+        alert("Demo wallet is ready. Real transactions are not available yet.");
+    }
+
+});
+
+</script>
 
 </body>
 </html>
