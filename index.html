@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AEGIS</title>
+<title>AEGIS Bank</title>
+<!-- Подключаем Supabase и QR Code -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-/* ... (твой CSS остался прежним, я его не менял, чтобы не увеличивать сообщение) ... */
+/* === СТИЛИ (CSS) === */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#000;min-height:100vh;display:flex;justify-content:center}
 .app{width:100%;max-width:420px;min-height:100vh;position:relative;padding-bottom:80px}
@@ -16,505 +17,254 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .logo{text-align:center;font-size:26px;font-weight:800;letter-spacing:1.5px;margin-bottom:26px;padding-top:8px}
 .logo-circle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:2px solid #000;border-radius:50%;margin-right:5px;font-size:17px}
-.logo-small{font-size:18px;margin-bottom:14px}
-.logo-small .logo-circle{width:28px;height:28px;font-size:14px}
-.back-btn{background:none;border:none;font-size:15px;cursor:pointer;margin-bottom:12px;color:#000;font-weight:500}
-.back-btn::before{content:'← '}
+.btn{padding:13px 15px;background:#000;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;border-radius:6px;font-family:inherit;width:100%}
+.btn:hover{opacity:.88}
 .form{display:flex;flex-direction:column;gap:12px}
 .input-group{display:flex;flex-direction:column;gap:5px}
-.input-group label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.input-group input,.input-group select{padding:12px 13px;border:1.5px solid #000;font-size:16px;border-radius:6px;font-family:inherit}
-.input-group input:focus,.input-group select:focus{outline:none;border-width:2.5px}
-.hint{font-size:12px;color:#666}
-.error{color:#000;font-size:13px;font-weight:600;padding:10px;border:1.5px solid #000;background:#f5f5f5;display:none;border-radius:6px}
+.input-group label{font-size:12px;font-weight:700;text-transform:uppercase}
+.input-group input{padding:12px;border:1.5px solid #000;font-size:16px;border-radius:6px}
+.error{color:#000;font-size:13px;padding:10px;border:1.5px solid #000;background:#f5f5f5;display:none;margin-top:10px}
 .error.show{display:block}
-.btn{padding:13px 15px;background:#000;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;border-radius:6px;font-family:inherit}
-.btn:hover{opacity:.88}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-outline{background:#fff;color:#000;border:1.5px solid #000}
-.btn-outline:hover{background:#000;color:#fff}
-.btn-full{width:100%}
-.btn-sm{padding:7px 11px;font-size:13px}
-.link{text-align:center;margin-top:16px;font-size:14px}
-.link a{color:#000;text-decoration:underline;cursor:pointer}
-.balance-section{text-align:center;padding:20px 0 16px;border-bottom:1.5px solid #000;margin-bottom:14px}
-.balance-label{font-size:12px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
-.balance-amount{font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1}
-.balance-currency{font-size:18px;color:#666;margin-left:4px;font-weight:600}
-.balance-usd{font-size:13px;color:#666;margin-top:4px}
-.balance-convert-btn{margin-top:10px;padding:7px 14px;background:#fff;border:1.5px solid #000;font-size:13px;font-weight:600;cursor:pointer;border-radius:6px;font-family:inherit}
-.balance-convert-btn:hover{background:#000;color:#fff}
-.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
-.action-btn{padding:14px 8px;background:#fff;border:1.5px solid #000;font-size:14px;font-weight:600;cursor:pointer;border-radius:6px;font-family:inherit}
-.action-btn:hover{background:#000;color:#fff}
-.search-box{margin-bottom:14px}
-.search-box input{width:100%;padding:11px 13px;border:1.5px solid #000;font-size:15px;border-radius:6px;font-family:inherit}
-.search-results{margin-top:8px}
-.search-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #eee}
-.search-item-name{font-weight:600;font-size:14px}
-.search-item-cat{font-size:11px;color:#666;text-transform:uppercase}
-.search-item-btn{padding:5px 10px;background:#000;color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;border-radius:5px}
-.section-title{font-size:12px;font-weight:700;margin-bottom:9px;text-transform:uppercase;letter-spacing:1px;color:#333}
-.tx-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #eee;cursor:pointer}
-.tx-info{flex:1;min-width:0}
-.tx-title{font-weight:600;font-size:14px;margin-bottom:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.tx-sub{font-size:11px;color:#666}
-.tx-amount{font-weight:700;font-size:14px;white-space:nowrap;margin-left:8px}
-.tx-amount.positive::before{content:'+'}
-.tx-amount.negative::before{content:'−'}
-.empty-state{text-align:center;padding:26px 14px;color:#666;font-size:14px;line-height:1.45}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:8px 0 11px;z-index:100}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:11px;color:#666;padding:3px 9px}
-.nav-item.active{color:#000;font-weight:700}
-.nav-icon{font-size:17px}
-.filters{display:flex;gap:7px;margin-bottom:12px;overflow-x:auto}
-.filter-chip{padding:5px 11px;border:1.5px solid #000;background:#fff;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;border-radius:14px;font-family:inherit}
-.filter-chip.active{background:#000;color:#fff}
-.pin-display{display:flex;gap:9px;justify-content:center;margin:20px 0}
-.pin-dot{width:13px;height:13px;border:2px solid #000;border-radius:50%}
-.pin-dot.filled{background:#000}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;max-width:250px;margin:0 auto}
-.pin-key{padding:16px;background:#fff;border:1.5px solid #000;font-size:20px;font-weight:600;cursor:pointer;border-radius:7px;font-family:inherit}
-.pin-key:hover{background:#000;color:#fff}
-.tap-container{text-align:center;padding:14px 0}
-.tap-counter{font-size:13px;color:#666;margin-bottom:14px}
-.tap-counter strong{color:#000;font-size:15px}
-.tap-btn{width:170px;height:170px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(0,0,0,.14)}
-.tap-btn:active{transform:scale(.94)}
-.tap-btn:disabled{opacity:.4;cursor:not-allowed}
-.tap-earned{font-size:15px;font-weight:700;margin-top:14px}
-.profile-header{text-align:center;padding:24px 16px 20px;margin-bottom:16px;border-radius:12px;position:relative;overflow:hidden;border:2px solid #000;background:#fff;color:#000}
-.profile-header.dark-mode{color:#fff}
-.profile-header.dark-mode .profile-date,.profile-header.dark-mode .profile-account-num,.profile-header.dark-mode .profile-status{color:#bbb}
-.profile-header.founder{border:2px solid #fff;background:#000;color:#fff}
-.profile-header.founder::before{content:'◆ FOUNDER';position:absolute;top:10px;right:10px;color:#fff;border:1px solid #fff;padding:3px 7px;font-size:10px;font-weight:700;letter-spacing:1px;border-radius:3px}
-.frame-blue{border-color:#007bff!important}.frame-red{border-color:#ff3b30!important}.frame-yellow{border-color:#ffcc00!important}.frame-light-blue{border-color:#5ac8fa!important}.frame-orange{border-color:#ff9500!important}.frame-green{border-color:#34c759!important}.frame-pink{border-color:#ff2d55!important}.frame-purple{border-color:#af52de!important}.frame-neon-blue{border-color:#00f3ff!important}.frame-double{border-style:double!important;border-width:6px!important;border-color:#000!important}.frame-dashed{border-style:dashed!important;border-width:3px!important;border-color:#000!important}.frame-thick{border-style:solid!important;border-width:6px!important;border-color:#000!important}
-.bg-blue{background-color:#007bff!important}.bg-red{background-color:#ff3b30!important}.bg-yellow{background-color:#ffcc00!important}.bg-light-blue{background-color:#5ac8fa!important}.bg-orange{background-color:#ff9500!important}.bg-green{background-color:#34c759!important}.bg-pink{background-color:#ff2d55!important}.bg-purple{background-color:#af52de!important}.bg-black{background-color:#000!important}.bg-graphite{background-color:#1c1c1e!important}.bg-navy{background-color:#0a1628!important}
-.pattern-stars{background-image:url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' fill='rgba(255,255,255,0.2)'/%3E%3C/svg%3E")!important;background-size:24px 24px!important}
-.pattern-lightning{background-image:url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z' fill='rgba(255,255,255,0.2)'/%3E%3C/svg%3E")!important;background-size:24px 24px!important}
-.pattern-diamonds{background-image:url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 0l10 10-10 10L0 10z' fill='rgba(255,255,255,0.2)'/%3E%3C/svg%3E")!important;background-size:20px 20px!important}
-.pattern-dollar-circle{background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='16' fill='none' stroke='rgba(255,255,255,0.25)' stroke-width='2'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='rgba(255,255,255,0.3)' font-size='18' font-weight='bold'%3E$%3C/text%3E%3C/svg%3E")!important;background-size:40px 40px!important}
-.pattern-grid{background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px)!important;background-size:16px 16px!important}
-.pattern-dots{background-image:radial-gradient(rgba(255,255,255,.2) 1.5px,transparent 1.5px)!important;background-size:14px 14px!important}
-.avatar-wrapper{position:relative;width:90px;height:90px;margin:0 auto 10px;border-radius:50%;border:3px solid #fff;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#f5f5f5}
-.profile-header.dark-mode .avatar-wrapper,.profile-header.founder .avatar-wrapper{border-color:#fff}
-.avatar-wrapper img{width:100%;height:100%;object-fit:cover}
-.avatar-placeholder{font-size:36px;color:#666}
-.avatar-edit-overlay{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.8);color:#fff;font-size:10px;font-weight:600;text-align:center;padding:4px 0;opacity:0;transition:opacity .2s}
-.avatar-wrapper:hover .avatar-edit-overlay{opacity:1}
-.avatar-frame-blue{border-color:#007bff!important;border-style:solid!important}.avatar-frame-red{border-color:#ff3b30!important;border-style:solid!important}.avatar-frame-green{border-color:#34c759!important;border-style:solid!important}.avatar-frame-purple{border-color:#af52de!important;border-style:solid!important}.avatar-frame-orange{border-color:#ff9500!important;border-style:solid!important}.avatar-frame-white{border-color:#fff!important;border-style:solid!important}.avatar-frame-black{border-color:#000!important;border-style:solid!important}.avatar-frame-double{border-style:double!important;border-width:6px!important;border-color:#000!important}.avatar-frame-dashed{border-style:dashed!important;border-width:3px!important;border-color:#000!important}.avatar-frame-thick{border-style:solid!important;border-width:6px!important;border-color:#000!important}.avatar-frame-neon{border-color:#00f3ff!important;border-style:solid!important}
-.sticker{position:absolute;font-size:24px;cursor:grab;user-select:none;z-index:5;line-height:1;touch-action:none}
-.profile-username{font-size:22px;font-weight:800;margin:0 0 6px 0;display:block;text-align:center}
-.profile-meta{display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-.lvl-badge{font-size:12px;font-weight:700;padding:2px 7px;background:#000;color:#fff;border-radius:4px}
-.profile-header.founder .lvl-badge{background:#fff;color:#000}
-.profile-status{font-size:13px;color:#666;margin-bottom:8px;font-style:italic}
-.profile-alt-usernames{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-bottom:8px}
-.alt-un-badge{font-size:12px;padding:3px 9px;background:rgba(0,0,0,.08);border-radius:10px;font-weight:600;color:#333}
-.profile-header.dark-mode .alt-un-badge,.profile-header.founder .alt-un-badge{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
-.profile-date{font-size:12px;color:#666}
-.profile-founder-tag{font-size:11px;font-weight:700;letter-spacing:1px;margin-top:6px;padding:3px 9px;border:1px solid #fff;display:inline-block;color:#fff;border-radius:3px}
-.profile-account-num{font-size:10px;color:#666;margin-top:5px;font-family:monospace}
-.menu-section{margin-bottom:18px}
-.menu-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666;margin-bottom:7px}
-.menu-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #eee;cursor:pointer;font-size:14px;font-weight:500}
-.menu-item::after{content:'→';opacity:.35}
-.un-actions{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap}
-.un-action-btn{flex:1;min-width:70px;padding:6px;background:#fff;border:1.5px solid #000;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px;font-family:inherit}
-.un-action-btn:hover{background:#000;color:#fff}
-.founder-badge{display:inline-block;background:transparent;color:#fff;border:1px solid #fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px}
-.username-badge{display:inline-block;padding:2px 6px;background:#000;color:#fff;font-size:10px;font-weight:700;border-radius:3px;margin-left:4px}
-.summary-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee;font-size:14px}
-.summary-row.total{border-top:1.5px solid #000;border-bottom:none;font-weight:700;font-size:15px;padding-top:10px;margin-top:3px}
-.summary-row .label{color:#666}
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
-.modal-overlay.show{display:flex}
-.modal{background:#fff;border:1.5px solid #000;padding:20px;max-width:340px;width:100%;border-radius:9px;max-height:90vh;overflow-y:auto}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:10px}
-.modal-body{font-size:14px;margin-bottom:14px;line-height:1.45}
-.modal-actions{display:flex;gap:8px}
-.modal-actions .btn{flex:1}
-.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 16px;font-size:13px;font-weight:600;z-index:300;opacity:0;transition:opacity .2s;max-width:90%;border-radius:6px}
+.balance-section{text-align:center;padding:30px 0;border-bottom:1.5px solid #000;margin-bottom:20px}
+.balance-amount{font-size:48px;font-weight:800}
+.tap-btn{width:180px;height:180px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;cursor:pointer;margin:20px auto;display:block}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 20px;border-radius:6px;opacity:0;transition:opacity 0.3s;z-index:999}
 .toast.show{opacity:1}
-.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-.shop-item{border:1.5px solid #000;padding:10px 6px;text-align:center;cursor:pointer;border-radius:7px}
-.shop-item:hover{background:#f5f5f5}
-.shop-item.selected{border-width:2.5px;background:#000;color:#fff}
-.shop-item-preview{width:38px;height:38px;margin:0 auto 6px;border-radius:50%;border:2px solid #000}
-.shop-item-name{font-size:11px;font-weight:600;margin-bottom:2px}
-.shop-item-price{font-size:10px;color:#666;font-weight:600}
-.shop-item.selected .shop-item-price{color:#ccc}
-.task-item{border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;display:flex;justify-content:space-between;align-items:center}
-.task-info{flex:1}
-.task-title{font-weight:600;font-size:14px}
-.task-reward{font-size:12px;color:#666;margin-top:2px}
-.sticker-controls{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;align-items:center}
-.sticker-controls input{width:58px;padding:5px;border:1px solid #000;border-radius:4px;font-size:12px}
-.sticker-controls button{padding:5px 8px;background:#000;color:#fff;border:none;border-radius:4px;font-size:11px;cursor:pointer}
-@keyframes giftPop{0%{transform:scale(0.3) rotate(-15deg);opacity:0}60%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-.gift-card{background:#000;color:#fff;padding:20px;border-radius:12px;text-align:center;animation:giftPop .6s ease;margin:16px 0}
-.gift-emoji{font-size:48px;margin-bottom:8px}
-.gift-amount{font-size:28px;font-weight:800}
-.gift-from{font-size:13px;opacity:.8;margin-top:6px}
-.gift-msg{font-size:14px;margin-top:8px;font-style:italic}
-.lb-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid #eee;gap:12px}
-.lb-rank{font-weight:800;font-size:16px;width:28px;text-align:center}
-.lb-info{flex:1}
-.lb-name{font-weight:600;font-size:15px}
-.lb-value{font-size:13px;color:#666}
-.lb-score{font-weight:700;font-size:15px}
-.auction-timer{font-size:12px;color:#c00;font-weight:600}
-.bid-item{padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:10px}
+.nav-item{font-size:12px;text-align:center;cursor:pointer}
 </style>
 </head>
 <body>
-<div class="app">
-<!-- ... (HTML структура осталась прежней, я её пропускаю для экономии места, она такая же как в прошлом файле) ... -->
-<!-- Для краткости я оставлю только скрипт, так как HTML не менялся. Просто используй свой старый HTML, но замени весь блок <script> на этот: -->
 
-<div id="screen-login" class="screen active"><div class="logo"><span class="logo-circle">$</span>AEGI$</div><form class="form" onsubmit="handleLogin(event)"><div class="input-group"><label>Username</label><input type="text" id="login-username" placeholder="@username" required></div><div class="input-group"><label>Пароль</label><input type="password" id="login-password" required></div><div id="login-error" class="error"></div><button type="submit" class="btn btn-full">Войти</button></form><div class="link"><a onclick="showScreen('register')">Создать аккаунт</a></div><div class="link"><a onclick="showScreen('recovery')">Забыли пароль?</a></div></div>
-<div id="screen-register" class="screen"><button class="back-btn" onclick="showScreen('login')">Назад</button><div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Создать аккаунт</h2><form class="form" onsubmit="handleRegister(event)"><div class="input-group"><label>Username</label><input type="text" id="reg-username" required><div class="hint">5–12 символов</div></div><div class="input-group"><label>Пароль</label><input type="password" id="reg-password" required></div><div class="input-group"><label>Повтор пароля</label><input type="password" id="reg-password2" required></div><div id="reg-error" class="error"></div><button type="submit" class="btn btn-full">Создать</button></form></div>
-<div id="screen-recovery" class="screen"><button class="back-btn" onclick="showScreen('login')">Назад</button><div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div><h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Восстановление</h2><form class="form" onsubmit="handleRecovery(event)"><div class="input-group"><label>Username</label><input type="text" id="rec-username" required></div><div class="input-group"><label>Recovery Code</label><input type="text" id="rec-code" required></div><div class="input-group"><label>Новый пароль</label><input type="password" id="rec-newpass" required></div><div class="input-group"><label>Повтор</label><input type="password" id="rec-newpass2" required></div><div id="rec-error" class="error"></div><button type="submit" class="btn btn-full">Сбросить</button></form></div>
-<div id="screen-recovery-show" class="screen"><div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div><h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Recovery Code</h2><div style="background:#f5f5f5;border:1.5px solid #000;padding:14px;font-family:monospace;font-size:13px;word-break:break-all;margin:12px 0;text-align:center;border-radius:6px" id="recovery-code-display"></div><button class="btn btn-full" onclick="copyRecoveryCode()">Скопировать</button><div style="height:8px"></div><button class="btn btn-outline btn-full" onclick="finishRegistration()">Продолжить</button></div>
-<div id="screen-main" class="screen"><div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div><div id="gift-banner"></div><div class="balance-section"><div class="balance-label">Ваш баланс</div><div><span class="balance-amount" id="main-balance">0</span><span class="balance-currency">AGS</span></div><div class="balance-usd" id="main-balance-usd">≈ $0.00</div><button class="balance-convert-btn" onclick="showConvertModal()">Конвертировать</button></div><div class="actions-grid"><button class="action-btn" onclick="showScreen('topup')">Пополнить</button><button class="action-btn" onclick="showScreen('transfer')">Перевести</button><button class="action-btn" onclick="showScreen('receive')">Получить</button><button class="action-btn" onclick="showScreen('tap')">Tap AGS</button></div><div class="search-box"><input type="text" id="user-search" placeholder="Поиск по username..." oninput="handleUserSearch(this.value)"><div id="search-results" class="search-results"></div></div><div id="founder-dashboard-btn" style="display:none;margin-bottom:12px"><button class="btn btn-full" onclick="showScreen('founder-dashboard')">◆ Founder Dashboard</button></div><div class="section-title">Ежедневные задания</div><div id="daily-tasks"></div><div class="section-title" style="margin-top:14px">Последние операции</div><div id="main-recent-tx"></div></div>
-<div id="screen-leaderboard" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:12px">Лидерборд</h2><div class="filters"><button class="filter-chip active" onclick="setLbTab('level',this)">По уровню</button><button class="filter-chip" onclick="setLbTab('earned',this)">Заработок</button><button class="filter-chip" onclick="setLbTab('volume',this)">Объём</button></div><div id="leaderboard-list"></div></div>
-<div id="screen-founder-dashboard" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:12px">◆ Founder Dashboard</h2><div id="fd-content"></div></div>
-<div id="screen-transfer" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Перевод</h2><div style="display:flex;gap:8px;margin-bottom:12px"><button class="filter-chip active" id="mode-transfer" onclick="setTransferMode('transfer')">Обычный</button><button class="filter-chip" id="mode-gift" onclick="setTransferMode('gift')">🎁 Подарок</button></div><form class="form" onsubmit="handleTransferPreview(event)"><div class="input-group"><label>Отправить от</label><select id="tr-from-username"></select></div><div class="input-group"><label>Кому</label><input type="text" id="tr-to" placeholder="@username" required></div><div class="input-group"><label>Сумма</label><input type="number" id="tr-amount" min="50" step="1" required><div class="hint">Минимум 50 AGS</div></div><div id="gift-fields" style="display:none"><div class="input-group"><label>Смайлик подарка</label><input type="text" id="tr-gift-emoji" maxlength="4" placeholder="🎁" style="font-size:24px;text-align:center"></div><div class="input-group"><label>Сообщение</label><input type="text" id="tr-gift-msg" maxlength="40" placeholder="С днём рождения!"></div></div><div class="input-group"><label>Комментарий</label><input type="text" id="tr-comment"></div><div id="tr-error" class="error"></div><button type="submit" class="btn btn-full">Продолжить</button></form></div>
-<div id="screen-transfer-confirm" class="screen"><button class="back-btn" onclick="showScreen('transfer')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:12px">Подтверждение</h2><div id="tc-summary"></div><div style="height:12px"></div><button class="btn btn-full" onclick="handleTransferConfirm()">Подтвердить</button></div>
-<div id="screen-pin" class="screen"><button class="back-btn" onclick="showScreen('transfer-confirm')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">Введите PIN</h2><p style="text-align:center;color:#666;font-size:13px;margin-bottom:8px">Для сумм от 5000 AGS</p><div class="pin-display" id="pin-display"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div><div id="pin-error" class="error" style="margin-bottom:12px"></div><div class="pin-pad"><button class="pin-key" onclick="pinInput('1')">1</button><button class="pin-key" onclick="pinInput('2')">2</button><button class="pin-key" onclick="pinInput('3')">3</button><button class="pin-key" onclick="pinInput('4')">4</button><button class="pin-key" onclick="pinInput('5')">5</button><button class="pin-key" onclick="pinInput('6')">6</button><button class="pin-key" onclick="pinInput('7')">7</button><button class="pin-key" onclick="pinInput('8')">8</button><button class="pin-key" onclick="pinInput('9')">9</button><button class="pin-key" style="visibility:hidden"></button><button class="pin-key" onclick="pinInput('0')">0</button><button class="pin-key" onclick="pinDelete()">⌫</button></div></div>
-<div id="screen-receive" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">Получить</h2><p style="text-align:center;color:#666;font-size:13px;margin-bottom:10px">Отсканируйте или поделитесь username</p><div id="qr-code-container" style="width:180px;height:180px;margin:16px auto;border:1.5px solid #000;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;"></div><div style="text-align:center;font-size:22px;font-weight:700;margin:12px 0" id="receive-username"></div><button class="btn btn-outline btn-full" onclick="copyReceiveUsername()">Скопировать username</button></div>
-<div id="screen-topup" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Пополнение</h2><div class="empty-state">Пополнение скоро появится</div></div>
-<div id="screen-history" class="screen"><h2 style="font-size:20px;font-weight:700;margin-bottom:12px">История</h2><div class="filters"><button class="filter-chip active" onclick="filterTx('all',this)">Все</button><button class="filter-chip" onclick="filterTx('in',this)">Получения</button><button class="filter-chip" onclick="filterTx('out',this)">Переводы</button><button class="filter-chip" onclick="filterTx('gift',this)">Подарки</button></div><div id="history-list"></div></div>
-<div id="screen-profile" class="screen"><div id="profile-header-container"></div><div class="menu-section"><div class="menu-section-title">Мои username</div><div id="profile-usernames"></div><button class="btn btn-outline btn-full" style="margin-top:10px" onclick="showScreen('buy-username')" id="buy-username-btn">+ Купить username</button></div><div class="menu-section"><div class="menu-section-title">Персонализация</div><div class="menu-item" onclick="showScreen('appearance')">🎨 Внешний вид</div><div class="menu-item" onclick="showScreen('stickers')">✨ Смайлики на карточке</div></div><div class="menu-section"><div class="menu-section-title">Аккаунт</div><div class="menu-item" onclick="showScreen('change-username')">Сменить основной username</div><div class="menu-item" onclick="showScreen('username-market')">Маркет username</div><div class="menu-item" onclick="showScreen('leaderboard')">Лидерборд</div><div class="menu-item" onclick="toggleHideBalance()">Скрыть / показать баланс</div><div class="menu-item" onclick="editStatus()">Изменить статус</div></div><div class="menu-section"><div class="menu-section-title">Безопасность</div><div class="menu-item" onclick="showScreen('change-password')">Изменить пароль</div><div class="menu-item" onclick="showScreen('change-pin')">Изменить PIN</div></div><div class="menu-section"><div class="menu-item" onclick="handleLogout()">Выйти</div></div></div>
-<div id="screen-appearance" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:6px">Внешний вид</h2><p style="font-size:13px;color:#666;margin-bottom:14px">Рамка, фон и паттерн</p><div class="menu-section-title">Рамка профиля</div><div class="shop-grid" id="shop-frames"></div><div class="menu-section-title">Рамка аватарки</div><div class="shop-grid" id="shop-avatarFrames"></div><div class="menu-section-title">Фон карточки</div><div class="shop-grid" id="shop-bgs"></div><div class="menu-section-title">Паттерн</div><div class="shop-grid" id="shop-patterns"></div></div>
-<div id="screen-stickers" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:6px">Смайлики</h2><p style="font-size:13px;color:#666;margin-bottom:12px" id="sticker-limit-text"></p><div id="stickers-list"></div><button class="btn btn-full" style="margin-top:10px" onclick="addSticker()">+ Добавить смайлик</button></div>
-<div id="screen-buy-username" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Купить username</h2><p style="color:#666;font-size:13px;margin-bottom:14px" id="buy-username-hint"></p><form class="form" onsubmit="handleBuyUsername(event)"><div class="input-group"><label>Новый username</label><input type="text" id="buy-username" required></div><div id="buy-error" class="error"></div><button type="submit" class="btn btn-full" id="buy-username-submit">Купить</button></form></div>
-<div id="screen-username-market" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:12px">Маркет username</h2><div class="filters"><button class="filter-chip active" onclick="setMarketTab('fixed',this)">Фикс. цена</button><button class="filter-chip" onclick="setMarketTab('auction',this)">Аукционы</button></div><div id="market-list"></div></div>
-<div id="screen-auction" class="screen"><button class="back-btn" onclick="showScreen('username-market')">Назад</button><div id="auction-content"></div></div>
-<div id="screen-change-username" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Сменить основной</h2><div id="change-username-list"></div></div>
-<div id="screen-change-password" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Изменить пароль</h2><form class="form" onsubmit="handleChangePassword(event)"><div class="input-group"><label>Текущий</label><input type="password" id="cp-current" required></div><div class="input-group"><label>Новый</label><input type="password" id="cp-new" required></div><div class="input-group"><label>Повтор</label><input type="password" id="cp-new2" required></div><div id="cp-error" class="error"></div><button type="submit" class="btn btn-full">Изменить</button></form></div>
-<div id="screen-change-pin" class="screen"><button class="back-btn" onclick="showScreen('profile')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Изменить PIN</h2><form class="form" onsubmit="handleChangePin(event)"><div class="input-group"><label>Текущий PIN</label><input type="password" id="cpi-current" maxlength="6" required></div><div class="input-group"><label>Новый PIN</label><input type="password" id="cpi-new" maxlength="6" required></div><div class="input-group"><label>Повтор</label><input type="password" id="cpi-new2" maxlength="6" required></div><div id="cpi-error" class="error"></div><button type="submit" class="btn btn-full">Изменить</button></form></div>
-<div id="screen-tap" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">Tap AGS</h2><p style="text-align:center;color:#666;font-size:13px;margin-bottom:14px" id="tap-reward-text">1 нажатие = +0.2 AGS</p><div class="tap-container"><div class="tap-counter">Сегодня: <strong id="tap-count">0</strong> <span id="tap-limit-display">/ 10000</span></div><button class="tap-btn" id="tap-btn" onclick="handleTap(event)">TAP</button><div class="tap-earned">Заработано: <span id="tap-earned">0</span> AGS</div></div></div>
-<div id="screen-public-profile" class="screen"><button class="back-btn" onclick="showScreen('main')">Назад</button><div id="public-profile-content"></div></div>
-<div id="screen-tx-detail" class="screen"><button class="back-btn" onclick="showScreen('history')">Назад</button><h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Детали</h2><div id="tx-detail-content"></div></div>
-<div class="bottom-nav" id="bottom-nav" style="display:none"><div class="nav-item active" data-nav="main" onclick="navTo('main')"><div class="nav-icon">◉</div><div>Главная</div></div><div class="nav-item" data-nav="transfer" onclick="navTo('transfer')"><div class="nav-icon">↑</div><div>Переводы</div></div><div class="nav-item" data-nav="history" onclick="navTo('history')"><div class="nav-icon">≡</div><div>История</div></div><div class="nav-item" data-nav="profile" onclick="navTo('profile')"><div class="nav-icon">◐</div><div>Профиль</div></div></div>
-<div class="modal-overlay" id="modal"><div class="modal"><div class="modal-title" id="modal-title"></div><div class="modal-body" id="modal-body"></div><div class="modal-actions" id="modal-actions"></div></div></div>
-<div class="toast" id="toast"></div>
+<div class="app">
+    <!-- ЭКРАН ВХОДА -->
+    <div id="screen-login" class="screen active">
+        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
+        <form class="form" onsubmit="handleLogin(event)">
+            <div class="input-group"><label>Username</label><input type="text" id="login-username" placeholder="@username" required></div>
+            <div class="input-group"><label>Пароль</label><input type="password" id="login-password" required></div>
+            <div id="login-error" class="error"></div>
+            <button type="submit" class="btn">Войти</button>
+        </form>
+        <div style="text-align:center;margin-top:20px">
+            <a href="#" onclick="showScreen('register')">Создать аккаунт</a>
+        </div>
+    </div>
+
+    <!-- ЭКРАН РЕГИСТРАЦИИ -->
+    <div id="screen-register" class="screen">
+        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
+        <h2 style="text-align:center;margin-bottom:20px">Регистрация</h2>
+        <form class="form" onsubmit="handleRegister(event)">
+            <div class="input-group"><label>Username (5-12 симв.)</label><input type="text" id="reg-username" required></div>
+            <div class="input-group"><label>Пароль</label><input type="password" id="reg-pass" required></div>
+            <div class="input-group"><label>Повтор пароля</label><input type="password" id="reg-pass2" required></div>
+            <div id="reg-error" class="error"></div>
+            <button type="submit" class="btn">Создать</button>
+        </form>
+        <div style="text-align:center;margin-top:20px">
+            <a href="#" onclick="showScreen('login')">Назад ко входу</a>
+        </div>
+    </div>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <div id="screen-main" class="screen">
+        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
+        <div class="balance-section">
+            <div style="font-size:12px;color:#666;text-transform:uppercase">Ваш баланс</div>
+            <div class="balance-amount"><span id="main-balance">0</span> AGS</div>
+            <div style="font-size:14px;color:#666;margin-top:5px">≈ $<span id="main-usd">0.00</span></div>
+        </div>
+        
+        <div style="text-align:center;margin-bottom:30px">
+            <button class="tap-btn" onclick="handleTap()">TAP TO EARN</button>
+            <div id="tap-info" style="font-size:12px;color:#666">Нажми, чтобы заработать AGS</div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="showScreen('main')">🏠 Главная</div>
+            <div class="nav-item" onclick="alert('Переводы скоро!')">💸 Перевод</div>
+            <div class="nav-item" onclick="handleLogout()">🚪 Выход</div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
 </div>
 
 <script>
-// === КОНФИГУРАЦИЯ SUPABASE ===
-const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co'; // Вставь сюда свой URL
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0eHJiY2Z4a2N1bXZlZGl2dXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNDE5NTgsImV4cCI6MjEwNDgxNzk1OH0.VMylla6vcw-9twflANYUEsicbbaDBKDsWPaTGm22MrI'; // Вставь сюда свой ANON KEY
+// === 1. НАСТРОЙКИ SUPABASE (ВСТАВЬ СВОИ ДАННЫЕ СЮДА) ===
+const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co '; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0eHJiY2Z4a2N1bXZlZGl2dXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNDE5NTgsImV4cCI6MjEwNDgxNzk1OH0.VMylla6vcw-9twflANYUEsicbbaDBKDsWPaTGm22MrI'; 
+
+// Инициализация клиента
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let currentWallet = null;
 
-// === УТИЛИТЫ ===
-function hash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return 'h_'+Math.abs(h).toString(36)+'_'+s.length}
-function generateRecoveryCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='';for(let i=0;i<32;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
-function generateTxId(){const c='0123456789ABCDEF';let id='AEG-';for(let i=0;i<8;i++)id+=c[Math.floor(Math.random()*c.length)];return id}
-function formatAGS(n){return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
-function formatUSD(a){return '$'+(a/100).toFixed(2)}
-function formatDate(ts){const d=new Date(ts);const t=d.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});const today=new Date();if(d.toDateString()===today.toDateString())return 'Сегодня, '+t;return d.toLocaleDateString('ru')+', '+t}
-function validateUsername(u){if(!u||u.length<5||u.length>12)return '5–12 символов';if(!/^[a-zA-Z0-9_]+$/.test(u))return 'Только латиница, цифры и _';return null}
-function isSacredUsername(u){return u.length>=3&&u.length<=4&&/^[a-zA-Z]+$/.test(u)}
-function classifyUsername(u){if(isSacredUsername(u))return{category:'sacred',basePrice:500000};const len=u.length;let score=0;if(len===5)score+=100;else if(len===6)score+=80;else score+=40;if(/^[a-zA-Z]+$/.test(u))score+=50;if(score>=150)return{category:'legendary',basePrice:100000};if(score>=100)return{category:'epic',basePrice:20000};if(score>=50)return{category:'rare',basePrice:5000};return{category:'common',basePrice:1000}}
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
-function showModal(title,body,actions){document.getElementById('modal-title').textContent=title;document.getElementById('modal-body').innerHTML=body;const act=document.getElementById('modal-actions');act.innerHTML='';actions.forEach(a=>{const b=document.createElement('button');b.className='btn '+(a.outline?'btn-outline':'');b.textContent=a.text;b.onclick=()=>{hideModal();a.onClick()};act.appendChild(b)});document.getElementById('modal').classList.add('show')}
-function hideModal(){document.getElementById('modal').classList.remove('show')}
-function showError(id,m){const e=document.getElementById(id);e.textContent=m;e.classList.add('show')}
-function clearError(id){document.getElementById(id).classList.remove('show')}
+// === 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
 
-// === НАВИГАЦИЯ ===
-const navScreens = ['main','transfer','history','profile'];
+function showError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+}
+
+function clearError(id) {
+    document.getElementById(id).classList.remove('show');
+}
+
+// Простое хеширование для MVP (в реальном банке нужен bcrypt)
+function hash(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+        h = ((h << 5) - h) + str.charCodeAt(i);
+        h |= 0;
+    }
+    return 'h_' + Math.abs(h).toString(36);
+}
+
 function showScreen(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  document.getElementById('bottom-nav').style.display = (currentUser && navScreens.includes(name)) ? 'flex' : 'none';
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.nav === name));
-  if (name === 'main') refreshMain();
-  if (name === 'history') refreshHistory();
-  if (name === 'profile') refreshProfile();
-  if (name === 'transfer') { refreshTransferScreen(); setTransferMode('transfer'); }
-  if (name === 'receive') refreshReceive();
-  if (name === 'tap') refreshTap();
-  if (name === 'appearance') refreshAppearance();
-  if (name === 'stickers') refreshStickers();
-  if (name === 'buy-username') refreshBuyUsername();
-  if (name === 'username-market') refreshMarket();
-  if (name === 'change-username') refreshChangeUsername();
-  if (name === 'founder-dashboard') refreshFounderDashboard();
-  if (name === 'leaderboard') refreshLeaderboard();
-  window.scrollTo(0,0);
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    if (name === 'main') refreshMain();
 }
-function navTo(n){showScreen(n)}
 
-// === АВТОРИЗАЦИЯ И ДАННЫЕ ===
-async function loadUserData(username) {
-    const { data: user, error } = await supabase.from('users').select('*').eq('username', username).single();
-    if (error || !user) return null;
+// === 3. АВТОРИЗАЦИЯ ===
+async function handleLogin(e) {
+    e.preventDefault();
+    clearError('login-error');
     
-    const { data: wallet } = await supabase.from('wallets').select('*').eq('user_id', user.id).single();
+    const username = document.getElementById('login-username').value.trim().replace('@', '');
+    const password = document.getElementById('login-password').value;
+
+    // 1. Ищем пользователя в базе
+    const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', username)
+        .single();
+
+    if (error || !user) {
+        showError('login-error', 'Пользователь не найден');
+        return;
+    }
+
+    // 2. Проверяем пароль
+    if (user.password_hash !== hash(password)) {
+        showError('login-error', 'Неверный пароль');
+        return;
+    }
+
+    // 3. Успех
     currentUser = user;
-    currentWallet = wallet;
-    
-    // Подписка на обновление баланса в реальном времени
-    supabase.channel('wallet-channel')
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'wallets', filter: `user_id=eq.${user.id}` }, payload => {
-            currentWallet = payload.new;
-            refreshMain();
-        })
-        .subscribe();
-        
-    return user;
+    toast('Добро пожаловать, @' + username + '!');
+    showScreen('main');
 }
 
-async function handleLogin(e){
-  e.preventDefault(); clearError('login-error');
-  const username = document.getElementById('login-username').value.trim();
-  const password = document.getElementById('login-password').value;
-  
-  const user = await loadUserData(username);
-  if(!user){showError('login-error','Пользователь не найден');return}
-  if(user.password_hash !== hash(password)){showError('login-error','Неверный пароль');return}
-  
-  await supabase.from('users').update({last_active_at: new Date()}).eq('id', user.id);
-  toast('Добро пожаловать!');
-  showScreen('main');
-}
+async function handleRegister(e) {
+    e.preventDefault();
+    clearError('reg-error');
 
-async function handleRegister(e){
-  e.preventDefault(); clearError('reg-error');
-  const username = document.getElementById('reg-username').value.trim().toLowerCase();
-  const pass = document.getElementById('reg-password').value;
-  
-  if(validateUsername(username)){showError('reg-error',validateUsername(username));return}
-  if(pass.length<4){showError('reg-error','Минимум 4 символа');return}
-  if(pass !== document.getElementById('reg-password2').value){showError('reg-error','Пароли не совпадают');return}
-  
-  // Проверка занятости
-  const { data: existing } = await supabase.from('users').select('id').eq('username', username).single();
-  if(existing){showError('reg-error','Уже занят');return}
-  if(isSacredUsername(username)){showError('reg-error','Только для Founder');return}
+    const username = document.getElementById('reg-username').value.trim().toLowerCase();
+    const pass = document.getElementById('reg-pass').value;
+    const pass2 = document.getElementById('reg-pass2').value;
 
-  const recovery = generateRecoveryCode();
-  const { category } = classifyUsername(username);
-  
-  // Создаем пользователя
-  const { data: newUser, error: userErr } = await supabase.from('users').insert([{
-    username, password_hash: hash(pass), recovery_code_hash: hash(recovery),
-    customizations: {}, level: 1, xp: 0
-  }]).select().single();
-  
-  if(userErr) { showError('reg-error', 'Ошибка регистрации'); return; }
-  
-  // Создаем кошелек
-  await supabase.from('wallets').insert([{ user_id: newUser.id, balance: 2000 }]);
-  
-  // Создаем username
-  await supabase.from('usernames').insert([{
-    user_id: newUser.id, username, is_primary: true, category, 
-    history: [{userId: newUser.id, username, date: new Date()}]
-  }]);
-  
-  document.getElementById('recovery-code-display').textContent = recovery;
-  showScreen('recovery-show');
-}
+    if (username.length < 5 || username.length > 12) {
+        showError('reg-error', 'Username должен быть от 5 до 12 символов');
+        return;
+    }
+    if (pass !== pass2) {
+        showError('reg-error', 'Пароли не совпадают');
+        return;
+    }
 
-function copyRecoveryCode(){navigator.clipboard.writeText(document.getElementById('recovery-code-display').textContent).then(()=>toast('Скопировано'))}
-function finishRegistration(){showScreen('login')} // В реальной версии тут был бы автологин
+    // 1. Проверяем, свободен ли ник
+    const { data: existing } = await supabase.from('users').select('id').eq('username', username).single();
+    if (existing) {
+        showError('reg-error', 'Этот username уже занят');
+        return;
+    }
 
-async function handleRecovery(e){
-  e.preventDefault(); clearError('rec-error');
-  const username = document.getElementById('rec-username').value.trim();
-  const code = document.getElementById('rec-code').value.trim();
-  const np = document.getElementById('rec-newpass').value;
-  
-  const { data: user } = await supabase.from('users').select('*').eq('username', username).single();
-  if(!user){showError('rec-error','Не найден');return}
-  if(user.recovery_code_hash !== hash(code)){showError('rec-error','Неверный код');return}
-  if(np.length<4||np!==document.getElementById('rec-newpass2').value){showError('rec-error','Ошибка пароля');return}
-  
-  await supabase.from('users').update({password_hash: hash(np)}).eq('id', user.id);
-  toast('Пароль изменён'); showScreen('login');
-}
+    // 2. Создаем пользователя
+    const { data: newUser, error: userErr } = await supabase
+        .from('users')
+        .insert([{ username: username, password_hash: hash(pass), level: 1 }])
+        .select()
+        .single();
 
-function handleLogout(){showModal('Выйти?','Выйти из аккаунта?',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выйти',onClick:()=>{currentUser=null;currentWallet=null;showScreen('login')}}])}
+    if (userErr) {
+        showError('reg-error', 'Ошибка регистрации: ' + userErr.message);
+        return;
+    }
 
-// === ОСНОВНОЙ ЭКРАН ===
-async function refreshMain(){
-  if(!currentUser){showScreen('login');return}
-  
-  // Перезагружаем баланс из базы, чтобы быть уверенным
-  const { data: wallet } = await supabase.from('wallets').select('*').eq('user_id', currentUser.id).single();
-  currentWallet = wallet;
-  
-  const bal = currentUser.hide_balance ? '••••' : formatAGS(wallet ? wallet.balance : 0);
-  document.getElementById('main-balance').textContent = bal;
-  document.getElementById('main-balance-usd').textContent = currentUser.hide_balance ? '' : '≈ '+formatUSD(wallet?wallet.balance:0);
-  document.getElementById('founder-dashboard-btn').style.display = currentUser.is_founder?'block':'none';
+    // 3. Создаем кошелек с бонусом 2000 AGS
+    await supabase.from('wallets').insert([{ user_id: newUser.id, balance: 2000 }]);
 
-  // Загрузка последних транзакций
-  const { data: txs } = await supabase.from('transactions')
-    .select('*, sender_username:sender_username_id(username), receiver_username:receiver_username_id(username)')
-    .or(`sender_username_id.eq.${currentUser.id},receiver_username_id.eq.${currentUser.id}`)
-    .order('created_at', { ascending: false })
-    .limit(5);
-    
-  document.getElementById('main-recent-tx').innerHTML = txs && txs.length ? txs.map(t=>renderTxItem(t)).join('') : '<div class="empty-state">Нет операций</div>';
-}
+    // 4. Создаем запись username
+    await supabase.from('usernames').insert([{ user_id: newUser.id, username: username, is_primary: true, category: 'common' }]);
 
-function founderBadgeHtml(u){return u?.is_founder?'<span class="founder-badge">◆ FOUNDER</span>':''}
-function renderTxItem(tx){
-  const isOut = tx.sender_username?.username === getPrimaryUsername(currentUser.id)?.username; // Упрощенная проверка
-  const other = isOut ? tx.receiver_username : tx.sender_username;
-  return `<div class="tx-item" onclick="showTxDetail('${tx.id}')"><div class="tx-info"><div class="tx-title">${tx.is_gift?'🎁 ':''}${isOut?'Перевод ':'Получение от '}@${other.username}</div><div class="tx-sub">${formatDate(tx.created_at)}</div></div><div class="tx-amount ${isOut?'negative':'positive'}">${isOut?'−':'+'}${formatAGS(tx.amount)} AGS</div></div>`;
-}
-
-// === ПЕРЕВОДЫ ===
-let transferMode = 'transfer';
-function setTransferMode(mode) {
-  transferMode = mode;
-  document.getElementById('mode-transfer').classList.toggle('active', mode==='transfer');
-  document.getElementById('mode-gift').classList.toggle('active', mode==='gift');
-  document.getElementById('gift-fields').style.display = mode==='gift' ? 'block' : 'none';
-}
-
-let pendingTransfer=null;
-function refreshTransferScreen(){
-  if(!currentUser) return;
-  // Загрузка username'ов пользователя
-  supabase.from('usernames').select('*').eq('user_id', currentUser.id).then(({data})=>{
-     document.getElementById('tr-from-username').innerHTML = data.map(u=>`<option value="${u.id}" ${u.is_primary?'selected':''}>@${u.username}</option>`).join('');
-  });
-}
-
-async function handleTransferPreview(e){
-  e.preventDefault(); clearError('tr-error');
-  const toRaw=document.getElementById('tr-to').value.trim();
-  const amount=parseInt(document.getElementById('tr-amount').value);
-  if(!toRaw){showError('tr-error','Укажите получателя');return}
-  const toUsername=toRaw.replace('@','').toLowerCase();
-  
-  const { data: fromUn } = await supabase.from('usernames').select('*').eq('id', document.getElementById('tr-from-username').value).single();
-  if(fromUn.username.toLowerCase()===toUsername){showError('tr-error','Нельзя себе');return}
-  
-  const { data: toUn } = await supabase.from('usernames').select('*, users(is_founder)').eq('username', toUsername).single();
-  if(!toUn){showError('tr-error','Не найден');return}
-  if(amount<50){showError('tr-error','Минимум 50');return}
-  
-  let fee=0; if(!currentUser.is_founder&&amount>=1000) fee=Math.floor(amount*0.04);
-  if(currentWallet.balance<amount+fee){showError('tr-error','Недостаточно средств');return}
-
-  pendingTransfer={fromUnId:fromUn.id,toUnId:toUn.id,amount,fee,comment:document.getElementById('tr-comment').value.trim(),isGift:transferMode==='gift'};
-  document.getElementById('tc-summary').innerHTML=`
-    <div class="summary-row"><span class="label">Тип</span><span>${pendingTransfer.isGift?'🎁 Подарок':'Обычный перевод'}</span></div>
-    <div class="summary-row"><span class="label">Кому</span><span>@${toUn.username}</span></div>
-    <div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(amount)} AGS</span></div>
-    <div class="summary-row"><span class="label">Комиссия</span><span>${fee>0?formatAGS(fee)+' AGS':'0'}</span></div>
-    <div class="summary-row total"><span class="label">Итого</span><span>${formatAGS(amount+fee)} AGS</span></div>`;
-  showScreen('transfer-confirm');
-}
-
-async function handleTransferConfirm(){
-  if(!pendingTransfer) return;
-  if(pendingTransfer.amount>=5000){
-    // Здесь должна быть проверка PIN, но для MVP упростим
-    executeTransfer(); 
-    return;
-  }
-  executeTransfer();
-}
-
-async function executeTransfer(){
-  if(!pendingTransfer||!currentUser) return;
-  const {fromUnId,toUnId,amount,fee,comment,isGift}=pendingTransfer;
-  
-  // Транзакция в базе (RPC или последовательные запросы)
-  // 1. Списать у отправителя
-  await supabase.from('wallets').update({balance: currentWallet.balance - (amount + fee)}).eq('user_id', currentUser.id);
-  
-  // 2. Начислить получателю
-  const { data: receiver } = await supabase.from('usernames').select('user_id').eq('id', toUnId).single();
-  const { data: rWallet } = await supabase.from('wallets').select('balance').eq('user_id', receiver.user_id).single();
-  await supabase.from('wallets').update({balance: rWallet.balance + amount}).eq('user_id', receiver.user_id);
-  
-  // 3. Комиссия Founder'у
-  if(fee>0){
-      const { data: founder } = await supabase.from('users').select('id').eq('is_founder', true).single();
-      if(founder){
-          const { data: fWallet } = await supabase.from('wallets').select('balance').eq('user_id', founder.id).single();
-          await supabase.from('wallets').update({balance: fWallet.balance + Math.floor(fee*0.1)}).eq('user_id', founder.id);
-      }
-  }
-  
-  // 4. Запись транзакции
-  await supabase.from('transactions').insert([{
-    sender_username_id: fromUnId, receiver_username_id: toUnId, amount, fee, 
-    comment, is_gift: isGift, created_at: new Date()
-  }]);
-  
-  pendingTransfer=null;
-  toast('Перевод выполнен!');
-  showScreen('main');
-}
-
-// === ОСТАЛЬНЫЕ ФУНКЦИИ (TAP, PROFILE, MARKET) ===
-// Для краткости я оставил логику похожей на предыдущую, но с вызовами supabase
-// В реальном проекте нужно перенести всю логику (тапы, маркет, аукционы) на supabase
-
-function refreshReceive(){
-    if(!currentUser) return;
-    supabase.from('usernames').select('username').eq('user_id', currentUser.id).eq('is_primary', true).single().then(({data})=>{
-        if(data) {
-            document.getElementById('receive-username').textContent = '@'+data.username;
-            document.getElementById('qr-code-container').innerHTML = '';
-            new QRCode(document.getElementById('qr-code-container'), { text: 'aegis://'+data.username, width: 180, height: 180 });
-        }
-    });
-}
-
-async function handleTap(e){
-    if(!currentUser) return;
-    const today = new Date().toISOString().split('T')[0];
-    const reward = currentUser.is_founder ? 53 : 0.2;
-    
-    // Проверка лимита тапов
-    const { data: tapData } = await supabase.from('taps').select('*').eq('user_id', currentUser.id).eq('date', today).single();
-    if(!currentUser.is_founder && tapData && tapData.taps_count >= 10000) { toast('Лимит'); return; }
-    
-    const newCount = (tapData?.taps_count || 0) + 1;
-    await supabase.from('taps').upsert({ user_id: currentUser.id, date: today, taps_count: newCount });
-    
-    // Начисление
-    await supabase.from('wallets').update({ balance: currentWallet.balance + reward }).eq('user_id', currentUser.id);
-    
-    const btn=document.getElementById('tap-btn');
-    btn.classList.remove('pulse'); void btn.offsetWidth; btn.classList.add('pulse');
-    refreshTap();
-}
-
-function refreshTap(){
-    if(!currentUser) return;
-    const today = new Date().toISOString().split('T')[0];
-    supabase.from('taps').select('taps_count').eq('user_id', currentUser.id).eq('date', today).single().then(({data})=>{
-        const count = data?.taps_count || 0;
-        const reward = currentUser.is_founder ? 53 : 0.2;
-        document.getElementById('tap-count').textContent = count;
-        document.getElementById('tap-earned').textContent = (count * reward).toFixed(currentUser.is_founder ? 0 : 1);
-        document.getElementById('tap-limit-display').textContent = currentUser.is_founder ? '(∞)' : '/ 10000';
-        document.getElementById('tap-btn').disabled = !currentUser.is_founder && count >= 10000;
-    });
-}
-
-// Инициализация
-window.onload = () => {
-    // Если есть сохраненная сессия, можно попробовать восстановить
-    // Но для MVP просто показываем логин
+    toast('Аккаунт создан! Теперь войдите.');
     showScreen('login');
-};
+}
+
+function handleLogout() {
+    currentUser = null;
+    currentWallet = null;
+    showScreen('login');
+}
+
+// === 4. ОСНОВНОЙ ФУНКЦИОНАЛ ===
+async function refreshMain() {
+    if (!currentUser) return;
+
+    // Загружаем актуальный баланс из базы
+    const { data: wallet } = await supabase
+        .from('wallets')
+        .select('balance')
+        .eq('user_id', currentUser.id)
+        .single();
+
+    if (wallet) {
+        currentWallet = wallet;
+        document.getElementById('main-balance').textContent = Math.floor(wallet.balance).toLocaleString('ru-RU');
+        document.getElementById('main-usd').textContent = (wallet.balance / 100).toFixed(2);
+    }
+}
+
+async function handleTap() {
+    if (!currentUser || !currentWallet) return;
+
+    const reward = currentUser.is_founder ? 53 : 0.2;
+    const newBalance = parseFloat((currentWallet.balance + reward).toFixed(2));
+
+    // Обновляем баланс в базе
+    const { error } = await supabase
+        .from('wallets')
+        .update({ balance: newBalance })
+        .eq('user_id', currentUser.id);
+
+    if (!error) {
+        currentWallet.balance = newBalance;
+        refreshMain(); // Обновляем экран
+        
+        // Анимация кнопки
+        const btn = document.querySelector('.tap-btn');
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => btn.style.transform = 'scale(1)', 100);
+    } else {
+        toast('Ошибка сети');
+    }
+}
+
+// Старт приложения
+showScreen('login');
 </script>
 </body>
 </html>
