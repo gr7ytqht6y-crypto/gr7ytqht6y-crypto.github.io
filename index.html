@@ -3,268 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>AEGIS Bank</title>
-<!-- Подключаем Supabase и QR Code -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<title>AEGIS Test</title>
 <style>
-/* === СТИЛИ (CSS) === */
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#000;min-height:100vh;display:flex;justify-content:center}
-.app{width:100%;max-width:420px;min-height:100vh;position:relative;padding-bottom:80px}
-.screen{display:none;padding:20px 16px}
-.screen.active{display:block;animation:fadeIn .25s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.logo{text-align:center;font-size:26px;font-weight:800;letter-spacing:1.5px;margin-bottom:26px;padding-top:8px}
-.logo-circle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:2px solid #000;border-radius:50%;margin-right:5px;font-size:17px}
-.btn{padding:13px 15px;background:#000;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;border-radius:6px;font-family:inherit;width:100%}
-.btn:hover{opacity:.88}
-.form{display:flex;flex-direction:column;gap:12px}
-.input-group{display:flex;flex-direction:column;gap:5px}
-.input-group label{font-size:12px;font-weight:700;text-transform:uppercase}
-.input-group input{padding:12px;border:1.5px solid #000;font-size:16px;border-radius:6px}
-.error{color:#000;font-size:13px;padding:10px;border:1.5px solid #000;background:#f5f5f5;display:none;margin-top:10px}
-.error.show{display:block}
-.balance-section{text-align:center;padding:30px 0;border-bottom:1.5px solid #000;margin-bottom:20px}
-.balance-amount{font-size:48px;font-weight:800}
-.tap-btn{width:180px;height:180px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;cursor:pointer;margin:20px auto;display:block}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 20px;border-radius:6px;opacity:0;transition:opacity 0.3s;z-index:999}
-.toast.show{opacity:1}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:10px}
-.nav-item{font-size:12px;text-align:center;cursor:pointer}
+body{font-family:sans-serif;background:#fff;color:#000;display:flex;justify-content:center;padding:20px}
+.app{width:100%;max-width:400px}
+.screen{display:none}
+.screen.active{display:block}
+.btn{width:100%;padding:15px;background:#000;color:#fff;border:none;border-radius:8px;font-size:16px;margin-top:10px}
+input{width:100%;padding:12px;margin-bottom:10px;border:1px solid #ccc;border-radius:6px;font-size:16px}
+.error{color:red;margin-top:10px}
 </style>
 </head>
 <body>
-
 <div class="app">
-    <!-- ЭКРАН ВХОДА -->
-    <div id="screen-login" class="screen active">
-        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
-        <form class="form" onsubmit="handleLogin(event)">
-            <div class="input-group"><label>Username</label><input type="text" id="login-username" placeholder="@username" required></div>
-            <div class="input-group"><label>Пароль</label><input type="password" id="login-password" required></div>
-            <div id="login-error" class="error"></div>
-            <button type="submit" class="btn">Войти</button>
-        </form>
-        <div style="text-align:center;margin-top:20px">
-            <a href="#" onclick="showScreen('register')">Создать аккаунт</a>
-        </div>
+    <div id="login-screen" class="screen active">
+        <h2>Вход (Тест)</h2>
+        <input type="text" id="l-user" placeholder="Username">
+        <input type="password" id="l-pass" placeholder="Пароль">
+        <div id="l-err" class="error"></div>
+        <button class="btn" onclick="doLogin()">Войти</button>
+        <button class="btn" style="background:#fff;color:#000;border:1px solid #000" onclick="show('reg')">Регистрация</button>
     </div>
 
-    <!-- ЭКРАН РЕГИСТРАЦИИ -->
-    <div id="screen-register" class="screen">
-        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
-        <h2 style="text-align:center;margin-bottom:20px">Регистрация</h2>
-        <form class="form" onsubmit="handleRegister(event)">
-            <div class="input-group"><label>Username (5-12 симв.)</label><input type="text" id="reg-username" required></div>
-            <div class="input-group"><label>Пароль</label><input type="password" id="reg-pass" required></div>
-            <div class="input-group"><label>Повтор пароля</label><input type="password" id="reg-pass2" required></div>
-            <div id="reg-error" class="error"></div>
-            <button type="submit" class="btn">Создать</button>
-        </form>
-        <div style="text-align:center;margin-top:20px">
-            <a href="#" onclick="showScreen('login')">Назад ко входу</a>
-        </div>
+    <div id="reg-screen" class="screen">
+        <h2>Регистрация (Тест)</h2>
+        <input type="text" id="r-user" placeholder="Username">
+        <input type="password" id="r-pass" placeholder="Пароль">
+        <div id="r-err" class="error"></div>
+        <button class="btn" onclick="doReg()">Создать</button>
+        <button class="btn" style="background:#fff;color:#000;border:1px solid #000" onclick="show('login')">Назад</button>
     </div>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
-    <div id="screen-main" class="screen">
-        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
-        <div class="balance-section">
-            <div style="font-size:12px;color:#666;text-transform:uppercase">Ваш баланс</div>
-            <div class="balance-amount"><span id="main-balance">0</span> AGS</div>
-            <div style="font-size:14px;color:#666;margin-top:5px">≈ $<span id="main-usd">0.00</span></div>
-        </div>
-        
-        <div style="text-align:center;margin-bottom:30px">
-            <button class="tap-btn" onclick="handleTap()">TAP TO EARN</button>
-            <div id="tap-info" style="font-size:12px;color:#666">Нажми, чтобы заработать AGS</div>
-        </div>
-
-        <div class="bottom-nav">
-            <div class="nav-item" onclick="showScreen('main')">🏠 Главная</div>
-            <div class="nav-item" onclick="alert('Переводы скоро!')">💸 Перевод</div>
-            <div class="nav-item" onclick="handleLogout()">🚪 Выход</div>
-        </div>
+    <div id="main-screen" class="screen">
+        <h2>Привет, <span id="u-name"></span>!</h2>
+        <p>Баланс: <b id="u-bal">2000</b> AGS</p>
+        <button class="btn" onclick="tap()">TAP (+0.2)</button>
+        <button class="btn" style="background:#fff;color:#000;border:1px solid #000" onclick="logout()">Выйти</button>
     </div>
-    
-    <div id="toast" class="toast"></div>
 </div>
 
 <script>
-// === 1. НАСТРОЙКИ SUPABASE (ВСТАВЬ СВОИ ДАННЫЕ СЮДА) ===
-const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co'; 
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV0eHJiY2Z4a2N1bXZlZGl2dXNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNDE5NTgsImV4cCI6MjEwNDgxNzk1OH0.VMylla6vcw-9twflANYUEsicbbaDBKDsWPaTGm22MrI'; 
-
-// Инициализация клиента
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
+// Простая эмуляция для проверки работы интерфейса на iPhone
+let users = JSON.parse(localStorage.getItem('aegis_users')) || {};
 let currentUser = null;
-let currentWallet = null;
 
-// === 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
-function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function showError(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.classList.add('show');
-}
-
-function clearError(id) {
-    document.getElementById(id).classList.remove('show');
-}
-
-// Простое хеширование для MVP (в реальном банке нужен bcrypt)
-function hash(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-        h = ((h << 5) - h) + str.charCodeAt(i);
-        h |= 0;
-    }
-    return 'h_' + Math.abs(h).toString(36);
-}
-
-function showScreen(name) {
+function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + name).classList.add('active');
-    if (name === 'main') refreshMain();
+    document.getElementById(id + '-screen').classList.add('active');
 }
 
-// === 3. АВТОРИЗАЦИЯ ===
-async function handleLogin(e) {
-    e.preventDefault();
-    clearError('login-error');
+function doReg() {
+    const u = document.getElementById('r-user').value;
+    const p = document.getElementById('r-pass').value;
+    if(u.length < 5) { document.getElementById('r-err').innerText = 'Минимум 5 символов'; return; }
+    if(users[u]) { document.getElementById('r-err').innerText = 'Занят'; return; }
     
-    const username = document.getElementById('login-username').value.trim().replace('@', '');
-    const password = document.getElementById('login-password').value;
-
-    // 1. Ищем пользователя в базе
-    const { data: user, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('username', username)
-        .single();
-
-    if (error || !user) {
-        showError('login-error', 'Пользователь не найден');
-        return;
-    }
-
-    // 2. Проверяем пароль
-    if (user.password_hash !== hash(password)) {
-        showError('login-error', 'Неверный пароль');
-        return;
-    }
-
-    // 3. Успех
-    currentUser = user;
-    toast('Добро пожаловать, @' + username + '!');
-    showScreen('main');
+    users[u] = { pass: p, balance: 2000 };
+    localStorage.setItem('aegis_users', JSON.stringify(users));
+    alert('Создан! Теперь войди.');
+    show('login');
 }
 
-async function handleRegister(e) {
-    e.preventDefault();
-    clearError('reg-error');
-
-    const username = document.getElementById('reg-username').value.trim().toLowerCase();
-    const pass = document.getElementById('reg-pass').value;
-    const pass2 = document.getElementById('reg-pass2').value;
-
-    if (username.length < 5 || username.length > 12) {
-        showError('reg-error', 'Username должен быть от 5 до 12 символов');
-        return;
-    }
-    if (pass !== pass2) {
-        showError('reg-error', 'Пароли не совпадают');
-        return;
-    }
-
-    // 1. Проверяем, свободен ли ник
-    const { data: existing } = await supabase.from('users').select('id').eq('username', username).single();
-    if (existing) {
-        showError('reg-error', 'Этот username уже занят');
-        return;
-    }
-
-    // 2. Создаем пользователя
-    const { data: newUser, error: userErr } = await supabase
-        .from('users')
-        .insert([{ username: username, password_hash: hash(pass), level: 1 }])
-        .select()
-        .single();
-
-    if (userErr) {
-        showError('reg-error', 'Ошибка регистрации: ' + userErr.message);
-        return;
-    }
-
-    // 3. Создаем кошелек с бонусом 2000 AGS
-    await supabase.from('wallets').insert([{ user_id: newUser.id, balance: 2000 }]);
-
-    // 4. Создаем запись username
-    await supabase.from('usernames').insert([{ user_id: newUser.id, username: username, is_primary: true, category: 'common' }]);
-
-    toast('Аккаунт создан! Теперь войдите.');
-    showScreen('login');
-}
-
-function handleLogout() {
-    currentUser = null;
-    currentWallet = null;
-    showScreen('login');
-}
-
-// === 4. ОСНОВНОЙ ФУНКЦИОНАЛ ===
-async function refreshMain() {
-    if (!currentUser) return;
-
-    // Загружаем актуальный баланс из базы
-    const { data: wallet } = await supabase
-        .from('wallets')
-        .select('balance')
-        .eq('user_id', currentUser.id)
-        .single();
-
-    if (wallet) {
-        currentWallet = wallet;
-        document.getElementById('main-balance').textContent = Math.floor(wallet.balance).toLocaleString('ru-RU');
-        document.getElementById('main-usd').textContent = (wallet.balance / 100).toFixed(2);
-    }
-}
-
-async function handleTap() {
-    if (!currentUser || !currentWallet) return;
-
-    const reward = currentUser.is_founder ? 53 : 0.2;
-    const newBalance = parseFloat((currentWallet.balance + reward).toFixed(2));
-
-    // Обновляем баланс в базе
-    const { error } = await supabase
-        .from('wallets')
-        .update({ balance: newBalance })
-        .eq('user_id', currentUser.id);
-
-    if (!error) {
-        currentWallet.balance = newBalance;
-        refreshMain(); // Обновляем экран
-        
-        // Анимация кнопки
-        const btn = document.querySelector('.tap-btn');
-        btn.style.transform = 'scale(0.95)';
-        setTimeout(() => btn.style.transform = 'scale(1)', 100);
+function doLogin() {
+    const u = document.getElementById('l-user').value;
+    const p = document.getElementById('l-pass').value;
+    if(users[u] && users[u].pass === p) {
+        currentUser = u;
+        document.getElementById('u-name').innerText = u;
+        document.getElementById('u-bal').innerText = users[u].balance;
+        show('main');
     } else {
-        toast('Ошибка сети');
+        document.getElementById('l-err').innerText = 'Неверный логин/пароль';
     }
 }
 
-// Старт приложения
-showScreen('login');
+function tap() {
+    if(!currentUser) return;
+    users[currentUser].balance += 0.2;
+    localStorage.setItem('aegis_users', JSON.stringify(users));
+    document.getElementById('u-bal').innerText = users[currentUser].balance.toFixed(1);
+}
+
+function logout() {
+    currentUser = null;
+    show('login');
+}
 </script>
 </body>
 </html>
