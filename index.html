@@ -75,10 +75,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .tap-container{text-align:center;padding:14px 0}
 .tap-counter{font-size:13px;color:#666;margin-bottom:14px}
 .tap-counter strong{color:#000;font-size:15px}
-.tap-btn{width:170px;height:170px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(0,0,0,.14)}
-.tap-btn:active{transform:scale(.94)}
-.tap-btn:disabled{opacity:.4;cursor:not-allowed}
+.tap-btn{width:170px;height:170px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 5px 16px rgba(0,0,0,.14);transition:transform .08s ease;touch-action:manipulation;user-select:none}
+.tap-btn.pressed{transform:scale(.94)}
+.tap-btn.tap-btn-disabled{opacity:.4;cursor:not-allowed}
 .tap-earned{font-size:15px;font-weight:700;margin-top:14px}
+#tap-count,#tap-earned{display:inline-block;transition:transform .18s ease,color .18s ease}
+#tap-count.pulse,#tap-earned.pulse{animation:tapPulse .22s ease}
+@keyframes tapPulse{0%{transform:scale(1.22)}100%{transform:scale(1)}}
 .profile-header{text-align:center;padding:24px 16px 20px;margin-bottom:16px;border-radius:12px;position:relative;overflow:hidden;border:2px solid #000;background:#fff;color:#000}
 .profile-header.dark-mode{color:#fff}
 .profile-header.dark-mode .profile-date,.profile-header.dark-mode .profile-account-num,.profile-header.dark-mode .profile-status{color:#bbb}
@@ -185,6 +188,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .gift-amount{font-size:28px;font-weight:800}
 .gift-from{font-size:13px;opacity:.8;margin-top:6px}
 .gift-msg{font-size:14px;margin-top:8px;font-style:italic}
+.rarity-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;display:inline-block;text-transform:uppercase;letter-spacing:.5px}
+.rarity-common{background:#9e9e9e;color:#fff}
+.rarity-rare{background:#007bff;color:#fff}
+.rarity-epic{background:#af52de;color:#fff}
+.rarity-legendary{background:#ffcc00;color:#000}
+.rarity-mythic{background:#ff3b30;color:#fff}
+.rarity-divine{background:#000;color:#fff;box-shadow:0 0 0 1px #fff inset}
+.gift-shop-item{border:2px solid #ccc;padding:12px 6px 10px;text-align:center;border-radius:11px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center;gap:3px}
+.gift-shop-item:hover{background:#f7f7f7}
+.gift-shop-emoji{font-size:36px;line-height:1;margin-bottom:2px}
+.gift-shop-name{font-size:11.5px;font-weight:700}
+.gift-shop-price{font-size:11px;color:#666;font-weight:600;margin-bottom:2px}
+.my-gift-card{background:#fff;border:2px solid #ccc;border-radius:10px;padding:12px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.my-gift-emoji{font-size:34px;line-height:1}
 .lb-item{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid #eee;gap:12px}
 .lb-rank{font-weight:800;font-size:16px;width:28px;text-align:center}
 .lb-info{flex:1}
@@ -199,20 +216,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="app">
 <div id="screen-login" class="screen active">
 <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
-<form class="form" id="form-login">
+<form class="form" id="form-login" onsubmit="handleLogin(event); return false;">
 <div class="input-group"><label>Username</label><input type="text" id="login-username" placeholder="@username" autocomplete="username" required></div>
 <div class="input-group"><label>Пароль</label><input type="password" id="login-password" autocomplete="current-password" required></div>
 <div id="login-error" class="error"></div>
 <button type="submit" class="btn btn-full" id="btn-login">Войти</button>
 </form>
-<div class="link"><a href="#" id="go-register">Создать аккаунт</a></div>
-<div class="link"><a href="#" id="go-recovery">Забыли пароль?</a></div>
+<div class="link"><a onclick="showScreen('register')">Создать аккаунт</a></div>
+<div class="link"><a onclick="showScreen('recovery')">Забыли пароль?</a></div>
 </div>
 <div id="screen-register" class="screen">
 <button class="back-btn" onclick="showScreen('login')">Назад</button>
 <div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
 <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Создать аккаунт</h2>
-<form class="form" id="form-register">
+<form class="form" id="form-register" onsubmit="handleRegister(event); return false;">
 <div class="input-group"><label>Username</label><input type="text" id="reg-username" autocomplete="username" required><div class="hint">5–12 символов</div></div>
 <div class="input-group"><label>Пароль</label><input type="password" id="reg-password" autocomplete="new-password" required></div>
 <div class="input-group"><label>Повтор пароля</label><input type="password" id="reg-password2" autocomplete="new-password" required></div>
@@ -224,7 +241,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <button class="back-btn" onclick="showScreen('login')">Назад</button>
 <div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
 <h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Восстановление</h2>
-<form class="form" id="form-recovery">
+<form class="form" onsubmit="handleRecovery(event)">
 <div class="input-group"><label>Username</label><input type="text" id="rec-username" required></div>
 <div class="input-group"><label>Recovery Code</label><input type="text" id="rec-code" required></div>
 <div class="input-group"><label>Новый пароль</label><input type="password" id="rec-newpass" required></div>
@@ -293,7 +310,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <form class="form" onsubmit="handleTransferPreview(event)">
 <div class="input-group"><label>Отправить от</label><select id="tr-from-username"></select></div>
 <div class="input-group"><label>Кому</label><input type="text" id="tr-to" placeholder="@username" required></div>
-<div class="input-group"><label>Сумма</label><input type="number" id="tr-amount" min="50" step="1" required><div class="hint">Минимум 50 AGS · комиссия 4% с каждого перевода</div></div>
+<div class="input-group"><label>Сумма</label><input type="number" id="tr-amount" min="50" step="1" required><div class="hint">Минимум 50 AGS</div></div>
 <div id="gift-fields" style="display:none">
 <div class="input-group"><label>Смайлик подарка</label><input type="text" id="tr-gift-emoji" maxlength="4" placeholder="🎁" style="font-size:24px;text-align:center"></div>
 <div class="input-group"><label>Сообщение</label><input type="text" id="tr-gift-msg" maxlength="40" placeholder="С днём рождения!"></div>
@@ -313,7 +330,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div id="screen-pin" class="screen">
 <button class="back-btn" onclick="showScreen('transfer-confirm')">Назад</button>
 <h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">Введите PIN</h2>
-<p style="text-align:center;color:#666;font-size:13px;margin-bottom:8px">Для сумм от 1000 AGS</p>
+<p style="text-align:center;color:#666;font-size:13px;margin-bottom:8px">Для сумм от 5000 AGS</p>
 <div class="pin-display" id="pin-display"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div>
 <div id="pin-error" class="error" style="margin-bottom:12px"></div>
 <div class="pin-pad">
@@ -449,7 +466,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <p style="text-align:center;color:#666;font-size:13px;margin-bottom:14px" id="tap-reward-text">1 нажатие = +2 AGS</p>
 <div class="tap-container">
 <div class="tap-counter">Сегодня: <strong id="tap-count">0</strong> <span id="tap-limit-display">/ 10000</span></div>
-<button class="tap-btn" id="tap-btn" onclick="handleTap(event)">TAP</button>
+<button class="tap-btn" id="tap-btn" onclick="handleTap()" onpointerdown="tapPressVisual(true)" onpointerup="tapPressVisual(false)" onpointercancel="tapPressVisual(false)" onpointerleave="tapPressVisual(false)" onpointerout="tapPressVisual(false)">TAP</button>
 <div class="tap-earned">Заработано: <span id="tap-earned">0</span> AGS</div>
 </div>
 </div>
@@ -462,9 +479,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Детали</h2>
 <div id="tx-detail-content"></div>
 </div>
+<div id="screen-nft" class="screen">
+<div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:6px">Подарки · NFT</h2>
+<p style="font-size:13px;color:#666;margin-bottom:12px">Дарите анимированные подарки другим пользователям</p>
+<div class="filters">
+<button class="filter-chip active" onclick="setNftTab('shop',this)">Магазин</button>
+<button class="filter-chip" onclick="setNftTab('mine',this)">Мои подарки</button>
+</div>
+<div id="nft-content"></div>
+</div>
 <div class="bottom-nav" id="bottom-nav" style="display:none">
 <div class="nav-item active" data-nav="main" onclick="navTo('main')"><div class="nav-icon">◉</div><div>Главная</div></div>
 <div class="nav-item" data-nav="transfer" onclick="navTo('transfer')"><div class="nav-icon">↑</div><div>Переводы</div></div>
+<div class="nav-item" data-nav="nft" onclick="navTo('nft')"><div class="nav-icon">🎁</div><div>Подарки</div></div>
 <div class="nav-item" data-nav="history" onclick="navTo('history')"><div class="nav-icon">≡</div><div>История</div></div>
 <div class="nav-item" data-nav="profile" onclick="navTo('profile')"><div class="nav-icon">◐</div><div>Профиль</div></div>
 </div>
@@ -484,68 +512,89 @@ const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-const FOUNDER_CONFIG = { commissionShare: 0.5, dailyBonus: 500 };
-const TRANSFER_FEE_RATE = 0.04;
-const COMMISSION_THRESHOLD = 1000;
-const PIN_THRESHOLD = 1000;
+const FOUNDER_CONFIG = { commissionShare: 0.5, dailyBonus: 500 }; // half of 4% fee → founder, half → pool (deducted)
 const MAX_LEVEL = 999;
 const STICKER_PRICE = 550;
 const MAX_STICKERS_NORMAL = 5;
 const CUSTOMIZATION_OPTIONS = {
-frames: [
-{id:'default',name:'Стандарт',price:0,class:'',color:'#000'},
-{id:'blue',name:'Синяя',price:1200,class:'frame-blue',color:'#007bff'},
-{id:'red',name:'Красная',price:1200,class:'frame-red',color:'#ff3b30'},
-{id:'yellow',name:'Жёлтая',price:1200,class:'frame-yellow',color:'#ffcc00'},
-{id:'light-blue',name:'Голубая',price:1200,class:'frame-light-blue',color:'#5ac8fa'},
-{id:'orange',name:'Оранж.',price:1200,class:'frame-orange',color:'#ff9500'},
-{id:'green',name:'Зелёная',price:1200,class:'frame-green',color:'#34c759'},
-{id:'pink',name:'Розовая',price:1200,class:'frame-pink',color:'#ff2d55'},
-{id:'purple',name:'Фиолет.',price:1200,class:'frame-purple',color:'#af52de'},
-{id:'neon-blue',name:'Неон',price:0,class:'frame-neon-blue',color:'#00f3ff',founderOnly:true},
-{id:'double',name:'Двойная',price:1800,class:'frame-double',color:'#000'},
-{id:'dashed',name:'Пунктир',price:1500,class:'frame-dashed',color:'#000'},
-{id:'thick',name:'Толстая',price:1400,class:'frame-thick',color:'#000'}
-],
-avatarFrames: [
-{id:'default',name:'Стандарт',price:0,class:'',color:'#fff'},
-{id:'blue',name:'Синяя',price:900,class:'avatar-frame-blue',color:'#007bff'},
-{id:'red',name:'Красная',price:900,class:'avatar-frame-red',color:'#ff3b30'},
-{id:'green',name:'Зелёная',price:900,class:'avatar-frame-green',color:'#34c759'},
-{id:'purple',name:'Фиолет.',price:900,class:'avatar-frame-purple',color:'#af52de'},
-{id:'orange',name:'Оранж.',price:900,class:'avatar-frame-orange',color:'#ff9500'},
-{id:'white',name:'Белая',price:800,class:'avatar-frame-white',color:'#fff'},
-{id:'black',name:'Чёрная',price:800,class:'avatar-frame-black',color:'#000'},
-{id:'double',name:'Двойная',price:1200,class:'avatar-frame-double',color:'#000'},
-{id:'dashed',name:'Пунктир',price:1100,class:'avatar-frame-dashed',color:'#000'},
-{id:'thick',name:'Толстая',price:1000,class:'avatar-frame-thick',color:'#000'},
-{id:'neon',name:'Неон',price:0,class:'avatar-frame-neon',color:'#00f3ff',founderOnly:true}
-],
-bgs: [
-{id:'default',name:'Стандарт',price:0,class:'',color:'#fff'},
-{id:'blue',name:'Синий',price:1500,class:'bg-blue',color:'#007bff'},
-{id:'red',name:'Красный',price:1500,class:'bg-red',color:'#ff3b30'},
-{id:'yellow',name:'Жёлтый',price:1500,class:'bg-yellow',color:'#ffcc00'},
-{id:'light-blue',name:'Голубой',price:1500,class:'bg-light-blue',color:'#5ac8fa'},
-{id:'orange',name:'Оранж.',price:1500,class:'bg-orange',color:'#ff9500'},
-{id:'green',name:'Зелёный',price:1500,class:'bg-green',color:'#34c759'},
-{id:'pink',name:'Розовый',price:1500,class:'bg-pink',color:'#ff2d55'},
-{id:'purple',name:'Фиолет.',price:1500,class:'bg-purple',color:'#af52de'},
-{id:'black',name:'Чёрный',price:0,class:'bg-black',color:'#000',founderOnly:true},
-{id:'graphite',name:'Графит',price:1600,class:'bg-graphite',color:'#1c1c1e'},
-{id:'navy',name:'Тёмно-син.',price:1600,class:'bg-navy',color:'#0a1628'}
-],
-patterns: [
-{id:'none',name:'Нет',price:0,class:'',icon:'—'},
-{id:'stars',name:'Звёзды',price:2000,class:'pattern-stars',icon:'✦'},
-{id:'lightning',name:'Молнии',price:2000,class:'pattern-lightning',icon:'⚡'},
-{id:'diamonds',name:'Ромбы',price:2000,class:'pattern-diamonds',icon:'💎'},
-{id:'dollar-circle',name:'Dollar',price:0,class:'pattern-dollar-circle',icon:'💲',founderOnly:true},
-{id:'grid',name:'Сетка',price:1800,class:'pattern-grid',icon:'▦'},
-{id:'dots',name:'Точки',price:1800,class:'pattern-dots',icon:'···'}
-]
+  frames: [
+    {id:'default',name:'Стандарт',price:0,class:'',color:'#000'},
+    {id:'blue',name:'Синяя',price:1200,class:'frame-blue',color:'#007bff'},
+    {id:'red',name:'Красная',price:1200,class:'frame-red',color:'#ff3b30'},
+    {id:'yellow',name:'Жёлтая',price:1200,class:'frame-yellow',color:'#ffcc00'},
+    {id:'light-blue',name:'Голубая',price:1200,class:'frame-light-blue',color:'#5ac8fa'},
+    {id:'orange',name:'Оранж.',price:1200,class:'frame-orange',color:'#ff9500'},
+    {id:'green',name:'Зелёная',price:1200,class:'frame-green',color:'#34c759'},
+    {id:'pink',name:'Розовая',price:1200,class:'frame-pink',color:'#ff2d55'},
+    {id:'purple',name:'Фиолет.',price:1200,class:'frame-purple',color:'#af52de'},
+    {id:'neon-blue',name:'Неон',price:0,class:'frame-neon-blue',color:'#00f3ff',founderOnly:true},
+    {id:'double',name:'Двойная',price:1800,class:'frame-double',color:'#000'},
+    {id:'dashed',name:'Пунктир',price:1500,class:'frame-dashed',color:'#000'},
+    {id:'thick',name:'Толстая',price:1400,class:'frame-thick',color:'#000'}
+  ],
+  avatarFrames: [
+    {id:'default',name:'Стандарт',price:0,class:'',color:'#fff'},
+    {id:'blue',name:'Синяя',price:900,class:'avatar-frame-blue',color:'#007bff'},
+    {id:'red',name:'Красная',price:900,class:'avatar-frame-red',color:'#ff3b30'},
+    {id:'green',name:'Зелёная',price:900,class:'avatar-frame-green',color:'#34c759'},
+    {id:'purple',name:'Фиолет.',price:900,class:'avatar-frame-purple',color:'#af52de'},
+    {id:'orange',name:'Оранж.',price:900,class:'avatar-frame-orange',color:'#ff9500'},
+    {id:'white',name:'Белая',price:800,class:'avatar-frame-white',color:'#fff'},
+    {id:'black',name:'Чёрная',price:800,class:'avatar-frame-black',color:'#000'},
+    {id:'double',name:'Двойная',price:1200,class:'avatar-frame-double',color:'#000'},
+    {id:'dashed',name:'Пунктир',price:1100,class:'avatar-frame-dashed',color:'#000'},
+    {id:'thick',name:'Толстая',price:1000,class:'avatar-frame-thick',color:'#000'},
+    {id:'neon',name:'Неон',price:0,class:'avatar-frame-neon',color:'#00f3ff',founderOnly:true}
+  ],
+  bgs: [
+    {id:'default',name:'Стандарт',price:0,class:'',color:'#fff'},
+    {id:'blue',name:'Синий',price:1500,class:'bg-blue',color:'#007bff'},
+    {id:'red',name:'Красный',price:1500,class:'bg-red',color:'#ff3b30'},
+    {id:'yellow',name:'Жёлтый',price:1500,class:'bg-yellow',color:'#ffcc00'},
+    {id:'light-blue',name:'Голубой',price:1500,class:'bg-light-blue',color:'#5ac8fa'},
+    {id:'orange',name:'Оранж.',price:1500,class:'bg-orange',color:'#ff9500'},
+    {id:'green',name:'Зелёный',price:1500,class:'bg-green',color:'#34c759'},
+    {id:'pink',name:'Розовый',price:1500,class:'bg-pink',color:'#ff2d55'},
+    {id:'purple',name:'Фиолет.',price:1500,class:'bg-purple',color:'#af52de'},
+    {id:'black',name:'Чёрный',price:0,class:'bg-black',color:'#000',founderOnly:true},
+    {id:'graphite',name:'Графит',price:1600,class:'bg-graphite',color:'#1c1c1e'},
+    {id:'navy',name:'Тёмно-син.',price:1600,class:'bg-navy',color:'#0a1628'}
+  ],
+  patterns: [
+    {id:'none',name:'Нет',price:0,class:'',icon:'—'},
+    {id:'stars',name:'Звёзды',price:2000,class:'pattern-stars',icon:'✦'},
+    {id:'lightning',name:'Молнии',price:2000,class:'pattern-lightning',icon:'⚡'},
+    {id:'diamonds',name:'Ромбы',price:2000,class:'pattern-diamonds',icon:'💎'},
+    {id:'dollar-circle',name:'Dollar',price:0,class:'pattern-dollar-circle',icon:'💲',founderOnly:true},
+    {id:'grid',name:'Сетка',price:1800,class:'pattern-grid',icon:'▦'},
+    {id:'dots',name:'Точки',price:1800,class:'pattern-dots',icon:'···'}
+  ]
 };
 const CUSTOM_FIELD_MAP = {frames:'custom_frame',avatarFrames:'custom_avatar_frame',bgs:'custom_bg',patterns:'custom_pattern'};
+const RARITY_CONFIG = {
+  common:{label:'Common',color:'#9e9e9e'},
+  rare:{label:'Rare',color:'#007bff'},
+  epic:{label:'Epic',color:'#af52de'},
+  legendary:{label:'Legendary',color:'#ffcc00'},
+  mythic:{label:'Mythic',color:'#ff3b30'},
+  divine:{label:'Divine',color:'#000000'}
+};
+const GIFTS = [
+  {id:'heart',emoji:String.fromCodePoint(0x2764),name:'Сердечко',price:50,rarity:'common'},
+  {id:'heart_ribbon',emoji:String.fromCodePoint(0x1F49D),name:'Сердце с лентой',price:125,rarity:'common'},
+  {id:'diamond',emoji:String.fromCodePoint(0x1F48E),name:'Алмаз',price:230,rarity:'rare'},
+  {id:'monkey',emoji:String.fromCodePoint(0x1F647),name:'Monkey',price:350,rarity:'rare'},
+  {id:'clapper',emoji:String.fromCodePoint(0x1F3AC),name:'Хлопушка',price:480,rarity:'epic'},
+  {id:'dollars',emoji:String.fromCodePoint(0x1F4B8),name:'Доллары',price:525,rarity:'epic'},
+  {id:'spider',emoji:String.fromCodePoint(0x1F577),name:'Паук',price:655,rarity:'epic'},
+  {id:'fire',emoji:String.fromCodePoint(0x1F525),name:'Огонь',price:675,rarity:'epic'},
+  {id:'virus',emoji:String.fromCodePoint(0x1F9A0),name:'Вирус',price:890,rarity:'legendary'},
+  {id:'ghost',emoji:String.fromCodePoint(0x1F48B),name:'Призрак',price:710,rarity:'legendary'},
+  {id:'gamie',emoji:String.fromCodePoint(0x1F47E),name:'Gamie',price:1170,rarity:'legendary'},
+  {id:'pantheon',emoji:String.fromCodePoint(0x1F3DB),name:'Пантеон',price:1780,rarity:'mythic'},
+  {id:'pirate',emoji:String.fromCodePoint(0x1F3F4,0x200D,0x2620),name:'Pirate',price:2000,rarity:'divine'},
+  {id:'cat',emoji:String.fromCodePoint(0x1F408,0x200D,0x2B1B),name:'Cat',price:1980,rarity:'divine'}
+];
 function hash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return 'h_'+Math.abs(h).toString(36)+'_'+s.length}
 function generateRecoveryCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='';for(let i=0;i<32;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
 function generateTxId(){const c='0123456789ABCDEF';let id='AEG-';for(let i=0;i<8;i++)id+=c[Math.floor(Math.random()*c.length)];return id}
@@ -572,147 +621,44 @@ function isFounder(u){return u&&u.is_founder===true}
 async function addXP(userId,amount){const{data:u}=await sb.from('users').select('level,xp').eq('id',userId).single();if(!u||(u.level||1)>=MAX_LEVEL)return;let xp=(u.xp||0)+amount,level=u.level||1,needed=100+(level-1)*45;while(xp>=needed&&level<MAX_LEVEL){xp-=needed;level++;needed=100+(level-1)*45;if(level%5===0){const w=await getUserWallet(userId);if(w)await sb.from('wallets').update({balance:Number(w.balance)+150}).eq('id',w.id)}}await sb.from('users').update({level,xp}).eq('id',userId)}
 function getTodayTasks(userId){const key=new Date().toDateString();let data=JSON.parse(localStorage.getItem('aegis_daily_tasks')||'{}');if(!data[userId]||data[userId].date!==key){data[userId]={date:key,tasks:[{id:'transfer',title:'Сделать 1 перевод',progress:0,target:1,reward:80,done:false},{id:'tap',title:'Сделать 20 тапов',progress:0,target:20,reward:60,done:false},{id:'login',title:'Зайти в приложение',progress:1,target:1,reward:30,done:false}]};localStorage.setItem('aegis_daily_tasks',JSON.stringify(data))}return data[userId]}
 async function completeTask(userId,taskId,amount=1){const data=JSON.parse(localStorage.getItem('aegis_daily_tasks')||'{}');const today=getTodayTasks(userId);const task=today.tasks.find(t=>t.id===taskId);if(!task||task.done)return;task.progress=Math.min(task.target,task.progress+amount);if(task.progress>=task.target){task.done=true;const w=await getUserWallet(userId);if(w)await sb.from('wallets').update({balance:Number(w.balance)+task.reward}).eq('id',w.id);await addXP(userId,20);toast(`Задание выполнено! +${task.reward} AGS`)}data[userId]=today;localStorage.setItem('aegis_daily_tasks',JSON.stringify(data))}
-const navScreens=['main','transfer','history','profile'];
-async function showScreen(name){
-  const target=document.getElementById('screen-'+name);
-  if(!target)return;
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  target.classList.add('active');
-  const bottomNav=document.getElementById('bottom-nav');
-  let user=null;
-  try{user=await getCurrentUser()}catch(err){console.error('Session check error:',err)}
-  if(bottomNav)bottomNav.style.display=(user&&navScreens.includes(name))?'flex':'none';
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===name));
-  try{
-    if(name==='main')await refreshMain();
-    if(name==='history')await refreshHistory();
-    if(name==='profile')await refreshProfile();
-    if(name==='transfer'){await refreshTransferScreen();const to=document.getElementById('tr-to');if(to)to.value='@';setTransferMode('transfer')}
-    if(name==='receive')await refreshReceive();
-    if(name==='tap')await refreshTap();
-    if(name==='appearance')await refreshAppearance();
-    if(name==='stickers')await refreshStickers();
-    if(name==='buy-username')await refreshBuyUsername();
-    if(name==='username-market')await refreshMarket();
-    if(name==='change-username')await refreshChangeUsername();
-    if(name==='founder-dashboard')await refreshFounderDashboard();
-    if(name==='leaderboard')await refreshLeaderboard();
-  }catch(err){console.error('Screen refresh error:',err)}
-  window.scrollTo(0,0);
-}
+const navScreens=['main','transfer','history','profile','nft'];
+async function showScreen(name){const prevActive=document.querySelector('.screen.active');if(prevActive&&prevActive.id==='screen-tap'&&name!=='tap')flushTapSync();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+name).classList.add('active');const user=await getCurrentUser();document.getElementById('bottom-nav').style.display=(user&&navScreens.includes(name))?'flex':'none';document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===name));if(name==='main')await refreshMain();if(name==='history')await refreshHistory();if(name==='profile')await refreshProfile();if(name==='transfer'){await refreshTransferScreen();document.getElementById('tr-to').value='@';setTransferMode('transfer')}if(name==='receive')await refreshReceive();if(name==='tap')await refreshTap();if(name==='appearance')await refreshAppearance();if(name==='stickers')await refreshStickers();if(name==='buy-username')await refreshBuyUsername();if(name==='username-market')await refreshMarket();if(name==='change-username')await refreshChangeUsername();if(name==='founder-dashboard')await refreshFounderDashboard();if(name==='leaderboard')await refreshLeaderboard();if(name==='nft')await refreshNft();window.scrollTo(0,0)}
 function navTo(n){showScreen(n)}
-let authBusy=false;
-async function handleLogin(e){
-  if(e?.preventDefault)e.preventDefault();
-  if(authBusy)return;
-  authBusy=true;
-  const btn=document.getElementById('btn-login');
-  if(btn)btn.disabled=true;
-  clearError('login-error');
-  try{
-    if(typeof supabase==='undefined'||!sb){throw new Error('Не удалось подключиться к серверу')}
-    const username=document.getElementById('login-username').value.trim();
-    const password=document.getElementById('login-password').value;
-    if(!username||!password){showError('login-error','Введите username и пароль');return}
-    const user=await findUserByUsername(username);
-    if(!user){showError('login-error','Пользователь не найден');return}
-    if(user.password_hash!==hash(password)){showError('login-error','Неверный пароль');return}
-    setSession(user.id);
-    await completeTask(user.id,'login');
-    await showScreen('main');
-  }catch(err){console.error('Login error:',err);showError('login-error','Ошибка входа. Проверьте соединение и попробуйте снова.')}finally{authBusy=false;if(btn)btn.disabled=false}
-}
-async function handleRegister(e){
-  if(e?.preventDefault)e.preventDefault();
-  if(authBusy)return;
-  authBusy=true;
-  const btn=document.getElementById('btn-register');
-  if(btn)btn.disabled=true;
-  clearError('reg-error');
-  try{
-    if(typeof supabase==='undefined'||!sb){throw new Error('Не удалось подключиться к серверу')}
-    const username=document.getElementById('reg-username').value.trim().toLowerCase();
-    const pass=document.getElementById('reg-password').value;
-    const pass2=document.getElementById('reg-password2').value;
-    const usernameError=validateUsername(username);
-    if(usernameError){showError('reg-error',usernameError);return}
-    if(pass.length<4){showError('reg-error','Минимум 4 символа');return}
-    if(pass!==pass2){showError('reg-error','Пароли не совпадают');return}
-    if(await findUsernameRecord(username)){showError('reg-error','Уже занят');return}
-    if(isSacredUsername(username)){showError('reg-error','Только для Founder');return}
-    const recovery=generateRecoveryCode();
-    const{category}=classifyUsername(username);
-    const{data:newUser,error}=await sb.from('users').insert({username,password_hash:hash(pass),recovery_code_hash:hash(recovery),is_founder:false,level:1,xp:0,custom_frame:'default',custom_avatar_frame:'default',custom_bg:'default',custom_pattern:'none',purchased_customizations:[],stickers:[],hide_balance:false,status_text:''}).select().single();
-    if(error)throw error;
-    const{error:walletError}=await sb.from('wallets').insert({user_id:newUser.id,balance:2000});
-    if(walletError)throw walletError;
-    const{error:usernameError2}=await sb.from('usernames').insert({user_id:newUser.id,username,is_primary:true,category,history:[{userId:newUser.id,username,date:new Date().toISOString()}]});
-    if(usernameError2)throw usernameError2;
-    localStorage.setItem('aegis_temp_user',newUser.id);
-    localStorage.setItem('aegis_temp_recovery',recovery);
-    document.getElementById('recovery-code-display').textContent=recovery;
-    await showScreen('recovery-show');
-  }catch(err){console.error('Registration error:',err);showError('reg-error','Ошибка регистрации: '+(err?.message||'неизвестная ошибка'))}finally{authBusy=false;if(btn)btn.disabled=false}
-}
-function copyRecoveryCode(){
-  const code=document.getElementById('recovery-code-display').textContent;
-  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(code).then(()=>toast('Скопировано')).catch(()=>toast('Не удалось скопировать'));
-  else toast('Скопируйте код вручную');
-}
-async function finishRegistration(){const id=localStorage.getItem('aegis_temp_user');if(id){setSession(id);localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');await showScreen('main')}else await showScreen('login')}
-async function handleRecovery(e){
-  if(e?.preventDefault)e.preventDefault();
-  if(authBusy)return;
-  authBusy=true;
-  const form=e?.currentTarget;
-  const btn=form?.querySelector('button[type="submit"]');
-  if(btn)btn.disabled=true;
-  clearError('rec-error');
-  try{
-    if(typeof supabase==='undefined'||!sb){throw new Error('Не удалось подключиться к серверу')}
-    const username=document.getElementById('rec-username').value.trim();
-    const code=document.getElementById('rec-code').value.trim();
-    const np=document.getElementById('rec-newpass').value;
-    const np2=document.getElementById('rec-newpass2').value;
-    if(!username||!code){showError('rec-error','Введите username и Recovery Code');return}
-    const user=await findUserByUsername(username);
-    if(!user){showError('rec-error','Пользователь не найден');return}
-    if(!user.recovery_code_hash||user.recovery_code_hash!==hash(code)){showError('rec-error','Неверный код');return}
-    if(np.length<4){showError('rec-error','Минимум 4 символа');return}
-    if(np!==np2){showError('rec-error','Пароли не совпадают');return}
-    const{error}=await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);
-    if(error)throw error;
-    toast('Пароль изменён');
-    document.getElementById('rec-code').value='';
-    document.getElementById('rec-newpass').value='';
-    document.getElementById('rec-newpass2').value='';
-    await showScreen('login');
-  }catch(err){console.error('Recovery error:',err);showError('rec-error','Ошибка восстановления. Проверьте данные и соединение.')}finally{authBusy=false;if(btn)btn.disabled=false}
-}
+async function handleLogin(e){e.preventDefault();clearError('login-error');const user=await findUserByUsername(document.getElementById('login-username').value.trim());if(!user){showError('login-error','Пользователь не найден');return}if(user.password_hash!==hash(document.getElementById('login-password').value)){showError('login-error','Неверный пароль');return}setSession(user.id);await completeTask(user.id,'login');showScreen('main')}
+async function handleRegister(e){e.preventDefault();clearError('reg-error');const username=document.getElementById('reg-username').value.trim().toLowerCase();const pass=document.getElementById('reg-password').value;if(validateUsername(username)){showError('reg-error',validateUsername(username));return}if(pass.length<4){showError('reg-error','Минимум 4 символа');return}if(pass!==document.getElementById('reg-password2').value){showError('reg-error','Пароли не совпадают');return}if(await findUsernameRecord(username)){showError('reg-error','Уже занят');return}if(isSacredUsername(username)){showError('reg-error','Только для Founder');return}const recovery=generateRecoveryCode();const{category}=classifyUsername(username);const{data:newUser,error}=await sb.from('users').insert({username,password_hash:hash(pass),recovery_code_hash:hash(recovery),is_founder:false,level:1,xp:0,custom_frame:'default',custom_avatar_frame:'default',custom_bg:'default',custom_pattern:'none',purchased_customizations:[],stickers:[],hide_balance:false,status_text:''}).select().single();if(error){showError('reg-error','Ошибка: '+error.message);return}await sb.from('wallets').insert({user_id:newUser.id,balance:2000});await sb.from('usernames').insert({user_id:newUser.id,username,is_primary:true,category,history:[{userId:newUser.id,username,date:new Date().toISOString()}]});localStorage.setItem('aegis_temp_user',newUser.id);localStorage.setItem('aegis_temp_recovery',recovery);document.getElementById('recovery-code-display').textContent=recovery;showScreen('recovery-show')}
+function copyRecoveryCode(){navigator.clipboard.writeText(document.getElementById('recovery-code-display').textContent).then(()=>toast('Скопировано'))}
+function finishRegistration(){const id=localStorage.getItem('aegis_temp_user');if(id){setSession(id);localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');showScreen('main')}else showScreen('login')}
+async function handleRecovery(e){e.preventDefault();clearError('rec-error');const user=await findUserByUsername(document.getElementById('rec-username').value.trim());if(!user){showError('rec-error','Не найден');return}if(user.recovery_code_hash!==hash(document.getElementById('rec-code').value.trim())){showError('rec-error','Неверный код');return}const np=document.getElementById('rec-newpass').value;if(np.length<4||np!==document.getElementById('rec-newpass2').value){showError('rec-error','Ошибка пароля');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('Пароль изменён');showScreen('login')}
 function handleLogout(){showModal('Выйти?','Выйти из аккаунта?',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выйти',onClick:()=>{setSession(null);showScreen('login')}}])}
-async function refreshMain(){const user=await getCurrentUser();if(!user){showScreen('login');return}const wallet=await getUserWallet(user.id);const bal=user.hide_balance?'••••':formatAGS(wallet?wallet.balance:0);document.getElementById('main-balance').textContent=bal;document.getElementById('main-balance-usd').textContent=user.hide_balance?'':'≈ '+formatUSD(wallet?wallet.balance:0);document.getElementById('founder-dashboard-btn').style.display=isFounder(user)?'block':'none';document.getElementById('gift-banner').innerHTML='';const tasksData=getTodayTasks(user.id);document.getElementById('daily-tasks').innerHTML=tasksData.tasks.map(t=>`<div class="task-item"><div class="task-info"><div class="task-title">${t.title}</div><div class="task-reward">${t.progress}/${t.target} · +${t.reward} AGS</div></div><div>${t.done?'✓':''}</div></div>`).join('');const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false}).limit(30);const myUns=await getUserUsernames(user.id);const myIds=myUns.map(u=>u.id);const myTxs=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).slice(0,5);document.getElementById('main-recent-tx').innerHTML=myTxs.length===0?'<div class="empty-state">Нет операций</div>':(await Promise.all(myTxs.map(t=>renderTxItem(t,user.id)))).join('')}
+async function refreshMain(){const user=await getCurrentUser();if(!user){showScreen('login');return}const wallet=await getUserWallet(user.id);const bal=user.hide_balance?'••••':formatAGS(wallet?wallet.balance:0);document.getElementById('main-balance').textContent=bal;document.getElementById('main-balance-usd').textContent=user.hide_balance?'':'≈ '+formatUSD(wallet?wallet.balance:0);document.getElementById('founder-dashboard-btn').style.display=isFounder(user)?'block':'none';renderGiftBanner(user);const tasksData=getTodayTasks(user.id);document.getElementById('daily-tasks').innerHTML=tasksData.tasks.map(t=>`<div class="task-item"><div class="task-info"><div class="task-title">${t.title}</div><div class="task-reward">${t.progress}/${t.target} · +${t.reward} AGS</div></div><div>${t.done?'✓':''}</div></div>`).join('');const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false}).limit(30);const myUns=await getUserUsernames(user.id);const myIds=myUns.map(u=>u.id);const myTxs=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).slice(0,5);document.getElementById('main-recent-tx').innerHTML=myTxs.length===0?'<div class="empty-state">Нет операций</div>':(await Promise.all(myTxs.map(t=>renderTxItem(t,user.id)))).join('')}
 async function handleUserSearch(q){const clean=q.replace('@','').toLowerCase().trim();const box=document.getElementById('search-results');if(clean.length<2){box.innerHTML='';return}const{data:uns}=await sb.from('usernames').select('*').ilike('username',`%${clean}%`).limit(6);if(!uns||!uns.length){box.innerHTML='<div class="empty-state" style="padding:12px 0">Ничего не найдено</div>';return}const html=await Promise.all(uns.map(async u=>{const{data:owner}=await sb.from('users').select('is_founder,level').eq('id',u.user_id).single();return`<div class="search-item"><div><div class="search-item-name">@${u.username} ${owner?.is_founder?'<span class="founder-badge">◆</span>':''}</div><div class="search-item-cat">${u.category} · lvl ${owner?.level||1}</div></div><button class="search-item-btn" onclick="openPublicProfile('${u.user_id}')">Профиль</button></div>`}));box.innerHTML=html.join('')}
 async function openPublicProfile(userId){const{data:user}=await sb.from('users').select('*').eq('id',userId).single();if(!user)return;const primary=await getPrimaryUsername(userId);const alts=(await getUserUsernames(userId)).filter(u=>!u.is_primary);const frame=CUSTOMIZATION_OPTIONS.frames.find(f=>f.id===(user.custom_frame||'default'));const bg=CUSTOMIZATION_OPTIONS.bgs.find(b=>b.id===(user.custom_bg||'default'));const pattern=CUSTOMIZATION_OPTIONS.patterns.find(p=>p.id===(user.custom_pattern||'none'));const isDark=['black','blue','red','purple','pink','green','orange','graphite','navy','yellow','light-blue'].includes(user.custom_bg)||user.is_founder;let classes=`profile-header ${frame?.class||''} ${bg?.class||''} ${pattern?.class||''}`;if(isDark)classes+=' dark-mode';if(user.is_founder)classes+=' founder';const stickersHtml=(user.stickers||[]).map(s=>`<div class="sticker" style="left:${s.x}%;top:${s.y}%;transform:rotate(${s.rotate||0}deg)">${s.emoji}</div>`).join('');document.getElementById('public-profile-content').innerHTML=`<div class="${classes}" style="position:relative">${stickersHtml}<div class="avatar-wrapper ${CUSTOMIZATION_OPTIONS.avatarFrames.find(f=>f.id===(user.custom_avatar_frame||'default'))?.class||''}">${user.avatar?`<img src="${user.avatar}">`:'<div class="avatar-placeholder">👤</div>'}</div><div class="profile-username">@${primary?.username||'?'}</div><div class="profile-meta"><span class="lvl-badge">lvl ${user.level||1}</span>${user.is_founder?'<span class="founder-badge">◆ FOUNDER</span>':''}</div>${user.status_text?`<div class="profile-status">${user.status_text}</div>`:''}${alts.length?`<div class="profile-alt-usernames">${alts.map(a=>`<span class="alt-un-badge">@${a.username}</span>`).join('')}</div>`:''}<div class="profile-date">В Aegis с ${new Date(user.created_at).toLocaleDateString('ru')}</div></div><button class="btn btn-full" onclick="quickTransferTo('${primary?.username||''}')">Перевести</button>`;showScreen('public-profile')}
 function quickTransferTo(username){showScreen('transfer');setTimeout(()=>{document.getElementById('tr-to').value='@'+username},40)}
 function founderBadgeHtml(u){return isFounder(u)?'<span class="founder-badge">◆ FOUNDER</span>':''}
+function renderGiftBanner(user){const banner=document.getElementById('gift-banner');const gifts=user.received_gifts||[];const unseen=gifts.slice().reverse().find(g=>!g.seen);if(!unseen){banner.innerHTML='';return}const rc=RARITY_CONFIG[unseen.rarity]||RARITY_CONFIG.common;banner.innerHTML=`<div class="gift-card" style="border:2px solid ${rc.color}"><div class="gift-emoji">${unseen.emoji}</div><div class="gift-amount">${unseen.name}</div><div class="rarity-badge rarity-${unseen.rarity}" style="margin-top:8px">${rc.label}</div><div class="gift-from">От @${unseen.fromUsername}</div>${unseen.message?`<div class="gift-msg">${unseen.message}</div>`:''}<button class="btn btn-outline btn-full" style="margin-top:12px;background:transparent;color:#fff;border-color:#fff" onclick="dismissGiftBanner()">Спасибо!</button></div>`}
+async function dismissGiftBanner(){const user=await getCurrentUser();if(!user)return;const gifts=(user.received_gifts||[]).map(g=>({...g,seen:true}));await sb.from('users').update({received_gifts:gifts}).eq('id',user.id);document.getElementById('gift-banner').innerHTML=''}
+function setNftTab(tab,el){window.nftTab=tab;document.querySelectorAll('#screen-nft .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshNft()}
+async function refreshNft(){const tab=window.nftTab||'shop';const cont=document.getElementById('nft-content');if(tab==='shop'){cont.innerHTML=`<div class="shop-grid">${GIFTS.map(g=>{const rc=RARITY_CONFIG[g.rarity];return`<div class="gift-shop-item" style="border-color:${rc.color}" onclick="openSendGiftModal('${g.id}')"><div class="gift-shop-emoji">${g.emoji}</div><div class="gift-shop-name">${g.name}</div><div class="gift-shop-price">${formatAGS(g.price)} AGS</div><div class="rarity-badge rarity-${g.rarity}">${rc.label}</div></div>`}).join('')}</div>`}else{const user=await getCurrentUser();if(!user)return;const gifts=(user.received_gifts||[]).slice().reverse();if(!gifts.length){cont.innerHTML='<div class="empty-state">Пока нет подарков. Отправьте кому-нибудь подарок из раздела «Магазин»!</div>';return}cont.innerHTML=gifts.map(g=>{const rc=RARITY_CONFIG[g.rarity]||RARITY_CONFIG.common;return`<div class="my-gift-card" style="border-color:${rc.color}"><div class="my-gift-emoji">${g.emoji}</div><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${g.name}<span class="rarity-badge rarity-${g.rarity}">${rc.label}</span></div><div style="font-size:12px;color:#666;margin-top:2px">От @${g.fromUsername||'?'} · ${formatDate(g.date)}</div>${g.message?`<div style="font-size:12px;font-style:italic;margin-top:3px">«${g.message}»</div>`:''}</div></div>`}).join('')}}
+function openSendGiftModal(giftId){const gift=GIFTS.find(g=>g.id===giftId);if(!gift)return;const rc=RARITY_CONFIG[gift.rarity];showModal(`${gift.emoji} ${gift.name}`,`<div style="text-align:center;margin-bottom:10px"><span class="rarity-badge rarity-${gift.rarity}">${rc.label}</span><div style="font-weight:700;margin-top:6px">${formatAGS(gift.price)} AGS</div></div><div class="input-group"><label>Кому (username)</label><input type="text" id="gift-to-username" placeholder="@username"></div><div class="input-group" style="margin-top:8px"><label>Сообщение (необязательно)</label><input type="text" id="gift-message" maxlength="60" placeholder="С праздником!"></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Отправить',onClick:()=>sendGift(giftId)}])}
+async function sendGift(giftId){const gift=GIFTS.find(g=>g.id===giftId);if(!gift)return;const toRaw=(document.getElementById('gift-to-username')?.value||'').trim();const message=(document.getElementById('gift-message')?.value||'').trim();if(!toRaw){toast('Укажите получателя');return}const toUsername=toRaw.replace('@','').toLowerCase();const user=await getCurrentUser();if(!user)return;const myPrimary=await getPrimaryUsername(user.id);if(myPrimary&&myPrimary.username.toLowerCase()===toUsername){toast('Нельзя отправить подарок себе');return}const toUser=await findUserByUsername(toUsername);if(!toUser){toast('Пользователь не найден');return}const wallet=await getUserWallet(user.id);if(!wallet||Number(wallet.balance)<gift.price){toast('Недостаточно средств');return}await sb.from('wallets').update({balance:Number(wallet.balance)-gift.price}).eq('id',wallet.id);const giftEntry={giftId:gift.id,emoji:gift.emoji,name:gift.name,rarity:gift.rarity,price:gift.price,fromUsername:myPrimary?.username||'?',message,date:new Date().toISOString(),seen:false};const receivedGifts=[...(toUser.received_gifts||[]),giftEntry];await sb.from('users').update({received_gifts:receivedGifts}).eq('id',toUser.id);try{const toPrimary=await getPrimaryUsername(toUser.id);await sb.from('transactions').insert({id:generateTxId(),sender_username_id:myPrimary?.id,receiver_username_id:toPrimary?.id,amount:gift.price,fee:0,status:'completed',comment:message||gift.name,is_gift:true,created_at:new Date().toISOString()})}catch(err){console.error(err)}await addXP(user.id,10);toast(`${gift.emoji} Подарок отправлен @${toUsername}`);refreshMain();refreshNft()}
 async function renderTxItem(tx,uid){const{data:sUn}=await sb.from('usernames').select('*').eq('id',tx.sender_username_id).maybeSingle();const{data:rUn}=await sb.from('usernames').select('*').eq('id',tx.receiver_username_id).maybeSingle();if(!sUn||!rUn)return'';const myUns=await getUserUsernames(uid);const isOut=myUns.some(u=>u.id===sUn.id);const other=isOut?rUn:sUn;const{data:otherUser}=await sb.from('users').select('is_founder').eq('id',other.user_id).single();return`<div class="tx-item" onclick="showTxDetail('${tx.id}')"><div class="tx-info"><div class="tx-title">${tx.is_gift?'🎁 ':''}${isOut?'Перевод ':'Получение от '}@${other.username} ${founderBadgeHtml(otherUser)}</div><div class="tx-sub">${formatDate(tx.created_at)}</div></div><div class="tx-amount ${isOut?'negative':'positive'}">${isOut?'−':'+'}${formatAGS(tx.amount)} AGS</div></div>`}
 let transferMode='transfer',pendingTransfer=null;
 function setTransferMode(mode){transferMode=mode;document.getElementById('mode-transfer').classList.toggle('active',mode==='transfer');document.getElementById('mode-gift').classList.toggle('active',mode==='gift');document.getElementById('gift-fields').style.display=mode==='gift'?'block':'none'}
 async function refreshTransferScreen(){const user=await getCurrentUser();if(!user)return;const uns=await getUserUsernames(user.id);document.getElementById('tr-from-username').innerHTML=uns.map(u=>`<option value="${u.id}" ${u.is_primary?'selected':''}>@${u.username}</option>`).join('')}
-async function handleTransferPreview(e){e.preventDefault();clearError('tr-error');const user=await getCurrentUser();if(!user)return;const toRaw=document.getElementById('tr-to').value.trim();const amount=parseInt(document.getElementById('tr-amount').value,10);if(!toRaw){showError('tr-error','Укажите получателя');return}if(!Number.isFinite(amount)||amount<50){showError('tr-error','Минимум 50 AGS');return}const toUsername=toRaw.replace('@','').trim().toLowerCase();const fromUnId=document.getElementById('tr-from-username').value;const{data:fromUn,error:fromError}=await sb.from('usernames').select('*').eq('id',fromUnId).single();if(fromError||!fromUn){showError('tr-error','Не удалось определить отправителя');return}const toUn=await findUsernameRecord(toUsername);if(!toUn){showError('tr-error','Пользователь не найден');return}if(toUn.user_id===user.id){showError('tr-error','Нельзя переводить самому себе');return}if(fromUn.username.toLowerCase()===toUsername){showError('tr-error','Нельзя себе');return}const wallet=await getUserWallet(user.id);if(!wallet){showError('tr-error','Кошелёк не найден');return}const fee=(!isFounder(user)&&amount>=COMMISSION_THRESHOLD)?Math.floor(amount*TRANSFER_FEE_RATE):0;const total=amount+fee;if(Number(wallet.balance)<total){showError('tr-error','Недостаточно средств');return}const isGift=transferMode==='gift';pendingTransfer={fromUnId,toUnId:toUn.id,amount,fee,comment:document.getElementById('tr-comment').value.trim(),isGift,giftEmoji:isGift?(document.getElementById('tr-gift-emoji').value.trim()||'🎁'):null,giftMsg:isGift?document.getElementById('tr-gift-msg').value.trim():null};document.getElementById('tc-summary').innerHTML=`<div class="summary-row"><span class="label">Тип</span><span>${isGift?'🎁 Подарок':'Обычный перевод'}</span></div><div class="summary-row"><span class="label">Кому</span><span>@${toUn.username}</span></div><div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(amount)} AGS</span></div>${fee>0?`<div class="summary-row"><span class="label">Комиссия 4%</span><span>${formatAGS(fee)} AGS</span></div>`:`<div class="summary-row"><span class="label">Комиссия</span><span>0 AGS</span></div>`}${isGift&&pendingTransfer.giftMsg?`<div class="summary-row"><span class="label">Сообщение</span><span>${pendingTransfer.giftMsg}</span></div>`:''}<div class="summary-row total"><span class="label">Итого списание</span><span>${formatAGS(total)} AGS</span></div>`;showScreen('transfer-confirm')}
-async function handleTransferConfirm(){if(!pendingTransfer||transferBusy)return;if(pendingTransfer.amount>=PIN_THRESHOLD){const user=await getCurrentUser();if(!user.pin_hash){showModal('Установите PIN','Для переводов от 1000 AGS нужен 6-значный PIN',[{text:'Установить',onClick:()=>showScreen('change-pin')},{text:'Отмена',outline:true,onClick:()=>{}}]);return}window.pinBuffer='';window.pinMode='transfer';window.pinAttempts=0;updatePinDisplay();clearError('pin-error');showScreen('pin');return}await executeTransfer()}
-let transferBusy=false;
-async function executeTransfer(){if(transferBusy)return;const user=await getCurrentUser();if(!pendingTransfer||!user)return;transferBusy=true;const currentTransfer=pendingTransfer;try{const{fromUnId,toUnId,amount,fee,comment,isGift}=currentTransfer;const{data:toUn,error:toError}=await sb.from('usernames').select('*').eq('id',toUnId).single();if(toError||!toUn)throw new Error('Получатель не найден');if(toUn.user_id===user.id)throw new Error('Нельзя переводить самому себе');const senderWallet=await getUserWallet(user.id);const receiverWallet=await getUserWallet(toUn.user_id);if(!senderWallet||!receiverWallet)throw new Error('Кошелёк не найден');const senderBalance=Number(senderWallet.balance)||0;const receiverBalance=Number(receiverWallet.balance)||0;const effectiveFee=(!isFounder(user)&&amount>=COMMISSION_THRESHOLD)?fee:0;const total=amount+effectiveFee;if(senderBalance<total)throw new Error('Недостаточно средств');const senderNew=senderBalance-total;const receiverNew=receiverBalance+amount;const{error:senderError}=await sb.from('wallets').update({balance:senderNew}).eq('id',senderWallet.id).eq('user_id',user.id);if(senderError)throw senderError;const{error:receiverError}=await sb.from('wallets').update({balance:receiverNew}).eq('id',receiverWallet.id).eq('user_id',toUn.user_id);if(receiverError){await sb.from('wallets').update({balance:senderBalance}).eq('id',senderWallet.id).eq('user_id',user.id);throw receiverError}if(effectiveFee>0){const founderShare=Math.floor(effectiveFee*FOUNDER_CONFIG.commissionShare);if(founderShare>0){const{data:founder,error:founderError}=await sb.from('users').select('id,total_dividends').eq('is_founder',true).maybeSingle();if(founderError)throw founderError;if(founder){const fW=await getUserWallet(founder.id);if(fW){const{error:fError}=await sb.from('wallets').update({balance:(Number(fW.balance)||0)+founderShare}).eq('id',fW.id).eq('user_id',founder.id);if(fError)throw fError;const{error:dError}=await sb.from('users').update({total_dividends:(Number(founder.total_dividends)||0)+founderShare}).eq('id',founder.id);if(dError)throw dError}}}}const{error:txError}=await sb.from('transactions').insert({id:generateTxId(),sender_username_id:fromUnId,receiver_username_id:toUnId,amount,fee:effectiveFee,status:'completed',comment,is_gift:!!isGift,created_at:new Date().toISOString()});if(txError){await sb.from('wallets').update({balance:senderBalance}).eq('id',senderWallet.id).eq('user_id',user.id);await sb.from('wallets').update({balance:receiverBalance}).eq('id',receiverWallet.id).eq('user_id',toUn.user_id);throw txError}await completeTask(user.id,'transfer');await addXP(user.id,15);pendingTransfer=null;showModal('Готово',`<div style="text-align:center;font-size:24px;font-weight:800">${formatAGS(amount)} AGS</div><div style="color:#666;margin-top:6px">${isGift?'Подарок отправлен':'Отправлено'} @${toUn.username}</div><div style="color:#666;margin-top:4px;font-size:12px">Комиссия: ${formatAGS(effectiveFee)} AGS</div>`,[{text:'OK',onClick:()=>showScreen('main')}])}catch(err){console.error('Transfer error:',err);toast(err?.message||'Ошибка перевода')}finally{transferBusy=false}}function pinInput(d){if(window.pinBuffer.length>=6)return;window.pinBuffer+=d;updatePinDisplay();if(window.pinBuffer.length===6)setTimeout(validatePin,120)}
+async function handleTransferPreview(e){e.preventDefault();clearError('tr-error');const user=await getCurrentUser();const toRaw=document.getElementById('tr-to').value.trim();const amount=parseInt(document.getElementById('tr-amount').value);if(!toRaw){showError('tr-error','Укажите получателя');return}const toUsername=toRaw.replace('@','').toLowerCase();const fromUnId=document.getElementById('tr-from-username').value;const{data:fromUn}=await sb.from('usernames').select('*').eq('id',fromUnId).single();if(fromUn.username.toLowerCase()===toUsername){showError('tr-error','Нельзя себе');return}const toUn=await findUsernameRecord(toUsername);if(!toUn){showError('tr-error','Не найден');return}if(amount<50){showError('tr-error','Минимум 50');return}const wallet=await getUserWallet(user.id);let fee=0;if(!isFounder(user)&&amount>=1000)fee=Math.floor(amount*0.04);if(Number(wallet.balance)<amount+fee){showError('tr-error','Недостаточно средств');return}const isGift=transferMode==='gift';pendingTransfer={fromUnId,toUnId:toUn.id,amount,fee,comment:document.getElementById('tr-comment').value.trim(),isGift,giftEmoji:isGift?(document.getElementById('tr-gift-emoji').value.trim()||'🎁'):null,giftMsg:isGift?document.getElementById('tr-gift-msg').value.trim():null};document.getElementById('tc-summary').innerHTML=`<div class="summary-row"><span class="label">Тип</span><span>${isGift?'🎁 Подарок':'Обычный перевод'}</span></div><div class="summary-row"><span class="label">Кому</span><span>@${toUn.username}</span></div><div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(amount)} AGS</span></div><div class="summary-row"><span class="label">Комиссия</span><span>${fee>0?formatAGS(fee)+' AGS':'0'}</span></div>${isGift&&pendingTransfer.giftMsg?`<div class="summary-row"><span class="label">Сообщение</span><span>${pendingTransfer.giftMsg}</span></div>`:''}<div class="summary-row total"><span class="label">Итого</span><span>${formatAGS(amount+fee)} AGS</span></div>`;showScreen('transfer-confirm')}
+async function handleTransferConfirm(){if(!pendingTransfer)return;if(pendingTransfer.amount>=5000){const user=await getCurrentUser();if(!user.pin_hash){showModal('Установите PIN','Для переводов от 5000 AGS нужен 6-значный PIN',[{text:'Установить',onClick:()=>showScreen('change-pin')},{text:'Отмена',outline:true,onClick:()=>{}}]);return}window.pinBuffer='';window.pinMode='transfer';window.pinAttempts=0;updatePinDisplay();clearError('pin-error');showScreen('pin');return}await executeTransfer()}
+async function executeTransfer(){const user=await getCurrentUser();if(!pendingTransfer||!user)return;const{fromUnId,toUnId,amount,fee,comment,isGift}=pendingTransfer;const{data:toUn}=await sb.from('usernames').select('*').eq('id',toUnId).single();const senderWallet=await getUserWallet(user.id);const receiverWallet=await getUserWallet(toUn.user_id);await sb.from('wallets').update({balance:Number(senderWallet.balance)-(amount+fee)}).eq('id',senderWallet.id);await sb.from('wallets').update({balance:Number(receiverWallet.balance)+amount}).eq('id',receiverWallet.id);if(fee>0){const founderShare=Math.floor(fee*FOUNDER_CONFIG.commissionShare);const{data:founder}=await sb.from('users').select('id,total_dividends').eq('is_founder',true).maybeSingle();if(founder){const fW=await getUserWallet(founder.id);if(fW){await sb.from('wallets').update({balance:Number(fW.balance)+founderShare}).eq('id',fW.id);await sb.from('users').update({total_dividends:(Number(founder.total_dividends)||0)+founderShare}).eq('id',founder.id)}}}await sb.from('transactions').insert({id:generateTxId(),sender_username_id:fromUnId,receiver_username_id:toUnId,amount,fee,status:'completed',comment,is_gift:!!isGift,created_at:new Date().toISOString()});await completeTask(user.id,'transfer');await addXP(user.id,15);pendingTransfer=null;showModal('Готово',`<div style="text-align:center;font-size:24px;font-weight:800">${formatAGS(amount)} AGS</div><div style="color:#666;margin-top:6px">${isGift?'Подарок отправлен':'Отправлено'} @${toUn.username}</div>`,[{text:'OK',onClick:()=>showScreen('main')}])}
+function pinInput(d){if(window.pinBuffer.length>=6)return;window.pinBuffer+=d;updatePinDisplay();if(window.pinBuffer.length===6)setTimeout(validatePin,120)}
 function pinDelete(){window.pinBuffer=window.pinBuffer.slice(0,-1);updatePinDisplay()}
 function updatePinDisplay(){document.querySelectorAll('#pin-display .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<window.pinBuffer.length))}
 async function validatePin(){const user=await getCurrentUser();if(user.pin_hash!==hash(window.pinBuffer)){window.pinAttempts=(window.pinAttempts||0)+1;if(window.pinAttempts>=5){showError('pin-error','PIN заблокирован');setTimeout(()=>showScreen('main'),1500);return}showError('pin-error',`Неверный PIN (${5-window.pinAttempts})`);window.pinBuffer='';updatePinDisplay();return}if(window.pinMode==='transfer')await executeTransfer()}
-async function refreshReceive(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const uname='@'+(primary?.username||'');document.getElementById('receive-username').textContent=uname;const cont=document.getElementById('qr-container');cont.innerHTML='';if(!uname||uname==='@'){cont.textContent='Username не найден';return}if(typeof QRCode==='undefined'){cont.textContent='QR-модуль не загрузился';return}try{const dataUrl=await QRCode.toDataURL(uname,{width:168,margin:1,errorCorrectionLevel:'M',color:{dark:'#000000',light:'#ffffff'}});const img=document.createElement('img');img.src=dataUrl;img.alt='QR '+uname;img.width=168;img.height=168;img.style.display='block';cont.appendChild(img)}catch(err){console.error('QR error:',err);cont.textContent='Не удалось создать QR'}}
+async function refreshReceive(){const user=await getCurrentUser();const primary=await getPrimaryUsername(user.id);const uname='@'+(primary?.username||'');document.getElementById('receive-username').textContent=uname;const cont=document.getElementById('qr-container');cont.innerHTML='';if(typeof QRCode!=='undefined'){QRCode.toCanvas(document.createElement('canvas'),uname,{width:168,margin:1,color:{dark:'#000000',light:'#ffffff'}},(err,canvas)=>{if(!err){cont.appendChild(canvas)}else{cont.textContent='QR error'}})}else{cont.textContent='QR'}}
 function copyReceiveUsername(){navigator.clipboard.writeText(document.getElementById('receive-username').textContent).then(()=>toast('Скопировано')).catch(()=>toast('Скопируйте вручную'))}
 let historyFilter='all';
 async function refreshHistory(){const user=await getCurrentUser();const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false});const myIds=(await getUserUsernames(user.id)).map(u=>u.id);let list=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id));if(historyFilter==='in')list=list.filter(t=>myIds.includes(t.receiver_username_id));if(historyFilter==='out')list=list.filter(t=>myIds.includes(t.sender_username_id));if(historyFilter==='gift')list=list.filter(t=>t.is_gift);document.getElementById('history-list').innerHTML=list.length?(await Promise.all(list.map(t=>renderTxItem(t,user.id)))).join(''):'<div class="empty-state">Нет операций</div>'}
 function filterTx(f,el){historyFilter=f;document.querySelectorAll('#screen-history .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshHistory()}
 async function showTxDetail(id){const{data:tx}=await sb.from('transactions').select('*').eq('id',id).single();if(!tx)return;const{data:s}=await sb.from('usernames').select('username').eq('id',tx.sender_username_id).single();const{data:r}=await sb.from('usernames').select('username').eq('id',tx.receiver_username_id).single();document.getElementById('tx-detail-content').innerHTML=`<div class="summary-row"><span class="label">Тип</span><span>${tx.is_gift?'🎁 Подарок':'Перевод'}</span></div><div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(tx.amount)} AGS</span></div><div class="summary-row"><span class="label">От</span><span>@${s?.username}</span></div><div class="summary-row"><span class="label">Кому</span><span>@${r?.username}</span></div><div class="summary-row"><span class="label">Дата</span><span>${formatDate(tx.created_at)}</span></div><div class="summary-row"><span class="label">ID</span><span style="font-family:monospace;font-size:12px">${tx.id}</span></div>`;showScreen('tx-detail')}
-async function refreshProfile(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const alts=(await getUserUsernames(user.id)).filter(u=>!u.is_primary);const frame=CUSTOMIZATION_OPTIONS.frames.find(f=>f.id===(user.custom_frame||'default'));const avFrame=CUSTOMIZATION_OPTIONS.avatarFrames.find(f=>f.id===(user.custom_avatar_frame||'default'));const bg=CUSTOMIZATION_OPTIONS.bgs.find(b=>b.id===(user.custom_bg||'default'));const pattern=CUSTOMIZATION_OPTIONS.patterns.find(p=>p.id===(user.custom_pattern||'none'));const isDark=['black','blue','red','purple','pink','green','orange','graphite','navy','yellow','light-blue'].includes(user.custom_bg)||user.is_founder;let classes=`profile-header ${frame?.class||''} ${bg?.class||''} ${pattern?.class||''}`;if(isDark)classes+=' dark-mode';if(user.is_founder)classes+=' founder';const stickersHtml=(user.stickers||[]).map(s=>`<div class="sticker" style="left:${s.x}%;top:${s.y}%;transform:rotate(${s.rotate||0}deg)">${s.emoji}</div>`).join('');document.getElementById('profile-header-container').innerHTML=`<div class="${classes}" style="position:relative">${stickersHtml}<div class="avatar-wrapper ${avFrame?.class||''}" onclick="document.getElementById('avatar-input')?.click()">${user.avatar?`<img src="${user.avatar}">`:'<div class="avatar-placeholder">👤</div>'}<div class="avatar-edit-overlay">Изменить</div><input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)"></div><div class="profile-username">@${primary?.username||'?'}</div><div class="profile-meta"><span class="lvl-badge">lvl ${user.level||1}</span>${user.is_founder?'<span class="founder-badge">◆ FOUNDER</span>':''}</div>${user.status_text?`<div class="profile-status">${user.status_text}</div>`:''}${alts.length?`<div class="profile-alt-usernames">${alts.map(a=>`<span class="alt-un-badge">@${a.username}</span>`).join('')}</div>`:''}<div class="profile-date">В Aegis с ${new Date(user.created_at).toLocaleDateString('ru')}</div>${user.is_founder?'<div class="profile-founder-tag">AEGIS FOUNDER</div>':''}<div class="profile-account-num">ACCOUNT #${String(user.account_number||0).padStart(4,'0')}</div></div>`;const uns=await getUserUsernames(user.id);document.getElementById('profile-usernames').innerHTML=uns.map(u=>{const canDelete=!u.is_primary&&uns.length>1;const isAuction=u.sale_status==='auction'&&u.auction_data&&u.auction_data.endTime>Date.now();return`<div style="padding:11px 0;border-bottom:1px solid #eee"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">@${u.username}</span><div>${u.is_primary?'<span class="username-badge">основной</span>':''}<span class="username-badge">${u.category}</span></div></div><div class="un-actions">${!u.sale_status&&!isAuction?`<button class="un-action-btn" onclick="openSellModal('${u.id}')">Продать</button>`:''}${u.sale_status==='listed'?`<button class="un-action-btn" onclick="cancelSale('${u.id}')">Снять</button>`:''}${isAuction?`<button class="un-action-btn" onclick="openAuction('${u.id}')">Аукцион</button><button class="un-action-btn" onclick="cancelAuction('${u.id}')">Снять с аукциона</button>`:''}<button class="un-action-btn" onclick="showUsernameHistory('${u.id}')">История</button>${canDelete?`<button class="un-action-btn" onclick="confirmDelete('${u.id}')">Удалить</button>`:''}</div></div>`}).join('');document.getElementById('buy-username-btn').textContent=isFounder(user)?'+ Создать username (бесплатно)':'+ Купить username — 6000 AGS'}
+async function refreshProfile(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const alts=(await getUserUsernames(user.id)).filter(u=>!u.is_primary);const frame=CUSTOMIZATION_OPTIONS.frames.find(f=>f.id===(user.custom_frame||'default'));const avFrame=CUSTOMIZATION_OPTIONS.avatarFrames.find(f=>f.id===(user.custom_avatar_frame||'default'));const bg=CUSTOMIZATION_OPTIONS.bgs.find(b=>b.id===(user.custom_bg||'default'));const pattern=CUSTOMIZATION_OPTIONS.patterns.find(p=>p.id===(user.custom_pattern||'none'));const isDark=['black','blue','red','purple','pink','green','orange','graphite','navy','yellow','light-blue'].includes(user.custom_bg)||user.is_founder;let classes=`profile-header ${frame?.class||''} ${bg?.class||''} ${pattern?.class||''}`;if(isDark)classes+=' dark-mode';if(user.is_founder)classes+=' founder';const stickersHtml=(user.stickers||[]).map(s=>`<div class="sticker" style="left:${s.x}%;top:${s.y}%;transform:rotate(${s.rotate||0}deg)">${s.emoji}</div>`).join('');document.getElementById('profile-header-container').innerHTML=`<div class="${classes}" style="position:relative">${stickersHtml}<div class="avatar-wrapper ${avFrame?.class||''}" onclick="document.getElementById('avatar-input')?.click()">${user.avatar?`<img src="${user.avatar}">`:'<div class="avatar-placeholder">👤</div>'}<div class="avatar-edit-overlay">Изменить</div><input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)"></div><div class="profile-username">@${primary?.username||'?'}</div><div class="profile-meta"><span class="lvl-badge">lvl ${user.level||1}</span>${user.is_founder?'<span class="founder-badge">◆ FOUNDER</span>':''}</div>${user.status_text?`<div class="profile-status">${user.status_text}</div>`:''}${alts.length?`<div class="profile-alt-usernames">${alts.map(a=>`<span class="alt-un-badge">@${a.username}</span>`).join('')}</div>`:''}<div class="profile-date">В Aegis с ${new Date(user.created_at).toLocaleDateString('ru')}</div>${user.is_founder?'<div class="profile-founder-tag">AEGIS FOUNDER</div>':''}<div class="profile-account-num">ACCOUNT #${String(user.account_number||0).padStart(4,'0')}</div></div>`;const uns=await getUserUsernames(user.id);document.getElementById('profile-usernames').innerHTML=uns.map(u=>{const canDelete=!u.is_primary&&uns.length>1;const isAuction=u.sale_status==='auction'&&u.auction_data&&u.auction_data.endTime>Date.now();return`<div style="padding:11px 0;border-bottom:1px solid #eee"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">@${u.username}</span><div>${u.is_primary?'<span class="username-badge">основной</span>':''}<span class="username-badge">${u.category}</span></div></div><div class="un-actions">${!u.sale_status&&!isAuction?`<button class="un-action-btn" onclick="openSellModal('${u.id}')">Продать</button>`:''}${u.sale_status==='listed'?`<button class="un-action-btn" onclick="cancelSale('${u.id}')">Снять</button>`:''}${isAuction?`<button class="un-action-btn" onclick="openAuction('${u.id}')">Аукцион</button>`:''}<button class="un-action-btn" onclick="showUsernameHistory('${u.id}')">История</button>${canDelete?`<button class="un-action-btn" onclick="confirmDelete('${u.id}')">Удалить</button>`:''}</div></div>`}).join('');document.getElementById('buy-username-btn').textContent=isFounder(user)?'+ Создать username (бесплатно)':'+ Купить username — 6000 AGS'}
 async function handleAvatarUpload(input){const file=input.files[0];if(!file)return;if(file.size>500*1024){toast('Макс 500 КБ');return}const reader=new FileReader();reader.onload=async e=>{const user=await getCurrentUser();await sb.from('users').update({avatar:e.target.result}).eq('id',user.id);toast('Аватар обновлён');refreshProfile()};reader.readAsDataURL(file)}
 async function refreshAppearance(){const user=await getCurrentUser();if(!user)return;const founder=isFounder(user);const render=(type,cid)=>{const cont=document.getElementById(cid);if(!cont)return;cont.innerHTML=CUSTOMIZATION_OPTIONS[type].map(opt=>{if(opt.founderOnly&&!founder)return'';const key=`${type}-${opt.id}`;const owned=founder||(user.purchased_customizations||[]).includes(key)||opt.price===0;const field=CUSTOM_FIELD_MAP[type];const selected=(user[field]||(type==='patterns'?'none':'default'))===opt.id;let prev='';if(type==='frames'||type==='avatarFrames'){prev=`border:3px solid ${opt.color};`;if(opt.id==='double')prev+=`border-style:double;border-width:5px;`;if(opt.id==='dashed')prev+=`border-style:dashed;`;if(opt.id==='thick')prev+=`border-width:5px;`}else if(type==='bgs')prev=`background:${opt.color}`;else prev=`background:#111;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff`;return`<div class="shop-item ${selected?'selected':''}" onclick="buyOrSelect('${type}','${opt.id}',${opt.price})"><div class="shop-item-preview" style="${prev}">${type==='patterns'?opt.icon:''}</div><div class="shop-item-name">${opt.name}</div><div class="shop-item-price">${selected?'✓':(owned?'Бесплатно':formatAGS(opt.price)+' AGS')}</div></div>`}).join('')};render('frames','shop-frames');render('avatarFrames','shop-avatarFrames');render('bgs','shop-bgs');render('patterns','shop-patterns')}
 async function buyOrSelect(type,id,price){const user=await getCurrentUser();if(!user)return;const founder=isFounder(user);const key=`${type}-${id}`;const owned=founder||(user.purchased_customizations||[]).includes(key)||price===0;const field=CUSTOM_FIELD_MAP[type];if(owned){await sb.from('users').update({[field]:id}).eq('id',user.id);toast('Применено');refreshAppearance();refreshProfile();return}const wallet=await getUserWallet(user.id);if(!wallet||Number(wallet.balance)<price){toast('Недостаточно средств');return}showModal(`Купить?`,`Стоимость: ${formatAGS(price)} AGS`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Купить',onClick:async()=>{await sb.from('wallets').update({balance:Number(wallet.balance)-price}).eq('id',wallet.id);const purchased=[...(user.purchased_customizations||[]),key];await sb.from('users').update({[field]:id,purchased_customizations:purchased}).eq('id',user.id);await addXP(user.id,25);toast('Куплено!');refreshAppearance();refreshProfile()}}])}
@@ -725,7 +671,6 @@ async function editStatus(){const user=await getCurrentUser();showModal('Ста�
 async function showUsernameHistory(unId){const{data:un}=await sb.from('usernames').select('*').eq('id',unId).single();if(!un||!un.history)return;const html=(un.history||[]).slice().reverse().map(h=>`<div style="padding:8px 0;border-bottom:1px solid #eee">@${h.username||'?'} · ${new Date(h.date).toLocaleDateString('ru')}</div>`).join('');showModal('История @'+un.username,html||'Нет истории',[{text:'OK',onClick:()=>{}}])}
 async function openSellModal(unId){const{data:u}=await sb.from('usernames').select('*').eq('id',unId).single();if(!u)return;const{basePrice}=classifyUsername(u.username);showModal('Продажа @'+u.username,`<div style="margin-bottom:10px">Рекомендуемая: <strong>${formatAGS(basePrice)} AGS</strong></div><div style="margin-bottom:12px"><label style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><input type="radio" name="sell-type" value="fixed" checked> Фиксированная цена</label><label style="display:flex;align-items:center;gap:8px"><input type="radio" name="sell-type" value="auction"> Аукцион</label></div><div class="input-group"><label>Цена / Старт (мин. 50 AGS)</label><input type="number" id="sell-price-input" min="50" value="${Math.max(50,basePrice)}" style="padding:10px;border:1.5px solid #000;width:100%;border-radius:6px"></div><div class="input-group" id="auction-duration-group" style="display:none;margin-top:10px"><label>Длительность</label><select id="auction-duration" style="padding:10px;border:1.5px solid #000;width:100%;border-radius:6px"><option value="3600000">1 час</option><option value="21600000">6 часов</option><option value="86400000">24 часа</option><option value="259200000">3 дня</option></select></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выставить',onClick:async()=>{const price=parseInt(document.getElementById('sell-price-input').value);if(!price||price<50){toast('Минимум 50 AGS');return}const type=document.querySelector('input[name="sell-type"]:checked').value;if(type==='fixed'){await sb.from('usernames').update({sale_status:'listed',sale_price:price,auction_data:null}).eq('id',unId)}else{const duration=parseInt(document.getElementById('auction-duration').value);await sb.from('usernames').update({sale_status:'auction',auction_data:{startPrice:price,currentBid:price,currentBidder:null,endTime:Date.now()+duration,bids:[]}}).eq('id',unId)}toast(type==='fixed'?'Выставлено':'Аукцион начат');showScreen('profile')}}]);setTimeout(()=>{document.querySelectorAll('input[name="sell-type"]').forEach(r=>{r.onchange=()=>{document.getElementById('auction-duration-group').style.display=r.value==='auction'?'block':'none'}})},50)}
 async function cancelSale(unId){await sb.from('usernames').update({sale_status:null,sale_price:null,auction_data:null}).eq('id',unId);toast('Снято');showScreen('profile')}
-async function cancelAuction(unId){const user=await getCurrentUser();const{data:u,error}=await sb.from('usernames').select('*').eq('id',unId).single();if(error||!u||u.user_id!==user.id||u.sale_status!=='auction'){toast('Аукцион не найден');return}showModal('Снять с аукциона?',u.auction_data?.currentBidder?'Текущая ставка будет возвращена участнику.':'Аукцион будет отменён.',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Снять',onClick:async()=>{try{if(u.auction_data?.currentBidder){const bidderWallet=await getUserWallet(u.auction_data.currentBidder);if(bidderWallet){const{error:refundError}=await sb.from('wallets').update({balance:(Number(bidderWallet.balance)||0)+Number(u.auction_data.currentBid||0)}).eq('id',bidderWallet.id).eq('user_id',u.auction_data.currentBidder);if(refundError)throw refundError}}const{error:clearError}=await sb.from('usernames').update({sale_status:null,sale_price:null,auction_data:null}).eq('id',unId).eq('user_id',user.id);if(clearError)throw clearError;toast('Аукцион снят');showScreen('profile')}catch(err){console.error(err);toast('Не удалось снять аукцион')}}}])}
 async function confirmDelete(unId){const{data:u}=await sb.from('usernames').select('username').eq('id',unId).single();showModal('Удалить @'+u.username+'?','Необратимо',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Удалить',onClick:async()=>{await sb.from('usernames').delete().eq('id',unId);toast('Удалён');showScreen('profile')}}])}
 async function refreshBuyUsername(){const founder=isFounder(await getCurrentUser());document.getElementById('buy-username-hint').textContent=founder?'Founder создаёт бесплатно':'Стоимость 6000 AGS';document.getElementById('buy-username-submit').textContent=founder?'Создать':'Купить за 6000'}
 async function handleBuyUsername(e){e.preventDefault();clearError('buy-error');const user=await getCurrentUser();const username=document.getElementById('buy-username').value.trim().toLowerCase();const founder=isFounder(user);if(validateUsername(username)){showError('buy-error',validateUsername(username));return}if(await findUsernameRecord(username)){showError('buy-error','Занят');return}if(isSacredUsername(username)&&!founder){showError('buy-error','Только Founder');return}if(!founder){if((await getUserUsernames(user.id)).length>=4){showError('buy-error','Макс 4');return}if(Number((await getUserWallet(user.id)).balance)<6000){showError('buy-error','Недостаточно');return}}showModal(founder?'Создать':'Купить',`@${username}`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:founder?'Создать':'Купить',onClick:async()=>{if(!founder){const w=await getUserWallet(user.id);await sb.from('wallets').update({balance:Number(w.balance)-6000}).eq('id',w.id)}const{category}=classifyUsername(username);await sb.from('usernames').insert({user_id:user.id,username,is_primary:false,category,history:[{userId:user.id,username,date:new Date().toISOString()}]});await addXP(user.id,40);toast('Готово');showScreen('profile')}}])}
@@ -734,9 +679,15 @@ async function setPrimary(unId){const user=await getCurrentUser();const uns=awai
 async function handleChangePassword(e){e.preventDefault();clearError('cp-error');const user=await getCurrentUser();if(user.password_hash!==hash(document.getElementById('cp-current').value)){showError('cp-error','Неверный пароль');return}const np=document.getElementById('cp-new').value;if(np.length<4||np!==document.getElementById('cp-new2').value){showError('cp-error','Ошибка');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('Изменён');showScreen('profile')}
 async function handleChangePin(e){e.preventDefault();clearError('cpi-error');const user=await getCurrentUser();if(user.pin_hash&&user.pin_hash!==hash(document.getElementById('cpi-current').value)){showError('cpi-error','Неверный PIN');return}const np=document.getElementById('cpi-new').value;if(!/^[0-9]{6}$/.test(np)||np!==document.getElementById('cpi-new2').value){showError('cpi-error','6 цифр');return}await sb.from('users').update({pin_hash:hash(np)}).eq('id',user.id);toast('PIN изменён');showScreen('profile')}
 async function getTodayTapData(uid){const today=new Date().toISOString().slice(0,10);let{data}=await sb.from('taps').select('*').eq('user_id',uid).eq('date',today).maybeSingle();if(!data){const{data:created}=await sb.from('taps').insert({user_id:uid,date:today,taps_count:0}).select().single();data=created}return data}
-let tapBusy = false;
-async function refreshTap(){const user=await getCurrentUser();const data=await getTodayTapData(user.id);const founder=isFounder(user);const reward=founder?53:2;document.getElementById('tap-count').textContent=(data.taps_count||0).toLocaleString('ru');document.getElementById('tap-earned').textContent=((data.taps_count||0)*reward).toFixed(0);document.getElementById('tap-limit-display').textContent=founder?'(∞)':'/ 10000';document.getElementById('tap-btn').disabled=tapBusy||(!founder&&(data.taps_count||0)>=10000);document.getElementById('tap-reward-text').textContent=founder?'1 нажатие = +53 AGS (Founder)':'1 нажатие = +2 AGS'}
-async function handleTap(e){if(tapBusy)return;const user=await getCurrentUser();if(!user)return;const data=await getTodayTapData(user.id);if(!data)return;const founder=isFounder(user);const currentCount=Number(data.taps_count)||0;if(!founder&&currentCount>=10000){toast('Лимит');return}tapBusy=true;const btn=document.getElementById('tap-btn');btn.disabled=true;btn.style.transform='scale(0.92)';const reward=founder?53:2;const newCount=currentCount+1;try{const{error:tapError}=await sb.from('taps').update({taps_count:newCount}).eq('id',data.id).eq('user_id',user.id);if(tapError)throw tapError;const wallet=await getUserWallet(user.id);if(!wallet)throw new Error('Кошелёк не найден');const{error:walletError}=await sb.from('wallets').update({balance:Math.round(((Number(wallet.balance)||0)+reward)*100)/100}).eq('id',wallet.id).eq('user_id',user.id);if(walletError)throw walletError;await completeTask(user.id,'tap',1);if(newCount%50===0)await addXP(user.id,10)}catch(err){toast('Ошибка тапа');console.error(err)}finally{tapBusy=false;btn.style.transform='';const latest=await getTodayTapData(user.id);const latestCount=Number(latest?.taps_count)||0;btn.disabled=!founder&&latestCount>=10000;await refreshTap()}}
+let tapState=null,tapPendingDelta=0,tapSyncTimer=null;
+function tapPressVisual(down){const btn=document.getElementById('tap-btn');if(btn)btn.classList.toggle('pressed',down)}
+function pulseTapNumbers(){['tap-count','tap-earned'].forEach(id=>{const el=document.getElementById(id);if(!el)return;el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse')})}
+async function refreshTap(){await flushTapSync();const user=await getCurrentUser();if(!user)return;const data=await getTodayTapData(user.id);const founder=isFounder(user);const wallet=await getUserWallet(user.id);tapState={rowId:data.id,userId:user.id,count:data.taps_count||0,reward:founder?53:2,founder,limit:10000,walletId:wallet?wallet.id:null};tapPendingDelta=0;renderTapUI();document.getElementById('tap-limit-display').textContent=founder?'(∞)':'/ 10000';document.getElementById('tap-reward-text').textContent=founder?'1 нажатие = +53 AGS (Founder)':'1 нажатие = +2 AGS'}
+function renderTapUI(){if(!tapState)return;document.getElementById('tap-count').textContent=tapState.count.toLocaleString('ru');document.getElementById('tap-earned').textContent=(tapState.count*tapState.reward).toFixed(0);const reachedLimit=!tapState.founder&&tapState.count>=tapState.limit;const btn=document.getElementById('tap-btn');if(btn)btn.classList.toggle('tap-btn-disabled',reachedLimit)}
+function handleTap(){if(!tapState)return;const reachedLimit=!tapState.founder&&tapState.count>=tapState.limit;if(reachedLimit){toast('Лимит на сегодня достигнут');return}tapState.count++;tapPendingDelta++;renderTapUI();pulseTapNumbers();completeTask(tapState.userId,'tap',1);if(tapState.count%50===0)addXP(tapState.userId,10);clearTimeout(tapSyncTimer);tapSyncTimer=setTimeout(flushTapSync,350)}
+async function flushTapSync(){if(!tapState||tapPendingDelta<=0)return;const delta=tapPendingDelta;const countToSave=tapState.count;tapPendingDelta=0;try{await sb.from('taps').update({taps_count:countToSave}).eq('id',tapState.rowId);if(tapState.walletId){const{data:freshWallet}=await sb.from('wallets').select('*').eq('id',tapState.walletId).single();const earnedDelta=delta*tapState.reward;const newBal=Math.round((Number(freshWallet.balance)+earnedDelta)*100)/100;await sb.from('wallets').update({balance:newBal}).eq('id',tapState.walletId)}}catch(err){console.error(err);if(tapState){tapState.count-=delta;tapPendingDelta+=delta;renderTapUI()}toast('Ошибка синхронизации, попробуйте ещё раз')}}
+window.addEventListener('beforeunload',()=>{flushTapSync()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flushTapSync()});
 let marketTab='fixed';
 function setMarketTab(tab,el){marketTab=tab;document.querySelectorAll('#screen-username-market .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshMarket()}
 async function refreshMarket(){await finishExpiredAuctions();const{data:uns}=await sb.from('usernames').select('*');const cont=document.getElementById('market-list');let list=[];if(marketTab==='fixed')list=(uns||[]).filter(u=>u.sale_status==='listed');else list=(uns||[]).filter(u=>u.sale_status==='auction'&&u.auction_data&&u.auction_data.endTime>Date.now());if(!list.length){cont.innerHTML='<div class="empty-state">Нет предложений</div>';return}cont.innerHTML=(await Promise.all(list.map(async u=>{const seller=await getPrimaryUsername(u.user_id);if(marketTab==='fixed'){return`<div style="border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;cursor:pointer" onclick="buyFromMarket('${u.id}')"><div style="font-weight:700;font-size:16px">@${u.username}</div><div style="font-size:12px;color:#666;margin:3px 0">${u.category} · @${seller?.username||'?'}</div><div style="font-weight:700">${formatAGS(u.sale_price)} AGS</div></div>`}else{const left=Math.max(0,u.auction_data.endTime-Date.now());const mins=Math.floor(left/60000);return`<div style="border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;cursor:pointer" onclick="openAuction('${u.id}')"><div style="font-weight:700;font-size:16px">@${u.username}</div><div style="font-size:12px;color:#666;margin:3px 0">${u.category} · @${seller?.username||'?'}</div><div style="font-weight:700">${formatAGS(u.auction_data.currentBid)} AGS</div><div class="auction-timer">Осталось ~${mins} мин</div></div>`}}))).join('')}
@@ -746,37 +697,36 @@ async function placeBid(unId){const user=await getCurrentUser();const{data:un}=a
 async function finishExpiredAuctions(){const{data:uns}=await sb.from('usernames').select('*').eq('sale_status','auction');for(const u of (uns||[])){if(u.auction_data&&u.auction_data.endTime<Date.now()){if(u.auction_data.currentBidder){const fee=Math.floor(u.auction_data.currentBid*0.1);const sellerW=await getUserWallet(u.user_id);if(sellerW)await sb.from('wallets').update({balance:Number(sellerW.balance)+(u.auction_data.currentBid-fee)}).eq('id',sellerW.id);const hist=[...(u.history||[]),{userId:u.auction_data.currentBidder,username:u.username,date:new Date().toISOString()}];await sb.from('usernames').update({user_id:u.auction_data.currentBidder,sale_status:null,auction_data:null,history:hist}).eq('id',u.id)}else{await sb.from('usernames').update({sale_status:null,auction_data:null}).eq('id',u.id)}}}}
 async function refreshLeaderboard(){await finishExpiredAuctions();const tab=window.lbTab||'level';const{data:users}=await sb.from('users').select('*');let list=[];if(tab==='level'){list=(users||[]).map(u=>({user:u,score:u.level||1,label:'lvl '+(u.level||1)})).sort((a,b)=>b.score-a.score).slice(0,20)}else if(tab==='earned'){list=await Promise.all((users||[]).map(async u=>{const w=await getUserWallet(u.id);return{user:u,score:w?Number(w.balance):0,label:formatAGS(w?w.balance:0)+' AGS'}}));list=list.sort((a,b)=>b.score-a.score).slice(0,20)}else{const{data:txs}=await sb.from('transactions').select('*');list=await Promise.all((users||[]).map(async u=>{const myIds=(await getUserUsernames(u.id)).map(x=>x.id);const vol=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).reduce((s,t)=>s+Number(t.amount),0);return{user:u,score:vol,label:formatAGS(vol)+' AGS'}}));list=list.sort((a,b)=>b.score-a.score).slice(0,20)}document.getElementById('leaderboard-list').innerHTML=(await Promise.all(list.map(async(item,i)=>{const primary=await getPrimaryUsername(item.user.id);return`<div class="lb-item"><div class="lb-rank">${i+1}</div><div class="lb-info"><div class="lb-name">@${primary?.username||'?'} ${item.user.is_founder?'◆':''}</div><div class="lb-value">lvl ${item.user.level||1}</div></div><div class="lb-score">${item.label}</div></div>`}))).join('')}
 function setLbTab(tab,el){window.lbTab=tab;document.querySelectorAll('#screen-leaderboard .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshLeaderboard()}
-async function refreshFounderDashboard(){const user=await getCurrentUser();if(!isFounder(user)){showScreen('main');return}const{count:usersCount}=await sb.from('users').select('*',{count:'exact',head:true});const{data:allTx}=await sb.from('transactions').select('amount,fee,created_at');const now=Date.now();const day=86400000,week=7*day,month=30*day;let volDay=0,volWeek=0,volMonth=0,volAll=0,feeAll=0; (allTx||[]).forEach(t=>{const a=Number(t.amount)||0;const f=Number(t.fee)||0;const ts=new Date(t.created_at).getTime();volAll+=a;feeAll+=f;if(now-ts<day)volDay+=a;if(now-ts<week)volWeek+=a;if(now-ts<month)volMonth+=a});const founderFromFees=Math.floor(feeAll*FOUNDER_CONFIG.commissionShare);const poolFromFees=feeAll-founderFromFees;document.getElementById('fd-content').innerHTML=`
+async function refreshFounderDashboard(){const user=await getCurrentUser();if(!isFounder(user)){showScreen('main');return}const{count:usersCount}=await sb.from('users').select('*',{count:'exact',head:true});const{data:allTx}=await sb.from('transactions').select('amount,fee,created_at');const now=Date.now();const day=86400000,week=7*day,month=30*day;let volDay=0,volWeek=0,volMonth=0,volAll=0,feeAll=0; (allTx||[]).forEach(t=>{const a=Number(t.amount)||0;const f=Number(t.fee)||0;const ts=new Date(t.created_at).getTime();volAll+=a;feeAll+=f;if(now-ts<day)volDay+=a;if(now-ts<week)volWeek+=a;if(now-ts<month)volMonth+=a});const founderFromFees=Math.floor(feeAll*FOUNDER_CONFIG.commissionShare);document.getElementById('fd-content').innerHTML=`
 <div style="background:#000;color:#fff;padding:14px;border-radius:8px;text-align:center;margin-bottom:14px">
-<div style="font-size:11px;opacity:.8">Получено с комиссий</div>
-<div style="font-size:22px;font-weight:800">${formatAGS(Math.max(Number(user.total_dividends)||0,founderFromFees))} AGS</div>
-<div style="font-size:11px;opacity:.75;margin-top:6px">Общий пул: ${formatAGS(poolFromFees)} AGS</div>
+  <div style="font-size:11px;opacity:.8">Получено с комиссий</div>
+  <div style="font-size:22px;font-weight:800">${formatAGS(user.total_dividends||founderFromFees)} AGS</div>
 </div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-<div style="border:1.5px solid #000;padding:12px;border-radius:7px;text-align:center"><div style="font-size:11px;color:#666">Пользователей</div><div style="font-size:18px;font-weight:800">${usersCount||0}</div></div>
-<div style="border:1.5px solid #000;padding:12px;border-radius:7px;text-align:center"><div style="font-size:11px;color:#666">Транзакций</div><div style="font-size:18px;font-weight:800">${(allTx||[]).length}</div></div>
+  <div style="border:1.5px solid #000;padding:12px;border-radius:7px;text-align:center"><div style="font-size:11px;color:#666">Пользователей</div><div style="font-size:18px;font-weight:800">${usersCount||0}</div></div>
+  <div style="border:1.5px solid #000;padding:12px;border-radius:7px;text-align:center"><div style="font-size:11px;color:#666">Транзакций</div><div style="font-size:18px;font-weight:800">${(allTx||[]).length}</div></div>
 </div>
 <div class="section-title">Обороты (сумма переводов)</div>
 <div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>За сутки</span><strong>${formatAGS(volDay)} AGS</strong></div>
 <div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>За неделю</span><strong>${formatAGS(volWeek)} AGS</strong></div>
 <div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>За месяц</span><strong>${formatAGS(volMonth)} AGS</strong></div>
 <div style="border:1.5px solid #000;padding:10px;border-radius:7px;display:flex;justify-content:space-between"><span>Всего</span><strong>${formatAGS(volAll)} AGS</strong></div>
-<div style="margin-top:12px;border:1.5px solid #000;padding:12px;border-radius:7px"><div class="section-title" style="margin-bottom:8px">Комиссии 4%</div><div style="display:flex;justify-content:space-between;margin-bottom:5px"><span>Founder · 2%</span><strong>${formatAGS(founderFromFees)} AGS</strong></div><div style="display:flex;justify-content:space-between"><span>Общий пул · 2%</span><strong>${formatAGS(poolFromFees)} AGS</strong></div></div>
 `}
 function showConvertModal(){getCurrentUser().then(async user=>{const wallet=await getUserWallet(user.id);const ags=wallet?wallet.balance:0;showModal('Конвертация',`<div style="text-align:center;font-size:28px;font-weight:800;margin-bottom:12px">${formatAGS(ags)} AGS</div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>USD</span><strong>~${formatUSD(ags)}</strong></div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>EUR</span><strong>~€${(ags/108).toFixed(2)}</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:6px;display:flex;justify-content:space-between"><span>RUB</span><strong>~₽${(ags*0.92).toFixed(0)}</strong></div>`,[{text:'Закрыть',onClick:()=>{}}])})}
-// Reliable authentication/navigation bindings for mobile browsers.
+(async()=>{const user=await getCurrentUser();if(user)showScreen('main');else showScreen('login')})();
+
+// Mobile / Android form fix
 document.addEventListener('DOMContentLoaded',()=>{
-  const loginForm=document.getElementById('form-login');
-  const registerForm=document.getElementById('form-register');
-  const recoveryForm=document.getElementById('form-recovery');
-  if(loginForm)loginForm.addEventListener('submit',handleLogin);
-  if(registerForm)registerForm.addEventListener('submit',handleRegister);
-  if(recoveryForm)recoveryForm.addEventListener('submit',handleRecovery);
-  const registerLink=document.getElementById('go-register');
-  const recoveryLink=document.getElementById('go-recovery');
-  if(registerLink)registerLink.addEventListener('click',e=>{e.preventDefault();showScreen('register')});
-  if(recoveryLink)recoveryLink.addEventListener('click',e=>{e.preventDefault();showScreen('recovery')});
+  const loginBtn=document.getElementById('btn-login');
+  const regBtn=document.getElementById('btn-register');
+  if(loginBtn)loginBtn.addEventListener('click',function(e){e.preventDefault();handleLogin(e);});
+  if(regBtn)regBtn.addEventListener('click',function(e){e.preventDefault();handleRegister(e);});
 });
-(async()=>{try{const user=await getCurrentUser();await showScreen(user?'main':'login')}catch(err){console.error('Startup error:',err);await showScreen('login')}})();
+// Also bind touchend for better mobile response
+['btn-login','btn-register'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('touchend',function(e){e.preventDefault();if(id==='btn-login')handleLogin(e);else handleRegister(e);},{passive:false});
+});
 </script>
 </body>
+</html>
