@@ -7,6 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
+/* === ПОЛНЫЙ СТИЛЬ AEGIS === */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#000;min-height:100vh;display:flex;justify-content:center}
 .app{width:100%;max-width:420px;min-height:100vh;position:relative;padding-bottom:80px}
@@ -34,14 +35,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:10px;z-index:100}
 .nav-item{font-size:12px;text-align:center;cursor:pointer;color:#666}
 .nav-item.active{color:#000;font-weight:700}
-.profile-header{text-align:center;padding:20px;border:2px solid #000;border-radius:12px;margin-bottom:20px}
+
+/* Профиль и Кастомизация */
+.profile-header{text-align:center;padding:30px 20px;border:2px solid #000;border-radius:16px;margin-bottom:20px;position:relative;overflow:hidden;background:#fff;transition:all 0.3s}
+.avatar-wrapper{width:100px;height:100px;border-radius:50%;border:4px solid #fff;margin:0 auto 15px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;position:relative}
+.profile-name{font-size:22px;font-weight:800;margin-bottom:5px}
+.profile-lvl{font-size:12px;background:#000;color:#fff;padding:3px 8px;border-radius:4px;display:inline-block}
+.menu-item{padding:15px 0;border-bottom:1px solid #eee;font-size:15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.menu-item::after{content:'→';opacity:0.3}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.shop-item{border:1.5px solid #000;padding:10px;text-align:center;cursor:pointer;border-radius:8px}
+.shop-item.selected{background:#000;color:#fff}
+.sticker{position:absolute;font-size:24px;cursor:move;z-index:10}
 .qr-box{margin:20px auto;display:flex;justify-content:center}
-.menu-item{padding:15px 0;border-bottom:1px solid #eee;font-size:15px;cursor:pointer;display:flex;justify-content:space-between}
-.section-title{font-size:12px;font-weight:700;text-transform:uppercase;margin:20px 0 10px;color:#666}
 .tx-item{padding:12px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between}
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
-.modal.show{display:flex}
-.modal-content{background:#fff;padding:20px;border-radius:12px;width:100%;max-width:350px}
+.auction-card{border:1.5px solid #000;padding:15px;border-radius:8px;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -76,35 +84,51 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     <div id="screen-main" class="screen">
         <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
         <div class="balance-section">
-            <div style="font-size:12px;color:#666">БАЛАНС</div>
+            <div style="font-size:12px;color:#666">ВАШ БАЛАНС</div>
             <div class="balance-amount"><span id="main-bal">0</span> AGS</div>
             <div style="font-size:14px;color:#666">≈ $<span id="main-usd">0.00</span></div>
         </div>
         <div class="actions-grid">
             <button class="action-btn" onclick="nav('transfer')">Перевести</button>
-            <button class="action-btn" onclick="nav('history')">История</button>
+            <button class="action-btn" onclick="nav('receive')">Получить</button>
+            <button class="action-btn" onclick="nav('market')">Маркет</button>
+            <button class="action-btn" onclick="nav('tap')">Tap AGS</button>
         </div>
-        <div class="section-title">Tap to Earn</div>
-        <button class="tap-btn" onclick="doTap()">TAP</button>
-        <div style="text-align:center;font-size:12px;color:#666">+0.2 AGS за тап</div>
+        <div class="section-title">Последние операции</div>
+        <div id="main-tx-list"></div>
     </div>
 
     <!-- PROFILE -->
     <div id="screen-profile" class="screen">
-        <div class="profile-header">
-            <div style="font-size:24px;font-weight:800" id="prof-name">@user</div>
-            <div style="color:#666;margin-top:5px" id="prof-lvl">lvl 1</div>
-            <div class="qr-box" id="prof-qr"></div>
+        <div class="profile-header" id="prof-header">
+            <div class="avatar-wrapper" id="prof-avatar">👤</div>
+            <div class="profile-name" id="prof-name">@user</div>
+            <div class="profile-lvl" id="prof-lvl">lvl 1</div>
+            <div id="prof-stickers-area" style="height:100px;position:relative;margin-top:10px"></div>
         </div>
-        <div class="menu-item" onclick="nav('leaderboard')">Лидерборд →</div>
-        <div class="menu-item" onclick="logout()">Выйти →</div>
+        <div class="menu-item" onclick="nav('appearance')">🎨 Внешний вид</div>
+        <div class="menu-item" onclick="nav('stickers')">✨ Смайлики</div>
+        <div class="menu-item" onclick="nav('leaderboard')">🏆 Лидерборд</div>
+        <div class="menu-item" onclick="logout()">🚪 Выйти</div>
     </div>
 
-    <!-- HISTORY -->
-    <div id="screen-history" class="screen">
-        <h2 style="margin-bottom:20px">История</h2>
-        <div id="hist-list"><div style="color:#666;text-align:center;padding:20px">Загрузка...</div></div>
-        <button class="btn btn-outline" style="margin-top:20px" onclick="nav('main')">Назад</button>
+    <!-- APPEARANCE -->
+    <div id="screen-appearance" class="screen">
+        <h2 style="margin-bottom:20px">Кастомизация</h2>
+        <div class="section-title">Рамка профиля</div>
+        <div class="shop-grid" id="shop-frames"></div>
+        <div class="section-title">Фон</div>
+        <div class="shop-grid" id="shop-bgs"></div>
+        <button class="btn btn-outline" onclick="nav('profile')">Сохранить и назад</button>
+    </div>
+
+    <!-- STICKERS -->
+    <div id="screen-stickers" class="screen">
+        <h2 style="margin-bottom:20px">Смайлики</h2>
+        <div class="input-group"><input type="text" id="sticker-input" placeholder="Введите смайлик (например 😎)"></div>
+        <button class="btn" onclick="addSticker()" style="margin-bottom:20px">Добавить</button>
+        <div id="stickers-list"></div>
+        <button class="btn btn-outline" onclick="nav('profile')">Назад</button>
     </div>
 
     <!-- TRANSFER -->
@@ -117,6 +141,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
             <button type="submit" class="btn">Отправить</button>
         </form>
         <button class="btn btn-outline" style="margin-top:10px" onclick="nav('main')">Назад</button>
+    </div>
+
+    <!-- RECEIVE -->
+    <div id="screen-receive" class="screen">
+        <h2 style="margin-bottom:20px;text-align:center">Получить</h2>
+        <div class="qr-box" id="recv-qr"></div>
+        <div style="text-align:center;font-size:20px;font-weight:700;margin-bottom:20px" id="recv-un"></div>
+        <button class="btn btn-outline" onclick="nav('main')">Назад</button>
+    </div>
+
+    <!-- TAP -->
+    <div id="screen-tap" class="screen">
+        <h2 style="margin-bottom:20px;text-align:center">Tap AGS</h2>
+        <button class="tap-btn" onclick="doTap()">TAP</button>
+        <div style="text-align:center;margin-top:20px"><button class="btn btn-outline" onclick="nav('main')">Назад</button></div>
+    </div>
+
+    <!-- MARKET -->
+    <div id="screen-market" class="screen">
+        <h2 style="margin-bottom:20px">Маркет Username</h2>
+        <div id="market-list"></div>
+        <button class="btn btn-outline" style="margin-top:20px" onclick="nav('main')">Назад</button>
     </div>
 
     <!-- LEADERBOARD -->
@@ -137,22 +183,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <script>
 // === CONFIG ===
 const SB_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
-const SB_KEY = 'ВСТАВЬ_СЮДА_СВОЙ_sb_publishable_КЛЮЧ'; 
+const SB_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U'; 
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
 let me = null;
+let myUn = null;
 
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
-function nav(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('screen-'+s).classList.add('active');if(s==='main')loadMain();if(s==='profile')loadProfile();if(s==='history')loadHistory();if(s==='leaderboard')loadLB()}
 function hash(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return 'h_'+Math.abs(h).toString(36)}
 
+// Навигация
+function nav(s){
+    document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+    const el = document.getElementById('screen-'+s);
+    if(el) el.classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    if(s==='main') { document.querySelector('[onclick="nav(\'main\')"]').classList.add('active'); loadMain(); }
+    if(s==='profile') { document.querySelector('[onclick="nav(\'profile\')"]').classList.add('active'); loadProfile(); }
+    
+    if(s==='appearance') loadAppearance();
+    if(s==='stickers') loadStickers();
+    if(s==='receive') loadReceive();
+    if(s==='market') loadMarket();
+    if(s==='leaderboard') loadLB();
+}
+
+// Авторизация
 async function handleLogin(e){
     e.preventDefault();
     const u=document.getElementById('login-user').value.trim().replace('@','');
     const p=document.getElementById('login-pass').value;
     const {data,err}=await sb.from('users').select('*').eq('username',u).single();
-    if(err||!data||data.password_hash!==hash(p)){document.getElementById('login-err').innerText='Неверные данные';document.getElementById('login-err').classList.add('show');return}
-    me=data;toast('Добро пожаловать!');nav('main');
+    if(err||!data||data.password_hash!==hash(p)){
+        const errBox=document.getElementById('login-err');
+        errBox.innerText='Неверные данные';errBox.classList.add('show');return;
+    }
+    me=data;
+    const {data:un}=await sb.from('usernames').select('*').eq('user_id',me.id).eq('is_primary',true).single();
+    myUn=un;
+    toast('Добро пожаловать!');nav('main');
 }
 
 async function handleReg(e){
@@ -169,10 +239,44 @@ async function handleReg(e){
     toast('Успешно! Войдите.');nav('login');
 }
 
+// Основные функции
 async function loadMain(){
     if(!me)return;
     const {data:w}=await sb.from('wallets').select('balance').eq('user_id',me.id).single();
     if(w){document.getElementById('main-bal').innerText=Math.floor(w.balance);document.getElementById('main-usd').innerText=(w.balance/100).toFixed(2)}
+    
+    // История
+    const {data:txs}=await sb.from('transactions').select('*,sender:sender_username_id(username),receiver:receiver_username_id(username)').or(`sender_username_id.eq.${myUn.id},receiver_username_id.eq.${myUn.id}`).order('created_at',{ascending:false}).limit(5);
+    const box=document.getElementById('main-tx-list');
+    if(txs&&txs.length) {
+        box.innerHTML=txs.map(t=>{
+            const isOut=t.sender?.username===myUn.username;
+            return `<div class="tx-item"><div>${isOut?'→':'←'} ${isOut?t.receiver?.username:t.sender?.username}</div><div style="font-weight:700">${isOut?'-':'+'}${t.amount}</div></div>`;
+        }).join('');
+    } else box.innerHTML='<div style="color:#666;text-align:center">Нет операций</div>';
+}
+
+async function loadProfile(){
+    if(!me)return;
+    document.getElementById('prof-name').innerText='@'+myUn.username;
+    document.getElementById('prof-lvl').innerText='lvl '+me.level;
+    
+    // Применяем кастомизацию
+    const header=document.getElementById('prof-header');
+    header.style.borderColor=me.custom_frame_color||'#000';
+    header.style.backgroundColor=me.custom_bg||'#fff';
+    
+    // Стикеры
+    const area=document.getElementById('prof-stickers-area');
+    area.innerHTML='';
+    if(me.stickers) {
+        JSON.parse(me.stickers).forEach(s=>{
+            const el=document.createElement('div');
+            el.className='sticker';el.textContent=s.char;
+            el.style.left=s.x+'%';el.style.top=s.y+'%';
+            area.appendChild(el);
+        });
+    }
 }
 
 async function doTap(){
@@ -181,31 +285,9 @@ async function doTap(){
     if(w){
         const nb=w.balance+0.2;
         await sb.from('wallets').update({balance:nb}).eq('user_id',me.id);
-        document.getElementById('main-bal').innerText=Math.floor(nb);
-        const b=document.querySelector('.tap-btn');b.style.transform='scale(0.95)';setTimeout(()=>b.style.transform='scale(1)',100);
+        toast('+0.2 AGS');
+        if(document.getElementById('screen-main').classList.contains('active')) loadMain();
     }
-}
-
-async function loadProfile(){
-    if(!me)return;
-    const {data:un}=await sb.from('usernames').select('username').eq('user_id',me.id).eq('is_primary',true).single();
-    if(un){
-        document.getElementById('prof-name').innerText='@'+un.username;
-        document.getElementById('prof-lvl').innerText='lvl '+me.level;
-        document.getElementById('prof-qr').innerHTML='';
-        new QRCode(document.getElementById('prof-qr'),{text:'aegis://'+un.username,width:128,height:128});
-    }
-}
-
-async function loadHistory(){
-    if(!me)return;
-    const {data:txs}=await sb.from('transactions').select('*,sender:sender_username_id(username),receiver:receiver_username_id(username)').or(`sender_username_id.eq.${me.id},receiver_username_id.eq.${me.id}`).order('created_at',{ascending:false}).limit(20);
-    const box=document.getElementById('hist-list');
-    if(!txs||!txs.length){box.innerHTML='<div style="color:#666;text-align:center">Нет операций</div>';return}
-    box.innerHTML=txs.map(t=>{
-        const isOut=t.sender?.username===document.getElementById('prof-name').innerText.replace('@','');
-        return `<div class="tx-item"><div>${isOut?'→':'←'} ${isOut?t.receiver?.username:t.sender?.username}</div><div style="font-weight:700">${isOut?'-':'+'}${t.amount}</div></div>`;
-    }).join('');
 }
 
 async function doTransfer(e){
@@ -213,21 +295,69 @@ async function doTransfer(e){
     const to=document.getElementById('tr-to').value.trim().replace('@','');
     const amt=parseFloat(document.getElementById('tr-amt').value);
     const {data:rU}=await sb.from('users').select('id').eq('username',to).single();
-    if(!rU){document.getElementById('tr-err').innerText='Пользователь не найден';document.getElementById('tr-err').classList.add('show');return}
+    if(!rU){document.getElementById('tr-err').innerText='Не найден';document.getElementById('tr-err').classList.add('show');return}
     const {data:mW}=await sb.from('wallets').select('balance').eq('user_id',me.id).single();
-    if(mW.balance<amt){document.getElementById('tr-err').innerText='Недостаточно средств';document.getElementById('tr-err').classList.add('show');return}
+    if(mW.balance<amt){document.getElementById('tr-err').innerText='Мало средств';document.getElementById('tr-err').classList.add('show');return}
     
-    // Списываем у себя
     await sb.from('wallets').update({balance:mW.balance-amt}).eq('user_id',me.id);
-    // Начисляем получателю
     const {data:rW}=await sb.from('wallets').select('balance').eq('user_id',rU.id).single();
     await sb.from('wallets').update({balance:rW.balance+amt}).eq('user_id',rU.id);
-    // Записываем транзакцию
-    const {data:mUn}=await sb.from('usernames').select('id').eq('user_id',me.id).eq('is_primary',true).single();
-    const {data:rUn}=await sb.from('usernames').select('id').eq('user_id',rU.id).eq('is_primary',true).single();
-    await sb.from('transactions').insert([{sender_username_id:mUn.id,receiver_username_id:rUn.id,amount:amt,status:'completed'}]);
     
-    toast('Перевод выполнен!');nav('main');
+    const {data:rUn}=await sb.from('usernames').select('id').eq('user_id',rU.id).eq('is_primary',true).single();
+    await sb.from('transactions').insert([{sender_username_id:myUn.id,receiver_username_id:rUn.id,amount:amt,status:'completed'}]);
+    
+    toast('Отправлено!');nav('main');
+}
+
+function loadReceive(){
+    document.getElementById('recv-un').innerText='@'+myUn.username;
+    document.getElementById('recv-qr').innerHTML='';
+    new QRCode(document.getElementById('recv-qr'),{text:'aegis://'+myUn.username,width:150,height:150});
+}
+
+// Кастомизация
+const frames=['#000','#007bff','#ff3b30','#34c759','#af52de'];
+const bgs=['#fff','#f0f0f0','#000','#1c1c1e'];
+
+function loadAppearance(){
+    const fBox=document.getElementById('shop-frames');
+    fBox.innerHTML=frames.map(c=>`<div class="shop-item" onclick="setCustom('frame','${c}')" style="border-color:${c}"><div style="width:30px;height:30px;border-radius:50%;border:3px solid ${c};margin:0 auto"></div></div>`).join('');
+    
+    const bBox=document.getElementById('shop-bgs');
+    bBox.innerHTML=bgs.map(c=>`<div class="shop-item" onclick="setCustom('bg','${c}')" style="background:${c}"><div style="width:30px;height:30px;border-radius:50%;margin:0 auto"></div></div>`).join('');
+}
+
+async function setCustom(type,val){
+    if(type==='frame') await sb.from('users').update({custom_frame_color:val}).eq('id',me.id);
+    if(type==='bg') await sb.from('users').update({custom_bg:val}).eq('id',me.id);
+    me[type==='frame'?'custom_frame_color':'custom_bg']=val;
+    toast('Сохранено');
+}
+
+// Стикеры
+function loadStickers(){
+    const list=document.getElementById('stickers-list');
+    const stickers=me.stickers?JSON.parse(me.stickers):[];
+    list.innerHTML=stickers.map((s,i)=>`<div style="padding:10px;border-bottom:1px solid #eee;display:flex;justify-content:space-between">${s.char} <span style="color:red;cursor:pointer" onclick="delSticker(${i})">✕</span></div>`).join('');
+}
+
+async function addSticker(){
+    const char=document.getElementById('sticker-input').value;
+    if(!char)return;
+    const stickers=me.stickers?JSON.parse(me.stickers):[];
+    stickers.push({char,x:10,y:10});
+    await sb.from('users').update({stickers:JSON.stringify(stickers)}).eq('id',me.id);
+    me.stickers=JSON.stringify(stickers);
+    document.getElementById('sticker-input').value='';
+    loadStickers();
+}
+
+async function delSticker(i){
+    const stickers=JSON.parse(me.stickers);
+    stickers.splice(i,1);
+    await sb.from('users').update({stickers:JSON.stringify(stickers)}).eq('id',me.id);
+    me.stickers=JSON.stringify(stickers);
+    loadStickers();
 }
 
 async function loadLB(){
@@ -235,7 +365,12 @@ async function loadLB(){
     document.getElementById('lb-list').innerHTML=data.map((u,i)=>`<div class="tx-item"><div>#${i+1} @${u.username}</div><div>lvl ${u.level}</div></div>`).join('');
 }
 
-function logout(){me=null;nav('login')}
+async function loadMarket(){
+    // Заглушка для маркета
+    document.getElementById('market-list').innerHTML='<div style="text-align:center;padding:20px;color:#666">Маркет скоро откроется</div>';
+}
+
+function logout(){me=null;myUn=null;nav('login')}
 nav('login');
 </script>
 </body>
