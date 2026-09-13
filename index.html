@@ -13,204 +13,230 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .screen{display:none;padding:20px 16px}
 .screen.active{display:block;animation:fadeIn .25s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.logo{text-align:center;font-size:26px;font-weight:800;margin-bottom:30px;padding-top:20px}
-.btn{padding:15px;background:#000;color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer;border-radius:8px;width:100%;margin-top:10px}
-.form{display:flex;flex-direction:column;gap:15px}
-.input-group input{padding:15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%}
-.error{color:red;margin-top:10px;text-align:center;font-size:14px}
-.balance-section{text-align:center;margin-top:40px}
-.balance-amount{font-size:50px;font-weight:800}
-.tap-btn{width:200px;height:200px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;margin:40px auto;display:block;cursor:pointer}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 20px;border-radius:20px;opacity:0;transition:0.3s;z-index:999}
+.logo{text-align:center;font-size:26px;font-weight:800;letter-spacing:1.5px;margin-bottom:26px;padding-top:8px}
+.logo-circle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:2px solid #000;border-radius:50%;margin-right:5px;font-size:17px}
+.btn{padding:13px 15px;background:#000;color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;border-radius:6px;font-family:inherit;width:100%}
+.btn:hover{opacity:.88}
+.btn-outline{background:#fff;color:#000;border:1.5px solid #000}
+.form{display:flex;flex-direction:column;gap:12px}
+.input-group{display:flex;flex-direction:column;gap:5px}
+.input-group label{font-size:12px;font-weight:700;text-transform:uppercase}
+.input-group input,.input-group select{padding:12px;border:1.5px solid #000;font-size:16px;border-radius:6px;width:100%}
+.error{color:#000;font-size:13px;padding:10px;border:1.5px solid #000;background:#f5f5f5;display:none;margin-top:10px}
+.error.show{display:block}
+.balance-section{text-align:center;padding:30px 0;border-bottom:1.5px solid #000;margin-bottom:20px}
+.balance-amount{font-size:48px;font-weight:800}
+.actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.action-btn{padding:15px;background:#fff;border:1.5px solid #000;font-size:14px;font-weight:600;cursor:pointer;border-radius:6px}
+.tap-btn{width:180px;height:180px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;cursor:pointer;margin:20px auto;display:block}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 20px;border-radius:6px;opacity:0;transition:opacity 0.3s;z-index:999}
 .toast.show{opacity:1}
-.qr-box{margin:30px auto;display:flex;justify-content:center}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:10px;z-index:100}
+.nav-item{font-size:12px;text-align:center;cursor:pointer;color:#666}
+.nav-item.active{color:#000;font-weight:700}
+.profile-header{text-align:center;padding:20px;border:2px solid #000;border-radius:12px;margin-bottom:20px}
+.qr-box{margin:20px auto;display:flex;justify-content:center}
+.menu-item{padding:15px 0;border-bottom:1px solid #eee;font-size:15px;cursor:pointer;display:flex;justify-content:space-between}
+.section-title{font-size:12px;font-weight:700;text-transform:uppercase;margin:20px 0 10px;color:#666}
+.tx-item{padding:12px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+.modal.show{display:flex}
+.modal-content{background:#fff;padding:20px;border-radius:12px;width:100%;max-width:350px}
 </style>
 </head>
 <body>
 
 <div class="app">
-    <!-- ЭКРАН ВХОДА -->
+    <!-- LOGIN -->
     <div id="screen-login" class="screen active">
-        <div class="logo">AEGI$</div>
+        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
         <form class="form" onsubmit="handleLogin(event)">
-            <div class="input-group"><input type="text" id="login-user" placeholder="Username" required></div>
-            <div class="input-group"><input type="password" id="login-pass" placeholder="Пароль" required></div>
+            <div class="input-group"><label>Username</label><input type="text" id="login-user" placeholder="@username" required></div>
+            <div class="input-group"><label>Пароль</label><input type="password" id="login-pass" required></div>
             <div id="login-err" class="error"></div>
             <button type="submit" class="btn">Войти</button>
         </form>
-        <div style="text-align:center;margin-top:20px"><a href="#" onclick="showScreen('register')">Создать аккаунт</a></div>
+        <div style="text-align:center;margin-top:20px"><a href="#" onclick="nav('register')">Создать аккаунт</a></div>
     </div>
 
-    <!-- ЭКРАН РЕГИСТРАЦИИ -->
+    <!-- REGISTER -->
     <div id="screen-register" class="screen">
-        <div class="logo">AEGI$</div>
+        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
         <form class="form" onsubmit="handleReg(event)">
-            <div class="input-group"><input type="text" id="reg-user" placeholder="Username (5-12 симв.)" required></div>
-            <div class="input-group"><input type="password" id="reg-pass" placeholder="Пароль" required></div>
-            <div class="input-group"><input type="password" id="reg-pass2" placeholder="Повтор пароля" required></div>
+            <div class="input-group"><label>Username</label><input type="text" id="reg-user" required></div>
+            <div class="input-group"><label>Пароль</label><input type="password" id="reg-pass" required></div>
+            <div class="input-group"><label>Повтор</label><input type="password" id="reg-pass2" required></div>
             <div id="reg-err" class="error"></div>
             <button type="submit" class="btn">Создать</button>
         </form>
-        <div style="text-align:center;margin-top:20px"><a href="#" onclick="showScreen('login')">Назад ко входу</a></div>
+        <div style="text-align:center;margin-top:20px"><a href="#" onclick="nav('login')">Назад</a></div>
     </div>
 
-    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <!-- MAIN -->
     <div id="screen-main" class="screen">
-        <div class="logo">AEGI$</div>
+        <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
         <div class="balance-section">
-            <div style="color:#666;font-size:12px">ВАШ БАЛАНС</div>
-            <div class="balance-amount"><span id="main-balance">0</span> AGS</div>
-            <div style="color:#666;margin-top:5px">≈ $<span id="main-usd">0.00</span></div>
+            <div style="font-size:12px;color:#666">БАЛАНС</div>
+            <div class="balance-amount"><span id="main-bal">0</span> AGS</div>
+            <div style="font-size:14px;color:#666">≈ $<span id="main-usd">0.00</span></div>
         </div>
-        
-        <button class="tap-btn" onclick="doTap()">TAP TO EARN</button>
-        
-        <div class="qr-box" id="qr-container"></div>
-        
-        <div style="text-align:center;margin-top:20px"><a href="#" onclick="logout()">Выйти из аккаунта</a></div>
+        <div class="actions-grid">
+            <button class="action-btn" onclick="nav('transfer')">Перевести</button>
+            <button class="action-btn" onclick="nav('history')">История</button>
+        </div>
+        <div class="section-title">Tap to Earn</div>
+        <button class="tap-btn" onclick="doTap()">TAP</button>
+        <div style="text-align:center;font-size:12px;color:#666">+0.2 AGS за тап</div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="screen-profile" class="screen">
+        <div class="profile-header">
+            <div style="font-size:24px;font-weight:800" id="prof-name">@user</div>
+            <div style="color:#666;margin-top:5px" id="prof-lvl">lvl 1</div>
+            <div class="qr-box" id="prof-qr"></div>
+        </div>
+        <div class="menu-item" onclick="nav('leaderboard')">Лидерборд →</div>
+        <div class="menu-item" onclick="logout()">Выйти →</div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="screen-history" class="screen">
+        <h2 style="margin-bottom:20px">История</h2>
+        <div id="hist-list"><div style="color:#666;text-align:center;padding:20px">Загрузка...</div></div>
+        <button class="btn btn-outline" style="margin-top:20px" onclick="nav('main')">Назад</button>
+    </div>
+
+    <!-- TRANSFER -->
+    <div id="screen-transfer" class="screen">
+        <h2 style="margin-bottom:20px">Перевод</h2>
+        <form class="form" onsubmit="doTransfer(event)">
+            <div class="input-group"><label>Кому</label><input type="text" id="tr-to" placeholder="@username" required></div>
+            <div class="input-group"><label>Сумма</label><input type="number" id="tr-amt" min="1" required></div>
+            <div id="tr-err" class="error"></div>
+            <button type="submit" class="btn">Отправить</button>
+        </form>
+        <button class="btn btn-outline" style="margin-top:10px" onclick="nav('main')">Назад</button>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="screen-leaderboard" class="screen">
+        <h2 style="margin-bottom:20px">Топ пользователей</h2>
+        <div id="lb-list"></div>
+        <button class="btn btn-outline" style="margin-top:20px" onclick="nav('profile')">Назад</button>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="nav('main')">🏠 Главная</div>
+        <div class="nav-item" onclick="nav('profile')">👤 Профиль</div>
     </div>
 
     <div id="toast" class="toast"></div>
 </div>
 
 <script>
-// === НАСТРОЙКИ SUPABASE ===
+// === CONFIG ===
 const SB_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
-const SB_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U'; 
+const SB_KEY = 'ВСТАВЬ_СЮДА_СВОЙ_sb_publishable_КЛЮЧ'; 
+const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
-let supabaseClient = null;
-try {
-    if (window.supabase) {
-        supabaseClient = window.supabase.createClient(SB_URL, SB_KEY);
-        console.log("Supabase OK");
-    } else {
-        console.error("Supabase lib not loaded");
-    }
-} catch (e) { console.error(e); }
+let me = null;
 
-let currentUser = null;
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+function nav(s){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById('screen-'+s).classList.add('active');if(s==='main')loadMain();if(s==='profile')loadProfile();if(s==='history')loadHistory();if(s==='leaderboard')loadLB()}
+function hash(s){let h=0;for(let i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return 'h_'+Math.abs(h).toString(36)}
 
-function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-function showScreen(name) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    const el = document.getElementById('screen-' + name);
-    if (el) el.classList.add('active');
-    if (name === 'main') refreshMain();
-}
-
-function hash(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) h = ((h << 5) - h) + str.charCodeAt(i);
-    return 'h_' + Math.abs(h).toString(36);
-}
-
-// === ВХОД ===
-async function handleLogin(e) {
+async function handleLogin(e){
     e.preventDefault();
-    if (!supabaseClient) { alert("Ошибка подключения!"); return; }
-    
-    const u = document.getElementById('login-user').value.trim().replace('@','');
-    const p = document.getElementById('login-pass').value;
-    const errBox = document.getElementById('login-err');
-    errBox.innerText = "";
-
-    try {
-        const { data, error } = await supabaseClient.from('users').select('*').eq('username', u).single();
-        if (error || !data) { errBox.innerText = "Пользователь не найден"; return; }
-        if (data.password_hash !== hash(p)) { errBox.innerText = "Неверный пароль"; return; }
-        
-        currentUser = data;
-        toast("Успешный вход!");
-        showScreen('main');
-    } catch (err) {
-        console.error(err);
-        errBox.innerText = "Ошибка сети";
-    }
+    const u=document.getElementById('login-user').value.trim().replace('@','');
+    const p=document.getElementById('login-pass').value;
+    const {data,err}=await sb.from('users').select('*').eq('username',u).single();
+    if(err||!data||data.password_hash!==hash(p)){document.getElementById('login-err').innerText='Неверные данные';document.getElementById('login-err').classList.add('show');return}
+    me=data;toast('Добро пожаловать!');nav('main');
 }
 
-// === РЕГИСТРАЦИЯ ===
-async function handleReg(e) {
+async function handleReg(e){
     e.preventDefault();
-    if (!supabaseClient) { alert("Ошибка подключения!"); return; }
+    const u=document.getElementById('reg-user').value.trim().toLowerCase();
+    const p=document.getElementById('reg-pass').value;
+    if(u.length<5){document.getElementById('reg-err').innerText='Минимум 5 символов';document.getElementById('reg-err').classList.add('show');return}
+    if(p!==document.getElementById('reg-pass2').value){document.getElementById('reg-err').innerText='Пароли не совпадают';document.getElementById('reg-err').classList.add('show');return}
+    const {data:ex}=await sb.from('users').select('id').eq('username',u).single();
+    if(ex){document.getElementById('reg-err').innerText='Занят';document.getElementById('reg-err').classList.add('show');return}
+    const {data:newU}=await sb.from('users').insert([{username:u,password_hash:hash(p),level:1}]).select().single();
+    await sb.from('wallets').insert([{user_id:newU.id,balance:2000}]);
+    await sb.from('usernames').insert([{user_id:newU.id,username:u,is_primary:true,category:'common'}]);
+    toast('Успешно! Войдите.');nav('login');
+}
 
-    const u = document.getElementById('reg-user').value.trim().toLowerCase();
-    const p = document.getElementById('reg-pass').value;
-    const p2 = document.getElementById('reg-pass2').value;
-    const errBox = document.getElementById('reg-err');
-    errBox.innerText = "";
+async function loadMain(){
+    if(!me)return;
+    const {data:w}=await sb.from('wallets').select('balance').eq('user_id',me.id).single();
+    if(w){document.getElementById('main-bal').innerText=Math.floor(w.balance);document.getElementById('main-usd').innerText=(w.balance/100).toFixed(2)}
+}
 
-    if (u.length < 5 || u.length > 12) { errBox.innerText = "От 5 до 12 символов"; return; }
-    if (p !== p2) { errBox.innerText = "Пароли не совпадают"; return; }
-
-    try {
-        // Проверка занятости
-        const { data: exist } = await supabaseClient.from('users').select('id').eq('username', u).single();
-        if (exist) { errBox.innerText = "Ник занят"; return; }
-
-        // Создание пользователя
-        const { data: newUser, error: uErr } = await supabaseClient.from('users').insert([{ username: u, password_hash: hash(p), level: 1 }]).select().single();
-        if (uErr) throw uErr;
-        
-        // Кошелек
-        await supabaseClient.from('wallets').insert([{ user_id: newUser.id, balance: 2000 }]);
-        // Username
-        await supabaseClient.from('usernames').insert([{ user_id: newUser.id, username: u, is_primary: true, category: 'common' }]);
-        
-        toast("Аккаунт создан! Войдите.");
-        showScreen('login');
-    } catch (err) {
-        console.error(err);
-        errBox.innerText = "Ошибка регистрации";
+async function doTap(){
+    if(!me)return;
+    const {data:w}=await sb.from('wallets').select('balance').eq('user_id',me.id).single();
+    if(w){
+        const nb=w.balance+0.2;
+        await sb.from('wallets').update({balance:nb}).eq('user_id',me.id);
+        document.getElementById('main-bal').innerText=Math.floor(nb);
+        const b=document.querySelector('.tap-btn');b.style.transform='scale(0.95)';setTimeout(()=>b.style.transform='scale(1)',100);
     }
 }
 
-// === ГЛАВНАЯ ===
-async function refreshMain() {
-    if (!currentUser) return;
+async function loadProfile(){
+    if(!me)return;
+    const {data:un}=await sb.from('usernames').select('username').eq('user_id',me.id).eq('is_primary',true).single();
+    if(un){
+        document.getElementById('prof-name').innerText='@'+un.username;
+        document.getElementById('prof-lvl').innerText='lvl '+me.level;
+        document.getElementById('prof-qr').innerHTML='';
+        new QRCode(document.getElementById('prof-qr'),{text:'aegis://'+un.username,width:128,height:128});
+    }
+}
+
+async function loadHistory(){
+    if(!me)return;
+    const {data:txs}=await sb.from('transactions').select('*,sender:sender_username_id(username),receiver:receiver_username_id(username)').or(`sender_username_id.eq.${me.id},receiver_username_id.eq.${me.id}`).order('created_at',{ascending:false}).limit(20);
+    const box=document.getElementById('hist-list');
+    if(!txs||!txs.length){box.innerHTML='<div style="color:#666;text-align:center">Нет операций</div>';return}
+    box.innerHTML=txs.map(t=>{
+        const isOut=t.sender?.username===document.getElementById('prof-name').innerText.replace('@','');
+        return `<div class="tx-item"><div>${isOut?'→':'←'} ${isOut?t.receiver?.username:t.sender?.username}</div><div style="font-weight:700">${isOut?'-':'+'}${t.amount}</div></div>`;
+    }).join('');
+}
+
+async function doTransfer(e){
+    e.preventDefault();
+    const to=document.getElementById('tr-to').value.trim().replace('@','');
+    const amt=parseFloat(document.getElementById('tr-amt').value);
+    const {data:rU}=await sb.from('users').select('id').eq('username',to).single();
+    if(!rU){document.getElementById('tr-err').innerText='Пользователь не найден';document.getElementById('tr-err').classList.add('show');return}
+    const {data:mW}=await sb.from('wallets').select('balance').eq('user_id',me.id).single();
+    if(mW.balance<amt){document.getElementById('tr-err').innerText='Недостаточно средств';document.getElementById('tr-err').classList.add('show');return}
     
-    // Баланс
-    const { data: w } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
-    if (w) {
-        document.getElementById('main-balance').innerText = Math.floor(w.balance);
-        document.getElementById('main-usd').innerText = (w.balance / 100).toFixed(2);
-    }
-
-    // QR Code
-    const { data: un } = await supabaseClient.from('usernames').select('username').eq('user_id', currentUser.id).eq('is_primary', true).single();
-    if (un && window.QRCode) {
-        document.getElementById('qr-container').innerHTML = '';
-        new QRCode(document.getElementById('qr-container'), { text: 'aegis://' + un.username, width: 128, height: 128 });
-    }
+    // Списываем у себя
+    await sb.from('wallets').update({balance:mW.balance-amt}).eq('user_id',me.id);
+    // Начисляем получателю
+    const {data:rW}=await sb.from('wallets').select('balance').eq('user_id',rU.id).single();
+    await sb.from('wallets').update({balance:rW.balance+amt}).eq('user_id',rU.id);
+    // Записываем транзакцию
+    const {data:mUn}=await sb.from('usernames').select('id').eq('user_id',me.id).eq('is_primary',true).single();
+    const {data:rUn}=await sb.from('usernames').select('id').eq('user_id',rU.id).eq('is_primary',true).single();
+    await sb.from('transactions').insert([{sender_username_id:mUn.id,receiver_username_id:rUn.id,amount:amt,status:'completed'}]);
+    
+    toast('Перевод выполнен!');nav('main');
 }
 
-async function doTap() {
-    if (!currentUser) return;
-    const { data: w } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
-    if (w) {
-        const newBal = parseFloat((w.balance + 0.2).toFixed(2));
-        await supabaseClient.from('wallets').update({ balance: newBal }).eq('user_id', currentUser.id);
-        document.getElementById('main-balance').innerText = Math.floor(newBal);
-        
-        // Анимация
-        const btn = document.querySelector('.tap-btn');
-        btn.style.transform = 'scale(0.95)';
-        setTimeout(() => btn.style.transform = 'scale(1)', 100);
-    }
+async function loadLB(){
+    const {data}=await sb.from('users').select('username,level').order('level',{ascending:false}).limit(10);
+    document.getElementById('lb-list').innerHTML=data.map((u,i)=>`<div class="tx-item"><div>#${i+1} @${u.username}</div><div>lvl ${u.level}</div></div>`).join('');
 }
 
-function logout() {
-    currentUser = null;
-    showScreen('login');
-}
-
-// Старт
-showScreen('login');
+function logout(){me=null;nav('login')}
+nav('login');
 </script>
 </body>
 </html>
