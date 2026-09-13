@@ -4,92 +4,91 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AEGIS Bank</title>
-<!-- Подключаем библиотеки -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-/* Стили */
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#000;min-height:100vh;display:flex;justify-content:center}
 .app{width:100%;max-width:420px;min-height:100vh;position:relative;padding-bottom:80px}
 .screen{display:none;padding:20px 16px}
-.screen.active{display:block}
+.screen.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .logo{text-align:center;font-size:26px;font-weight:800;margin-bottom:30px;padding-top:20px}
 .btn{padding:15px;background:#000;color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer;border-radius:8px;width:100%;margin-top:10px}
 .form{display:flex;flex-direction:column;gap:15px}
 .input-group input{padding:15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%}
-.error{color:red;margin-top:10px;text-align:center}
+.error{color:red;margin-top:10px;text-align:center;font-size:14px}
 .balance-section{text-align:center;margin-top:40px}
 .balance-amount{font-size:50px;font-weight:800}
 .tap-btn{width:200px;height:200px;border-radius:50%;background:#000;color:#fff;border:none;font-size:24px;font-weight:800;margin:40px auto;display:block;cursor:pointer}
-.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 20px;border-radius:20px;opacity:0;transition:0.3s}
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:10px 20px;border-radius:20px;opacity:0;transition:0.3s;z-index:999}
 .toast.show{opacity:1}
+.qr-box{margin:30px auto;display:flex;justify-content:center}
 </style>
 </head>
 <body>
 
 <div class="app">
-    <!-- ВХОД -->
+    <!-- ЭКРАН ВХОДА -->
     <div id="screen-login" class="screen active">
         <div class="logo">AEGI$</div>
         <form class="form" onsubmit="handleLogin(event)">
-            <div class="input-group"><input type="text" id="l-user" placeholder="Username" required></div>
-            <div class="input-group"><input type="password" id="l-pass" placeholder="Пароль" required></div>
-            <div id="l-err" class="error"></div>
+            <div class="input-group"><input type="text" id="login-user" placeholder="Username" required></div>
+            <div class="input-group"><input type="password" id="login-pass" placeholder="Пароль" required></div>
+            <div id="login-err" class="error"></div>
             <button type="submit" class="btn">Войти</button>
         </form>
-        <div style="text-align:center;margin-top:20px"><a href="#" onclick="show('reg')">Регистрация</a></div>
+        <div style="text-align:center;margin-top:20px"><a href="#" onclick="showScreen('register')">Создать аккаунт</a></div>
     </div>
 
-    <!-- РЕГИСТРАЦИЯ -->
-    <div id="screen-reg" class="screen">
+    <!-- ЭКРАН РЕГИСТРАЦИИ -->
+    <div id="screen-register" class="screen">
         <div class="logo">AEGI$</div>
         <form class="form" onsubmit="handleReg(event)">
-            <div class="input-group"><input type="text" id="r-user" placeholder="Username (5-12 симв.)" required></div>
-            <div class="input-group"><input type="password" id="r-pass" placeholder="Пароль" required></div>
-            <div class="input-group"><input type="password" id="r-pass2" placeholder="Повтор пароля" required></div>
-            <div id="r-err" class="error"></div>
+            <div class="input-group"><input type="text" id="reg-user" placeholder="Username (5-12 симв.)" required></div>
+            <div class="input-group"><input type="password" id="reg-pass" placeholder="Пароль" required></div>
+            <div class="input-group"><input type="password" id="reg-pass2" placeholder="Повтор пароля" required></div>
+            <div id="reg-err" class="error"></div>
             <button type="submit" class="btn">Создать</button>
         </form>
-        <div style="text-align:center;margin-top:20px"><a href="#" onclick="show('login')">Назад</a></div>
+        <div style="text-align:center;margin-top:20px"><a href="#" onclick="showScreen('login')">Назад ко входу</a></div>
     </div>
 
-    <!-- ГЛАВНАЯ -->
+    <!-- ГЛАВНЫЙ ЭКРАН -->
     <div id="screen-main" class="screen">
         <div class="logo">AEGI$</div>
         <div class="balance-section">
-            <div style="color:#666">БАЛАНС</div>
-            <div class="balance-amount"><span id="bal">0</span> AGS</div>
+            <div style="color:#666;font-size:12px">ВАШ БАЛАНС</div>
+            <div class="balance-amount"><span id="main-balance">0</span> AGS</div>
+            <div style="color:#666;margin-top:5px">≈ $<span id="main-usd">0.00</span></div>
         </div>
-        <button class="tap-btn" onclick="doTap()">TAP</button>
-        <div style="text-align:center"><a href="#" onclick="logout()">Выйти</a></div>
+        
+        <button class="tap-btn" onclick="doTap()">TAP TO EARN</button>
+        
+        <div class="qr-box" id="qr-container"></div>
+        
+        <div style="text-align:center;margin-top:20px"><a href="#" onclick="logout()">Выйти из аккаунта</a></div>
     </div>
 
     <div id="toast" class="toast"></div>
 </div>
 
 <script>
-// === НАСТРОЙКИ (ЗАМЕНИ ЭТИ СТРОКИ!) ===
+// === НАСТРОЙКИ SUPABASE ===
 const SB_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
-const SB_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U';
+const SB_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U'; 
 
 let supabaseClient = null;
 try {
     if (window.supabase) {
         supabaseClient = window.supabase.createClient(SB_URL, SB_KEY);
-        console.log("Supabase подключен успешно");
+        console.log("Supabase OK");
     } else {
-        console.error("Библиотека Supabase не загрузилась!");
+        console.error("Supabase lib not loaded");
     }
-} catch (e) {
-    console.error("Ошибка инициализации:", e);
-}
+} catch (e) { console.error(e); }
 
 let currentUser = null;
-
-function show(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + id).classList.add('active');
-}
 
 function toast(msg) {
     const t = document.getElementById('toast');
@@ -98,84 +97,120 @@ function toast(msg) {
     setTimeout(() => t.classList.remove('show'), 3000);
 }
 
+function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById('screen-' + name);
+    if (el) el.classList.add('active');
+    if (name === 'main') refreshMain();
+}
+
 function hash(str) {
     let h = 0;
     for (let i = 0; i < str.length; i++) h = ((h << 5) - h) + str.charCodeAt(i);
     return 'h_' + Math.abs(h).toString(36);
 }
 
+// === ВХОД ===
 async function handleLogin(e) {
     e.preventDefault();
-    if (!supabaseClient) { alert("Ошибка подключения к базе!"); return; }
+    if (!supabaseClient) { alert("Ошибка подключения!"); return; }
     
-    const u = document.getElementById('l-user').value.trim();
-    const p = document.getElementById('l-pass').value;
-    
+    const u = document.getElementById('login-user').value.trim().replace('@','');
+    const p = document.getElementById('login-pass').value;
+    const errBox = document.getElementById('login-err');
+    errBox.innerText = "";
+
     try {
         const { data, error } = await supabaseClient.from('users').select('*').eq('username', u).single();
-        if (error || !data) { document.getElementById('l-err').innerText = "Не найден"; return; }
-        if (data.password_hash !== hash(p)) { document.getElementById('l-err').innerText = "Неверный пароль"; return; }
+        if (error || !data) { errBox.innerText = "Пользователь не найден"; return; }
+        if (data.password_hash !== hash(p)) { errBox.innerText = "Неверный пароль"; return; }
         
         currentUser = data;
-        loadBalance();
-        show('main');
+        toast("Успешный вход!");
+        showScreen('main');
     } catch (err) {
         console.error(err);
-        document.getElementById('l-err').innerText = "Ошибка сети";
+        errBox.innerText = "Ошибка сети";
     }
 }
 
+// === РЕГИСТРАЦИЯ ===
 async function handleReg(e) {
     e.preventDefault();
     if (!supabaseClient) { alert("Ошибка подключения!"); return; }
 
-    const u = document.getElementById('r-user').value.trim().toLowerCase();
-    const p = document.getElementById('r-pass').value;
-    const p2 = document.getElementById('r-pass2').value;
+    const u = document.getElementById('reg-user').value.trim().toLowerCase();
+    const p = document.getElementById('reg-pass').value;
+    const p2 = document.getElementById('reg-pass2').value;
+    const errBox = document.getElementById('reg-err');
+    errBox.innerText = "";
 
-    if (u.length < 5) { document.getElementById('r-err').innerText = "Минимум 5 символов"; return; }
-    if (p !== p2) { document.getElementById('r-err').innerText = "Пароли не совпадают"; return; }
+    if (u.length < 5 || u.length > 12) { errBox.innerText = "От 5 до 12 символов"; return; }
+    if (p !== p2) { errBox.innerText = "Пароли не совпадают"; return; }
 
     try {
-        // Создаем пользователя
+        // Проверка занятости
+        const { data: exist } = await supabaseClient.from('users').select('id').eq('username', u).single();
+        if (exist) { errBox.innerText = "Ник занят"; return; }
+
+        // Создание пользователя
         const { data: newUser, error: uErr } = await supabaseClient.from('users').insert([{ username: u, password_hash: hash(p), level: 1 }]).select().single();
-        if (uErr) { document.getElementById('r-err').innerText = "Ник занят или ошибка"; return; }
+        if (uErr) throw uErr;
         
-        // Создаем кошелек
+        // Кошелек
         await supabaseClient.from('wallets').insert([{ user_id: newUser.id, balance: 2000 }]);
-        // Создаем username
+        // Username
         await supabaseClient.from('usernames').insert([{ user_id: newUser.id, username: u, is_primary: true, category: 'common' }]);
         
-        toast("Успешно! Войдите.");
-        show('login');
+        toast("Аккаунт создан! Войдите.");
+        showScreen('login');
     } catch (err) {
-        document.getElementById('r-err').innerText = "Ошибка регистрации";
+        console.error(err);
+        errBox.innerText = "Ошибка регистрации";
     }
 }
 
-async function loadBalance() {
+// === ГЛАВНАЯ ===
+async function refreshMain() {
     if (!currentUser) return;
-    const { data } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
-    if (data) document.getElementById('bal').innerText = Math.floor(data.balance);
+    
+    // Баланс
+    const { data: w } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
+    if (w) {
+        document.getElementById('main-balance').innerText = Math.floor(w.balance);
+        document.getElementById('main-usd').innerText = (w.balance / 100).toFixed(2);
+    }
+
+    // QR Code
+    const { data: un } = await supabaseClient.from('usernames').select('username').eq('user_id', currentUser.id).eq('is_primary', true).single();
+    if (un && window.QRCode) {
+        document.getElementById('qr-container').innerHTML = '';
+        new QRCode(document.getElementById('qr-container'), { text: 'aegis://' + un.username, width: 128, height: 128 });
+    }
 }
 
 async function doTap() {
     if (!currentUser) return;
-    const { data } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
-    if (data) {
-        const newBal = data.balance + 0.2;
+    const { data: w } = await supabaseClient.from('wallets').select('balance').eq('user_id', currentUser.id).single();
+    if (w) {
+        const newBal = parseFloat((w.balance + 0.2).toFixed(2));
         await supabaseClient.from('wallets').update({ balance: newBal }).eq('user_id', currentUser.id);
-        document.getElementById('bal').innerText = Math.floor(newBal);
+        document.getElementById('main-balance').innerText = Math.floor(newBal);
+        
+        // Анимация
+        const btn = document.querySelector('.tap-btn');
+        btn.style.transform = 'scale(0.95)';
+        setTimeout(() => btn.style.transform = 'scale(1)', 100);
     }
 }
 
 function logout() {
     currentUser = null;
-    show('login');
+    showScreen('login');
 }
 
-// Запуск
-show('login');
+// Старт
+showScreen('login');
 </script>
 </body>
 </html>
