@@ -16,7 +16,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .logo-small{font-size:18px;margin-bottom:14px}
 .logo-small .logo-circle{width:28px;height:28px;font-size:14px}
 .back-btn{background:none;border:none;font-size:15px;cursor:pointer;margin-bottom:12px;color:#000;font-weight:500}
-.back-btn::before{content:'← '}
+.back-btn::before{content:'? '}
 .form{display:flex;flex-direction:column;gap:12px}
 .input-group{display:flex;flex-direction:column;gap:5px}
 .input-group label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
@@ -58,7 +58,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .tx-sub{font-size:11px;color:#666}
 .tx-amount{font-weight:700;font-size:14px;white-space:nowrap;margin-left:8px}
 .tx-amount.positive::before{content:'+'}
-.tx-amount.negative::before{content:'−'}
+.tx-amount.negative::before{content:'?'}
 .empty-state{text-align:center;padding:26px 14px;color:#666;font-size:14px;line-height:1.45}
 .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:8px 0 11px;z-index:100}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:11px;color:#666;padding:3px 9px}
@@ -84,7 +84,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .profile-header.dark-mode{color:#fff}
 .profile-header.dark-mode .profile-date,.profile-header.dark-mode .profile-account-num,.profile-header.dark-mode .profile-status{color:#bbb}
 .profile-header.founder{border:2px solid #fff;background:#000;color:#fff}
-.profile-header.founder::before{content:'◆ FOUNDER';position:absolute;top:10px;right:10px;color:#fff;border:1px solid #fff;padding:3px 7px;font-size:10px;font-weight:700;letter-spacing:1px;border-radius:3px}
+.profile-header.founder::before{content:'? FOUNDER';position:absolute;top:10px;right:10px;color:#fff;border:1px solid #fff;padding:3px 7px;font-size:10px;font-weight:700;letter-spacing:1px;border-radius:3px}
 .frame-blue{border-color:#007bff!important}
 .frame-red{border-color:#ff3b30!important}
 .frame-yellow{border-color:#ffcc00!important}
@@ -147,7 +147,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .menu-section{margin-bottom:18px}
 .menu-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666;margin-bottom:7px}
 .menu-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #eee;cursor:pointer;font-size:14px;font-weight:500}
-.menu-item::after{content:'→';opacity:.35}
+.menu-item::after{content:'?';opacity:.35}
 .un-actions{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap}
 .un-action-btn{flex:1;min-width:70px;padding:6px;background:#fff;border:1.5px solid #000;font-size:12px;font-weight:600;cursor:pointer;border-radius:4px;font-family:inherit}
 .un-action-btn:hover{background:#000;color:#fff}
@@ -189,7 +189,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .auction-timer{font-size:12px;color:#c00;font-weight:600}
 .bid-item{padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
 
-/* ===== NFT ===== */
+/* NFT styles */
 .nft-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
 .nft-card{border:1.5px solid #000;border-radius:10px;overflow:hidden;position:relative}
 .nft-card-bg{padding:12px 10px 14px;min-height:190px;display:flex;flex-direction:column;align-items:center}
@@ -203,270 +203,1047 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .rarity-rare{background:#d6eaff}
 .rarity-epic{background:#e8d5ff}
 .rarity-mythic{background:#ffd6d6}
-.rarity-legendary{background:linear-gradient(135deg,#fff3c4,#ffe08a)}
+.rarity-legendary{background:#ffe08a}
 .nft-detail-img{width:160px;height:160px;object-fit:contain;display:block;margin:0 auto 14px}
+
+/* NFT patch */
+.nft-image-wrap{width:90px;height:90px;display:flex;align-items:center;justify-content:center;margin:8px 0 6px}
+.nft-image-wrap .nft-img{margin:0}
+.nft-placeholder{width:90px;height:90px;border:1px dashed #999;border-radius:8px;align-items:center;justify-content:center;font-size:11px;color:#777;background:#fafafa}
+.nft-detail-box{position:relative;border:1.5px solid #000;border-radius:10px;padding:18px;margin-bottom:14px}
+.nft-detail-box .nft-image-wrap{width:180px;height:180px;margin:0 auto 12px}
+.nft-detail-box .nft-detail-img{width:180px;height:180px;margin:0}
+.nft-detail-title{text-align:center;font-size:20px;font-weight:800;margin-bottom:6px}
+.nft-detail-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.nft-gift-note{font-size:11px;color:#555;margin-bottom:4px}
+.market-nft-item{margin-bottom:12px}
+.nft-market-card{position:relative;border:1.5px solid #000;border-radius:10px;padding:14px}
+.nft-market-card .nft-image-wrap{margin:4px auto 8px}
+.public-nft-section{margin-top:16px}
+@media(max-width:360px){.nft-grid{gap:8px}.nft-card-bg{padding-left:7px;padding-right:7px}.nft-actions .btn{font-size:11px}}
+
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app"><div id="screen-login" class="screen active">
+<div class="logo"><span class="logo-circle">$</span>AEGI$</div>
+<div class="form" id="form-login">
+<div class="input-group"><label>Username</label><input type="text" id="login-username" placeholder="@username" autocomplete="username"></div>
+<div class="input-group"><label>??????</label><input type="password" id="login-password" autocomplete="current-password"></div>
+<div id="login-error" class="error"></div>
+<button type="button" class="btn btn-full" id="btn-login" onclick="handleLogin(event)">?????</button>
+</div>
+<div class="link"><a onclick="showScreen('register')">??????? ???????</a></div>
+<div class="link"><a onclick="showScreen('recovery')">?????? ???????</a></div>
+</div>
+<div id="screen-register" class="screen">
+<button class="back-btn" onclick="showScreen('login')">?????</button>
+<div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">??????? ???????</h2>
+<div class="form" id="form-register">
+<div class="input-group"><label>Username</label><input type="text" id="reg-username" autocomplete="username"><div class="hint">5-12 ????????</div></div>
+<div class="input-group"><label>??????</label><input type="password" id="reg-password" autocomplete="new-password"></div>
+<div class="input-group"><label>?????? ??????</label><input type="password" id="reg-password2" autocomplete="new-password"></div>
+<div id="reg-error" class="error"></div>
+<button type="button" class="btn btn-full" id="btn-register" onclick="handleRegister(event)">???????</button>
+</div>
+</div>
+<div id="screen-recovery" class="screen">
+<button class="back-btn" onclick="showScreen('login')">?????</button>
+<div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:8px">??????????????</h2>
+<div class="form">
+<div class="input-group"><label>Username</label><input type="text" id="rec-username"></div>
+<div class="input-group"><label>Recovery Code</label><input type="text" id="rec-code"></div>
+<div class="input-group"><label>????? ??????</label><input type="password" id="rec-newpass"></div>
+<div class="input-group"><label>??????</label><input type="password" id="rec-newpass2"></div>
+<div id="rec-error" class="error"></div>
+<button type="button" class="btn btn-full" onclick="handleRecovery(event)">????????</button>
+</div>
+</div>
+<div id="screen-recovery-show" class="screen">
+<div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:8px">Recovery Code</h2>
+<div style="background:#f5f5f5;border:1.5px solid #000;padding:14px;font-family:monospace;font-size:13px;word-break:break-all;margin:12px 0;text-align:center;border-radius:6px" id="recovery-code-display"></div>
+<button class="btn btn-full" onclick="copyRecoveryCode()">???????????</button>
+<div style="height:8px"></div>
+<button class="btn btn-outline btn-full" onclick="finishRegistration()">??????????</button>
+</div>
+<div id="screen-main" class="screen">
+<div class="logo logo-small"><span class="logo-circle">$</span>AEGI$</div>
+<div class="balance-section">
+<div class="balance-label">??? ??????</div>
+<div><span class="balance-amount" id="main-balance">0</span><span class="balance-currency">AGS</span></div>
+<div class="balance-usd" id="main-balance-usd">? $0.00</div>
+<button class="balance-convert-btn" onclick="showConvertModal()">??????????????</button>
+</div>
+<div class="actions-grid">
+<button class="action-btn" onclick="showScreen('topup')">?????????</button>
+<button class="action-btn" onclick="showScreen('transfer')">?????????</button>
+<button class="action-btn" onclick="showScreen('receive')">????????</button>
+<button class="action-btn" onclick="showScreen('tap')">Tap AGS</button>
+<button class="action-btn" onclick="showScreen('nft-store');refreshNftStore()">NFT</button><button class="action-btn" onclick="showScreen('nft-marketplace')">NFT Market</button><button class="action-btn" onclick="showScreen('nft-auctions')">NFT Auctions</button>
+</div>
+<div class="search-box">
+<input type="text" id="user-search" placeholder="????? ?? username..." oninput="handleUserSearch(this.value)">
+<div id="search-results" class="search-results"></div>
+</div>
+<div id="founder-dashboard-btn" style="display:none;margin-bottom:12px">
+<button class="btn btn-full" onclick="showScreen('founder-dashboard')">? Founder Dashboard</button>
+</div>
+<div class="section-title">?????????? ???????</div>
+<div id="daily-tasks"></div>
+<div class="section-title" style="margin-top:14px">????????? ????????</div>
+<div id="main-recent-tx"></div>
+</div>
+<div id="screen-leaderboard" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:12px">?????????</h2>
+<div class="filters">
+<button class="filter-chip active" onclick="setLbTab('level',this)">?? ??????</button>
+<button class="filter-chip" onclick="setLbTab('earned',this)">?????????</button>
+<button class="filter-chip" onclick="setLbTab('volume',this)">?????</button>
+</div>
+<div id="leaderboard-list"></div>
+</div>
+<div id="screen-founder-dashboard" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:12px">? Founder Dashboard</h2>
+<div id="fd-content"></div>
+<div id="founder-pool-box" style="margin-top:14px"></div>
+</div>
+<div id="screen-transfer" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">???????</h2>
+<form class="form" onsubmit="handleTransferPreview(event)">
+<div class="input-group"><label>????????? ??</label><select id="tr-from-username"></select></div>
+<div class="input-group"><label>????</label><input type="text" id="tr-to" placeholder="@username" required></div>
+<div class="input-group"><label>?????</label><input type="number" id="tr-amount" min="50" step="1" required><div class="hint">??????? 50 AGS</div></div>
+<div class="hint" style="margin-top:-4px">???????? 4% ??????????? ?????? ??? ???????? ?? 1 000 AGS. ??? Founder ???????? ?? ?????????.</div>
+<div class="input-group"><label>???????????</label><input type="text" id="tr-comment"></div>
+<div id="tr-error" class="error"></div>
+<button type="submit" class="btn btn-full">??????????</button>
+</form>
+</div>
+<div id="screen-transfer-confirm" class="screen">
+<button class="back-btn" onclick="showScreen('transfer')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:12px">?????????????</h2>
+<div id="tc-summary"></div>
+<div style="height:12px"></div>
+<button class="btn btn-full" onclick="handleTransferConfirm()">???????????</button>
+</div>
+<div id="screen-pin" class="screen">
+<button class="back-btn" onclick="showScreen('transfer-confirm')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">??????? PIN</h2>
+<p style="text-align:center;color:#666;font-size:13px;margin-bottom:8px">??? ???? ?? 5000 AGS</p>
+<div class="pin-display" id="pin-display"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div>
+<div id="pin-error" class="error" style="margin-bottom:12px"></div>
+<div class="pin-pad">
+<button class="pin-key" onclick="pinInput('1')">1</button><button class="pin-key" onclick="pinInput('2')">2</button><button class="pin-key" onclick="pinInput('3')">3</button>
+<button class="pin-key" onclick="pinInput('4')">4</button><button class="pin-key" onclick="pinInput('5')">5</button><button class="pin-key" onclick="pinInput('6')">6</button>
+<button class="pin-key" onclick="pinInput('7')">7</button><button class="pin-key" onclick="pinInput('8')">8</button><button class="pin-key" onclick="pinInput('9')">9</button>
+<button class="pin-key" style="visibility:hidden"></button><button class="pin-key" onclick="pinInput('0')">0</button><button class="pin-key" onclick="pinDelete()">?</button>
+</div>
+</div>
+<div id="screen-receive" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">????????</h2>
+<p style="text-align:center;color:#666;font-size:13px;margin-bottom:10px">?????????? username</p>
+<div id="qr-container" style="width:180px;height:180px;margin:16px auto;border:1.5px solid #000;display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden;background:#fff"></div>
+<div style="text-align:center;font-size:22px;font-weight:700;margin:12px 0" id="receive-username"></div>
+<button class="btn btn-outline btn-full" onclick="copyReceiveUsername()">???????????</button>
+</div>
+<div id="screen-topup" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">??????????</h2>
+<div class="empty-state">?????????? ????? ????????</div>
+</div>
+<div id="screen-history" class="screen">
+<h2 style="font-size:20px;font-weight:700;margin-bottom:12px">???????</h2>
+<div class="filters">
+<button class="filter-chip active" onclick="filterTx('all',this)">???</button>
+<button class="filter-chip" onclick="filterTx('in',this)">?????????</button>
+<button class="filter-chip" onclick="filterTx('out',this)">????????</button>
+</div>
+<div id="history-list"></div>
+</div>
+<div id="screen-profile" class="screen">
+<div id="profile-header-container"></div>
+<div class="menu-section">
+<div class="menu-section-title">??? NFT</div>
+<div class="menu-item" onclick="showScreen('my-nfts');refreshMyNfts()">???????? ??? NFT</div>
+</div>
+<div class="menu-section">
+<div class="menu-section-title">??? username</div>
+<div id="profile-usernames"></div>
+<button class="btn btn-outline btn-full" style="margin-top:10px" onclick="showScreen('buy-username')" id="buy-username-btn">+ ?????? username</button>
+</div>
+<div class="menu-section">
+<div class="menu-section-title">??????????????</div>
+<div class="menu-item" onclick="showScreen('appearance')">? ??????? ???</div>
+<div class="menu-item" onclick="showScreen('stickers')">? ???????? ?? ????????</div>
+</div>
+<div class="menu-section">
+<div class="menu-section-title">???????</div>
+<div class="menu-item" onclick="showScreen('change-username')">??????? ???????? username</div>
+<div class="menu-item" onclick="showScreen('username-market')">?????? username</div>
+<div class="menu-item" onclick="showScreen('leaderboard')">?????????</div><div class="menu-item" onclick="showScreen('my-nfts')">Мои NFT</div><div class="menu-item" onclick="showScreen('nft-marketplace')">NFT Marketplace</div><div class="menu-item" onclick="showScreen('nft-auctions')">Аукционы NFT</div>
+<div class="menu-item" onclick="toggleHideBalance()">?????? / ???????? ??????</div>
+<div class="menu-item" onclick="editStatus()">???????? ??????</div>
+</div>
+<div class="menu-section">
+<div class="menu-section-title">????????????</div>
+<div class="menu-item" onclick="showScreen('change-password')">???????? ??????</div>
+<div class="menu-item" onclick="showScreen('change-pin')">???????? PIN</div>
+</div>
+<div class="menu-section"><div class="menu-item" onclick="handleLogout()">?????</div></div>
+</div>
+<div id="screen-appearance" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:6px">??????? ???</h2>
+<p style="font-size:13px;color:#666;margin-bottom:14px">?????, ??? ? ???????</p>
+<div class="menu-section-title">????? ???????</div>
+<div class="shop-grid" id="shop-frames"></div>
+<div class="menu-section-title">????? ????????</div>
+<div class="shop-grid" id="shop-avatarFrames"></div>
+<div class="menu-section-title">??? ????????</div>
+<div class="shop-grid" id="shop-bgs"></div>
+<div class="menu-section-title">???????</div>
+<div class="shop-grid" id="shop-patterns"></div>
+</div>
+<div id="screen-stickers" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:6px">????????</h2>
+<p style="font-size:13px;color:#666;margin-bottom:12px" id="sticker-limit-text"></p>
+<div id="stickers-list"></div>
+<button class="btn btn-full" style="margin-top:10px" onclick="addSticker()">+ ???????? ???????</button>
+</div>
+<div id="screen-buy-username" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:8px">?????? username</h2>
+<p style="color:#666;font-size:13px;margin-bottom:14px" id="buy-username-hint"></p>
+<form class="form" onsubmit="handleBuyUsername(event)">
+<div class="input-group"><label>????? username</label><input type="text" id="buy-username" required></div>
+<div id="buy-error" class="error"></div>
+<button type="submit" class="btn btn-full" id="buy-username-submit">??????</button>
+</form>
+</div>
+<div id="screen-username-market" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:12px">?????? username</h2>
+<div class="filters">
+<button class="filter-chip active" onclick="setMarketTab('fixed',this)">????. ????</button>
+<button class="filter-chip" onclick="setMarketTab('auction',this)">????????</button>
+</div>
+<div id="market-list"></div>
+</div>
+<div id="screen-auction" class="screen">
+<button class="back-btn" onclick="showScreen('username-market')">?????</button>
+<div id="auction-content"></div>
+</div>
+<div id="screen-change-username" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">??????? ????????</h2>
+<div id="change-username-list"></div>
+</div>
+<div id="screen-change-password" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">???????? ??????</h2>
+<form class="form" onsubmit="handleChangePassword(event)">
+<div class="input-group"><label>???????</label><input type="password" id="cp-current" required></div>
+<div class="input-group"><label>?????</label><input type="password" id="cp-new" required></div>
+<div class="input-group"><label>??????</label><input type="password" id="cp-new2" required></div>
+<div id="cp-error" class="error"></div>
+<button type="submit" class="btn btn-full">????????</button>
+</form>
+</div>
+<div id="screen-change-pin" class="screen">
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">???????? PIN</h2>
+<form class="form" onsubmit="handleChangePin(event)">
+<div class="input-group"><label>??????? PIN (???? ????)</label><input type="password" id="cpi-current" maxlength="6" placeholder="???????? ?????? ???? ?????? ???"></div>
+<div class="input-group"><label>????? PIN</label><input type="password" id="cpi-new" maxlength="6" required></div>
+<div class="input-group"><label>??????</label><input type="password" id="cpi-new2" maxlength="6" required></div>
+<div id="cpi-error" class="error"></div>
+<button type="submit" class="btn btn-full">????????</button>
+</form>
+</div>
+<div id="screen-tap" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:6px;text-align:center">Tap AGS</h2>
+<p style="text-align:center;color:#666;font-size:13px;margin-bottom:14px" id="tap-reward-text">1 ??????? = +2 AGS</p>
+<div class="tap-container">
+<div class="tap-counter">???????: <strong id="tap-count">0</strong> <span id="tap-limit-display">/ 10000</span></div>
+<button class="tap-btn" id="tap-btn" type="button" onpointerdown="handleTap(event)">TAP</button>
+<div class="tap-earned">??????????: <span id="tap-earned">0</span> AGS</div>
+</div>
+</div>
+<div id="screen-public-profile" class="screen">
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<div id="public-profile-content"></div>
+</div>
+<div id="screen-tx-detail" class="screen">
+<button class="back-btn" onclick="showScreen('history')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">??????</h2>
+<div id="tx-detail-content"></div>
+</div>
 
-<!-- ========== ВСЕ ТВОИ СУЩЕСТВУЮЩИЕ ЭКРАНЫ ОСТАВЛЕНЫ ========== -->
-<!-- login, register, recovery, main, transfer, history, profile, appearance, stickers, buy-username, username-market, auction, change-*, tap, public-profile, tx-detail -->
-
-<!-- Я не удалил ни одного экрана. Ниже только добавлены новые NFT-экраны. -->
-
+<!-- ===== NFT SCREENS ===== -->
 <div id="screen-nft-store" class="screen">
-  <button class="back-btn" onclick="showScreen('main')">Назад</button>
-  <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">NFT Store</h2>
-  <div class="nft-grid" id="nft-store-grid"></div>
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">NFT Store</h2>
+<div class="nft-grid" id="nft-store-grid"></div>
 </div>
-
 <div id="screen-my-nfts" class="screen">
-  <button class="back-btn" onclick="showScreen('profile')">Назад</button>
-  <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Мои NFT</h2>
-  <div id="my-nfts-list"></div>
+<button class="back-btn" onclick="showScreen('profile')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">??? NFT</h2>
+<div id="my-nfts-list"></div>
 </div>
-
 <div id="screen-nft-detail" class="screen">
-  <button class="back-btn" id="nft-detail-back" onclick="showScreen('my-nfts')">Назад</button>
-  <div id="nft-detail-content"></div>
+<button class="back-btn" onclick="showScreen('my-nfts')">?????</button>
+<div id="nft-detail-content"></div>
 </div>
-
 <div id="screen-nft-marketplace" class="screen">
-  <button class="back-btn" onclick="showScreen('main')">Назад</button>
-  <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">NFT Marketplace</h2>
-  <div id="nft-market-list"></div>
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">NFT Marketplace</h2>
+<div id="nft-market-list"></div>
 </div>
-
 <div id="screen-nft-auctions" class="screen">
-  <button class="back-btn" onclick="showScreen('main')">Назад</button>
-  <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Аукционы NFT</h2>
-  <div id="nft-auctions-list"></div>
+<button class="back-btn" onclick="showScreen('main')">?????</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">???????? NFT</h2>
+<div id="nft-auctions-list"></div>
 </div>
-
-<!-- bottom-nav и modal остаются как были -->
 
 <div class="bottom-nav" id="bottom-nav" style="display:none">
-  <div class="nav-item active" data-nav="main" onclick="navTo('main')"><div class="nav-icon">◉</div><div>Главная</div></div>
-  <div class="nav-item" data-nav="transfer" onclick="navTo('transfer')"><div class="nav-icon">↑</div><div>Переводы</div></div>
-  <div class="nav-item" data-nav="history" onclick="navTo('history')"><div class="nav-icon">≡</div><div>История</div></div>
-  <div class="nav-item" data-nav="profile" onclick="navTo('profile')"><div class="nav-icon">◐</div><div>Профиль</div></div>
+<div class="nav-item active" data-nav="main" onclick="navTo('main')"><div class="nav-icon">?</div><div>???????</div></div>
+<div class="nav-item" data-nav="transfer" onclick="navTo('transfer')"><div class="nav-icon">?</div><div>????????</div></div>
+<div class="nav-item" data-nav="history" onclick="navTo('history')"><div class="nav-icon">?</div><div>???????</div></div>
+<div class="nav-item" data-nav="profile" onclick="navTo('profile')"><div class="nav-icon">?</div><div>???????</div></div>
 </div>
-
 <div class="modal-overlay" id="modal">
-  <div class="modal">
-    <div class="modal-title" id="modal-title"></div>
-    <div class="modal-body" id="modal-body"></div>
-    <div class="modal-actions" id="modal-actions"></div>
-  </div>
+<div class="modal">
+<div class="modal-title" id="modal-title"></div>
+<div class="modal-body" id="modal-body"></div>
+<div class="modal-actions" id="modal-actions"></div>
+</div>
 </div>
 <div class="toast" id="toast"></div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-/* 
-  =====================================================
-  ВЕСЬ ТВОЙ СУЩЕСТВУЮЩИЙ JS ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ
-  (login, register, transfer, history, profile, Tap и т.д.)
-  =====================================================
-*/
+<script>const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+const FOUNDER_CONFIG = { commissionShare: 0.5, dailyBonus: 500 };
+const MAX_LEVEL = 999;
+const STICKER_PRICE = 550;
+const MAX_STICKERS_NORMAL = 5;
+const CUSTOMIZATION_OPTIONS = {
+ frames: [
+   {id:'default',name:'????????',price:0,class:'',color:'#000'},
+   {id:'blue',name:'?????',price:1200,class:'frame-blue',color:'#007bff'},
+   {id:'red',name:'???????',price:1200,class:'frame-red',color:'#ff3b30'},
+   {id:'yellow',name:'??????',price:1200,class:'frame-yellow',color:'#ffcc00'},
+   {id:'light-blue',name:'???????',price:1200,class:'frame-light-blue',color:'#5ac8fa'},
+   {id:'orange',name:'?????.',price:1200,class:'frame-orange',color:'#ff9500'},
+   {id:'green',name:'???????',price:1200,class:'frame-green',color:'#34c759'},
+   {id:'pink',name:'???????',price:1200,class:'frame-pink',color:'#ff2d55'},
+   {id:'purple',name:'??????.',price:1200,class:'frame-purple',color:'#af52de'},
+   {id:'neon-blue',name:'????',price:0,class:'frame-neon-blue',color:'#00f3ff',founderOnly:true},
+   {id:'double',name:'???????',price:1800,class:'frame-double',color:'#000'},
+   {id:'dashed',name:'???????',price:1500,class:'frame-dashed',color:'#000'},
+   {id:'thick',name:'???????',price:1400,class:'frame-thick',color:'#000'}
+ ],
+ avatarFrames: [
+   {id:'default',name:'????????',price:0,class:'',color:'#fff'},
+   {id:'blue',name:'?????',price:900,class:'avatar-frame-blue',color:'#007bff'},
+   {id:'red',name:'???????',price:900,class:'avatar-frame-red',color:'#ff3b30'},
+   {id:'green',name:'???????',price:900,class:'avatar-frame-green',color:'#34c759'},
+   {id:'purple',name:'??????.',price:900,class:'avatar-frame-purple',color:'#af52de'},
+   {id:'orange',name:'?????.',price:900,class:'avatar-frame-orange',color:'#ff9500'},
+   {id:'white',name:'?????',price:800,class:'avatar-frame-white',color:'#fff'},
+   {id:'black',name:'??????',price:800,class:'avatar-frame-black',color:'#000'},
+   {id:'double',name:'???????',price:1200,class:'avatar-frame-double',color:'#000'},
+   {id:'dashed',name:'???????',price:1100,class:'avatar-frame-dashed',color:'#000'},
+   {id:'thick',name:'???????',price:1000,class:'avatar-frame-thick',color:'#000'},
+   {id:'neon',name:'????',price:0,class:'avatar-frame-neon',color:'#00f3ff',founderOnly:true}
+ ],
+ bgs: [
+   {id:'default',name:'????????',price:0,class:'',color:'#fff'},
+   {id:'blue',name:'?????',price:1500,class:'bg-blue',color:'#007bff'},
+   {id:'red',name:'???????',price:1500,class:'bg-red',color:'#ff3b30'},
+   {id:'yellow',name:'??????',price:1500,class:'bg-yellow',color:'#ffcc00'},
+   {id:'light-blue',name:'???????',price:1500,class:'bg-light-blue',color:'#5ac8fa'},
+   {id:'orange',name:'?????.',price:1500,class:'bg-orange',color:'#ff9500'},
+   {id:'green',name:'???????',price:1500,class:'bg-green',color:'#34c759'},
+   {id:'pink',name:'???????',price:1500,class:'bg-pink',color:'#ff2d55'},
+   {id:'purple',name:'??????.',price:1500,class:'bg-purple',color:'#af52de'},
+   {id:'black',name:'??????',price:0,class:'bg-black',color:'#000',founderOnly:true},
+   {id:'graphite',name:'??????',price:1600,class:'bg-graphite',color:'#1c1c1e'},
+   {id:'navy',name:'?????-???.',price:1600,class:'bg-navy',color:'#0a1628'}
+ ],
+ patterns: [
+   {id:'none',name:'???',price:0,class:'',icon:'-'},
+   {id:'stars',name:'??????',price:2000,class:'pattern-stars',icon:'?'},
+   {id:'lightning',name:'??????',price:2000,class:'pattern-lightning',icon:'?'},
+   {id:'diamonds',name:'?????',price:2000,class:'pattern-diamonds',icon:'?'},
+   {id:'dollar-circle',name:'Dollar',price:0,class:'pattern-dollar-circle',icon:'?',founderOnly:true},
+   {id:'grid',name:'?????',price:1800,class:'pattern-grid',icon:'?'},
+   {id:'dots',name:'?????',price:1800,class:'pattern-dots',icon:''}
+ ]
+};
+const CUSTOM_FIELD_MAP = {frames:'custom_frame',avatarFrames:'custom_avatar_frame',bgs:'custom_bg',patterns:'custom_pattern'};
 
 /* ===== NFT CATALOG ===== */
 const NFT_CATALOG = [
-  {id:'statue-of-liberty',name:'Statue of Liberty',price:940,rarity:'Rare',image:'statue-of-liberty.png'},
-  {id:'star',name:'Star',price:320,rarity:'Common',image:'star.png'},
-  {id:'dice',name:'Dice',price:380,rarity:'Common',image:'dice.png'},
-  {id:'harry-potter-wand',name:"Harry Potter’s Wand",price:640,rarity:'Rare',image:'harry-potter-wand.png'},
-  {id:'oleg',name:'oLeg',price:1320,rarity:'Epic',image:'oleg.png'},
-  {id:'pickaxe',name:'Pickaxe',price:480,rarity:'Common',image:'pickaxe.png'},
-  {id:'sw-lightsaber',name:'SW Lightsaber',price:990,rarity:'Epic',image:'sw-lightsaber.png'},
-  {id:'joker',name:'Joker',price:2040,rarity:'Epic',image:'joker.png'},
-  {id:'diesel-bag',name:'Diesel Bag',price:1760,rarity:'Epic',image:'diesel-bag.png'},
-  {id:'rolex-watch',name:'Rolex Watch',price:3990,rarity:'Mythic',image:'rolex-watch.png'},
-  {id:'perfume',name:'Perfume',price:2110,rarity:'Epic',image:'perfume.png'},
-  {id:'mjs-glove',name:"MJ’s Glove",price:7290,rarity:'Legendary',image:'mjs-glove.png'},
-  {id:'masquerade',name:'Masquerade',price:7690,rarity:'Legendary',image:'masquerade.png'},
-  {id:'olympus',name:'Olympus',price:5460,rarity:'Mythic',image:'olympus.png'},
-  {id:'mclaren',name:'McLaren',price:9990,rarity:'Legendary',image:'mclaren.png'},
-  {id:'marilyn-monroe-dress',name:"Marilyn Monroe’s Dress",price:8700,rarity:'Legendary',image:'marilyn-monroe-dress.png'},
-  {id:'reverse',name:'Reverse',price:6540,rarity:'Mythic',image:'reverse.png'},
-  {id:'777',name:'777',price:6250,rarity:'Mythic',image:'777.png'},
-  {id:'spirit-of-ecstasy',name:'Spirit of Ecstasy',price:12540,rarity:'Legendary',image:'spirit-of-ecstasy.png'},
-  {id:'african-drum',name:'African Drum',price:4890,rarity:'Mythic',image:'african-drum.png'},
-  {id:'ralph-lauren',name:'Ralph Lauren',price:5380,rarity:'Mythic',image:'ralph-lauren.png'}
+ {id:'statue-of-liberty',name:'Statue of Liberty',price:940,rarity:'Rare',image:'statue-of-liberty.png'},
+ {id:'star',name:'Star',price:320,rarity:'Common',image:'star.png'},
+ {id:'dice',name:'Dice',price:380,rarity:'Common',image:'dice.png'},
+ {id:'harry-potter-wand',name:"Harry Potter's Wand",price:640,rarity:'Rare',image:'harry-potter-wand.png'},
+ {id:'oleg',name:'oLeg',price:1320,rarity:'Epic',image:'oleg.png'},
+ {id:'pickaxe',name:'Pickaxe',price:480,rarity:'Common',image:'pickaxe.png'},
+ {id:'sw-lightsaber',name:'SW Lightsaber',price:990,rarity:'Epic',image:'sw-lightsaber.png'},
+ {id:'joker',name:'Joker',price:2040,rarity:'Epic',image:'joker.png'},
+ {id:'diesel-bag',name:'Diesel Bag',price:1760,rarity:'Epic',image:'diesel-bag.png'},
+ {id:'rolex-watch',name:'Rolex Watch',price:3990,rarity:'Mythic',image:'rolex.png'},
+ {id:'perfume',name:'Perfume',price:2110,rarity:'Epic',image:'perfume.png'},
+ {id:'mjs-glove',name:"MJ's Glove",price:7290,rarity:'Legendary',image:'mj-glove.png'},
+ {id:'masquerade',name:'Masquerade',price:7690,rarity:'Legendary',image:'masquerade.png'},
+ {id:'olympus',name:'Olympus',price:5460,rarity:'Mythic',image:'olympus.png'},
+ {id:'mclaren',name:'McLaren',price:9990,rarity:'Legendary',image:'mclaren.png'},
+ {id:'marilyn-monroe-dress',name:"Marilyn Monroe's Dress",price:8700,rarity:'Legendary',image:'marilyn-monroe-dress.png'},
+ {id:'reverse',name:'Reverse',price:6540,rarity:'Mythic',image:'reverse.png'},
+ {id:'777',name:'777',price:6250,rarity:'Mythic',image:'777.png'},
+ {id:'spirit-of-ecstasy',name:'Spirit of Ecstasy',price:12540,rarity:'Legendary',image:'spirit-of-ecstasy.png'},
+ {id:'african-drum',name:'African Drum',price:4890,rarity:'Mythic',image:'african-drum.png'},
+ {id:'ralph-lauren',name:'Ralph Lauren',price:5380,rarity:'Mythic',image:'ralph-lauren.png'}
 ];
-
-const RARITY_CLASS = {
-  'Common':'rarity-common',
-  'Rare':'rarity-rare',
-  'Epic':'rarity-epic',
-  'Mythic':'rarity-mythic',
-  'Legendary':'rarity-legendary'
-};
-
+const RARITY_CLASS = {'Common':'rarity-common','Rare':'rarity-rare','Epic':'rarity-epic','Mythic':'rarity-mythic','Legendary':'rarity-legendary'};
 function getNft(id){return NFT_CATALOG.find(n=>n.id===id)}
 
-/* ===== NFT STORE ===== */
+function hash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return 'h_'+Math.abs(h).toString(36)+'_'+s.length}
+function generateRecoveryCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='';for(let i=0;i<32;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
+function generateTxId(){const c='0123456789ABCDEF';let id='AEG-';for(let i=0;i<8;i++)id+=c[Math.floor(Math.random()*c.length)];return id}
+function formatAGS(n){return Math.floor(Number(n)||0).toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
+function formatUSD(a){return '$'+((Number(a)||0)/100).toFixed(2)}
+function formatDate(ts){const d=new Date(ts);const t=d.toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});const today=new Date();if(d.toDateString()===today.toDateString())return '???????, '+t;return d.toLocaleDateString('ru')+', '+t}
+function validateUsername(u){if(!u||u.length<5||u.length>12)return '5-12 ????????';if(!/^[a-zA-Z0-9_]+$/.test(u))return '?????? ????????, ????? ? _';return null}
+function isSacredUsername(u){return u.length>=3&&u.length<=4&&/^[a-zA-Z]+$/.test(u)}
+function classifyUsername(u){if(isSacredUsername(u))return{category:'sacred',basePrice:500000};const len=u.length;let score=0;if(len===5)score+=100;else if(len===6)score+=80;else score+=40;if(/^[a-zA-Z]+$/.test(u))score+=50;if(score>=150)return{category:'legendary',basePrice:100000};if(score>=100)return{category:'epic',basePrice:20000};if(score>=50)return{category:'rare',basePrice:5000};return{category:'common',basePrice:1000}}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function showModal(title,body,actions){document.getElementById('modal-title').textContent=title;document.getElementById('modal-body').innerHTML=body;const act=document.getElementById('modal-actions');act.innerHTML='';actions.forEach(a=>{const b=document.createElement('button');b.className='btn '+(a.outline?'btn-outline':'');b.textContent=a.text;b.onclick=()=>{hideModal();a.onClick()};act.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function hideModal(){document.getElementById('modal').classList.remove('show')}
+function showError(id,m){const e=document.getElementById(id);e.textContent=m;e.classList.add('show')}
+function clearError(id){document.getElementById(id).classList.remove('show')}
+function getSessionId(){return localStorage.getItem('aegis_session')}
+function setSession(id){if(id)localStorage.setItem('aegis_session',id);else localStorage.removeItem('aegis_session')}
+async function getCurrentUser(){const id=getSessionId();if(!id)return null;const{data,error}=await sb.from('users').select('*').eq('id',id).single();if(error||!data)return null;return data}
+async function getUserWallet(uid){const{data}=await sb.from('wallets').select('*').eq('user_id',uid).single();return data}
+async function getUserUsernames(uid){const{data}=await sb.from('usernames').select('*').eq('user_id',uid);return data||[]}
+async function getPrimaryUsername(uid){const uns=await getUserUsernames(uid);return uns.find(u=>u.is_primary)||uns[0]}
+async function findUserByUsername(u){const clean=u.replace('@','').toLowerCase();const{data:un}=await sb.from('usernames').select('*').ilike('username',clean).maybeSingle();if(!un)return null;const{data:user}=await sb.from('users').select('*').eq('id',un.user_id).single();return user}
+async function findUsernameRecord(u){const clean=u.replace('@','').toLowerCase();const{data}=await sb.from('usernames').select('*').ilike('username',clean).maybeSingle();return data}
+function isFounder(u){return u&&u.is_founder===true}
+async function addXP(userId,amount){const{data:u}=await sb.from('users').select('level,xp').eq('id',userId).single();if(!u||(u.level||1)>=MAX_LEVEL)return;let xp=(u.xp||0)+amount,level=u.level||1,needed=100+(level-1)*45;while(xp>=needed&&level<MAX_LEVEL){xp-=needed;level++;needed=100+(level-1)*45;if(level%5===0){const w=await getUserWallet(userId);if(w)await sb.from('wallets').update({balance:Number(w.balance)+150}).eq('id',w.id)}}await sb.from('users').update({level,xp}).eq('id',userId)}
+function getTodayTasks(userId){const key=new Date().toDateString();let data=JSON.parse(localStorage.getItem('aegis_daily_tasks')||'{}');if(!data[userId]||data[userId].date!==key){data[userId]={date:key,tasks:[{id:'transfer',title:'??????? 1 ???????',progress:0,target:1,reward:80,done:false},{id:'tap',title:'??????? 20 ?????',progress:0,target:20,reward:60,done:false},{id:'login',title:'????? ? ??????????',progress:1,target:1,reward:30,done:false}]};localStorage.setItem('aegis_daily_tasks',JSON.stringify(data))}return data[userId]}
+async function completeTask(userId,taskId,amount=1){const data=JSON.parse(localStorage.getItem('aegis_daily_tasks')||'{}');const today=getTodayTasks(userId);const task=today.tasks.find(t=>t.id===taskId);if(!task||task.done)return;task.progress=Math.min(task.target,task.progress+amount);if(task.progress>=task.target){task.done=true;const w=await getUserWallet(userId);if(w)await sb.from('wallets').update({balance:Number(w.balance)+task.reward}).eq('id',w.id);await addXP(userId,20);toast(`??????? ?????????! +${task.reward} AGS`)}data[userId]=today;localStorage.setItem('aegis_daily_tasks',JSON.stringify(data))}
+const navScreens=['main','transfer','history','profile'];
+async function showScreen(name){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById('screen-'+name).classList.add('active');
+ const user=await getCurrentUser();
+ document.getElementById('bottom-nav').style.display=(user&&navScreens.includes(name))?'flex':'none';
+ document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===name));
+ if(name==='main')await refreshMain();
+ if(name==='history')await refreshHistory();
+ if(name==='profile')await refreshProfile();
+ if(name==='transfer'){await refreshTransferScreen();document.getElementById('tr-to').value='@';}
+ if(name==='receive')await refreshReceive();
+ if(name==='tap')await refreshTap();
+ if(name==='appearance')await refreshAppearance();
+ if(name==='stickers')await refreshStickers();
+ if(name==='buy-username')await refreshBuyUsername();
+ if(name==='username-market')await refreshMarket();
+ if(name==='change-username')await refreshChangeUsername();
+ if(name==='founder-dashboard'){await refreshFounderDashboard();await refreshFounderPool();}
+ if(name==='leaderboard')await refreshLeaderboard();
+ if(name==='nft-store')await refreshNftStore();
+ if(name==='my-nfts')await refreshMyNfts();
+ window.scrollTo(0,0);
+}
+function navTo(n){showScreen(n)}
+
+/* ===== NFT FUNCTIONS ===== */
 async function refreshNftStore(){
-  const grid=document.getElementById('nft-store-grid');
-  if(!grid)return;
-  grid.innerHTML=NFT_CATALOG.map(n=>`
-    <div class="nft-card">
-      <div class="nft-card-bg ${RARITY_CLASS[n.rarity]}">
-        <div class="nft-rarity">${n.rarity}</div>
-        <img class="nft-img" src="assets/nfts/${n.image}" alt="${n.name}" onerror="this.style.opacity=0.3">
-        <div class="nft-name">${n.name}</div>
-        <div class="nft-price">${formatAGS(n.price)} AGS</div>
-        <div class="nft-actions">
-          <button class="btn btn-full" id="buy-${n.id}" onclick="buyNft('${n.id}',this)">Купить</button>
-          <button class="btn btn-outline btn-full" onclick="buyAndGift('${n.id}')">Купить и подарить</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
+ const grid=document.getElementById('nft-store-grid');
+ if(!grid)return;
+ grid.innerHTML=NFT_CATALOG.map(n=>`
+   <div class="nft-card">
+     <div class="nft-card-bg ${RARITY_CLASS[n.rarity]}">
+       <div class="nft-rarity">${n.rarity}</div>
+       <img class="nft-img" src="assets/nfts/${n.image}" alt="${n.name}" onerror="this.style.opacity=0.3">
+       <div class="nft-name">${n.name}</div>
+       <div class="nft-price">${formatAGS(n.price)} AGS</div>
+       <div class="nft-actions">
+         <button class="btn btn-full" onclick="buyNft('${n.id}',this)">??????</button>
+         <button class="btn btn-outline btn-full" onclick="buyAndGift('${n.id}')">?????? ? ????????</button>
+       </div>
+     </div>
+   </div>
+ `).join('');
+}
+async function buyNft(catalogId,btn){
+ if(btn)btn.disabled=true;
+ try{
+   const user=await getCurrentUser();
+   if(!user)return;
+   const nft=getNft(catalogId);
+   if(!nft)return;
+   const wallet=await getUserWallet(user.id);
+   if(!wallet||Number(wallet.balance)<nft.price){toast('???????????? AGS');return;}
+   const{error:e1}=await sb.from('wallets').update({balance:Number(wallet.balance)-nft.price}).eq('id',wallet.id).eq('balance',Number(wallet.balance));
+   if(e1){toast('?????? ????????');return;}
+   const{error:e2}=await sb.from('user_nfts').insert({catalog_id:catalogId,owner_id:user.id,status:'owned',purchase_price:nft.price,acquired_type:'purchase',acquired_at:new Date().toISOString()});
+   if(e2){await sb.from('wallets').update({balance:Number(wallet.balance)}).eq('id',wallet.id);toast('??????: '+e2.message);return;}
+   toast('NFT ???????!');
+   refreshMain();
+ }finally{if(btn)btn.disabled=false;}
+}
+async function buyAndGift(catalogId){
+ const nft=getNft(catalogId);
+ if(!nft)return;
+ showModal('?????? ? ????????',`<div class="input-group"><label>Username ??????????</label><input type="text" id="gift-username" placeholder="@username"></div>`,[
+   {text:'??????',outline:true,onClick:()=>{}},
+   {text:'?????? ? ????????',onClick:async()=>{
+     const to=await findUserByUsername(document.getElementById('gift-username').value.trim());
+     if(!to){toast('???????????? ?? ??????');return;}
+     const user=await getCurrentUser();
+     if(to.id===user.id){toast('?????? ???????? ????');return;}
+     const wallet=await getUserWallet(user.id);
+     if(!wallet||Number(wallet.balance)<nft.price){toast('???????????? AGS');return;}
+     const{error:e1}=await sb.from('wallets').update({balance:Number(wallet.balance)-nft.price}).eq('id',wallet.id).eq('balance',Number(wallet.balance));
+     if(e1){toast('?????? ????????');return;}
+     const{error:e2}=await sb.from('user_nfts').insert({catalog_id:catalogId,owner_id:to.id,status:'owned',purchase_price:nft.price,acquired_type:'gift',gifted_from:user.id,acquired_at:new Date().toISOString()});
+     if(e2){await sb.from('wallets').update({balance:Number(wallet.balance)}).eq('id',wallet.id);toast('??????: '+e2.message);return;}
+     toast('NFT ????????!');
+   }}
+ ]);
+}
+async function refreshMyNfts(){
+ const user=await getCurrentUser();
+ if(!user)return;
+ const{data}=await sb.from('user_nfts').select('*').eq('owner_id',user.id).eq('status','owned').order('acquired_at',{ascending:false});
+ const cont=document.getElementById('my-nfts-list');
+ if(!data||!data.length){cont.innerHTML='<div class="empty-state">? ??? ???? ??? NFT</div>';return;}
+ cont.innerHTML=data.map(item=>{
+   const n=getNft(item.catalog_id);if(!n)return'';
+   return`<div class="nft-card" style="margin-bottom:12px" onclick="openMyNft('${item.id}')">
+     <div class="nft-card-bg ${RARITY_CLASS[n.rarity]}">
+       <div class="nft-rarity">${n.rarity}</div>
+       <img class="nft-img" src="assets/nfts/${n.image}" onerror="this.style.opacity=0.3">
+       <div class="nft-name">${n.name}</div>
+       <div class="nft-price">${formatAGS(n.price)} AGS</div>
+       ${item.acquired_type==='gift'?'<div style="font-size:11px;color:#666">???????? ? ???????</div>':''}
+     </div>
+   </div>`;
+ }).join('');
+}
+async function openMyNft(userNftId){
+ const{data:item}=await sb.from('user_nfts').select('*').eq('id',userNftId).single();
+ if(!item)return;
+ const n=getNft(item.catalog_id);if(!n)return;
+ const date=new Date(item.acquired_at).toLocaleDateString('ru');
+ document.getElementById('nft-detail-content').innerHTML=`
+   <div class="nft-card-bg ${RARITY_CLASS[n.rarity]}" style="border-radius:10px;padding:20px;margin-bottom:16px">
+     <div class="nft-rarity">${n.rarity}</div>
+     <img class="nft-detail-img" src="assets/nfts/${n.image}" onerror="this.style.opacity=0.3">
+     <div style="text-align:center;font-size:20px;font-weight:800;margin-bottom:6px">${n.name}</div>
+     <div style="text-align:center;font-size:16px;font-weight:700;margin-bottom:12px">${formatAGS(n.price)} AGS</div>
+   </div>
+   <div class="summary-row"><span class="label">???? ???????</span><span>${formatAGS(item.purchase_price||n.price)} AGS</span></div>
+   <div class="summary-row"><span class="label">????</span><span>${date}</span></div>
+   <div class="summary-row"><span class="label">???</span><span>${item.acquired_type==='gift'?'???????':'???????'}</span></div>
+   <div style="height:16px"></div>
+   <button class="btn btn-full" style="margin-bottom:8px" onclick="toast('??????? ?????')">???????</button>
+   <button class="btn btn-outline btn-full" style="margin-bottom:8px" onclick="toast('??????? ?????')">????????</button>
+   <button class="btn btn-outline btn-full" disabled>????????? (?????)</button>
+ `;
+ showScreen('nft-detail');
 }
 
-async function buyNft(catalogId, btn){
+/* ===== ???????????? ??????? AEGIS (??? ?????????) ===== */
+async function handleLogin(e){if(e&&e.preventDefault)e.preventDefault();clearError('login-error');const un=document.getElementById('login-username').value.trim();const pw=document.getElementById('login-password').value;if(!un||!pw){showError('login-error','????????? ????');return}try{const user=await findUserByUsername(un);if(!user){showError('login-error','???????????? ?? ??????');return}if(user.password_hash!==hash(pw)){showError('login-error','???????? ??????');return}setSession(user.id);await completeTask(user.id,'login');showScreen('main')}catch(err){showError('login-error','?????? ????');console.error(err)}}
+async function handleRegister(e){if(e&&e.preventDefault)e.preventDefault();clearError('reg-error');const username=document.getElementById('reg-username').value.trim().toLowerCase();const pass=document.getElementById('reg-password').value;const pass2=document.getElementById('reg-password2').value;if(validateUsername(username)){showError('reg-error',validateUsername(username));return}if(pass.length<4){showError('reg-error','??????? 4 ???????');return}if(pass!==pass2){showError('reg-error','?????? ?? ?????????');return}try{if(await findUsernameRecord(username)){showError('reg-error','??? ?????');return}if(isSacredUsername(username)){showError('reg-error','?????? ??? Founder');return}const recovery=generateRecoveryCode();const{category}=classifyUsername(username);const{data:newUser,error}=await sb.from('users').insert({username,password_hash:hash(pass),recovery_code_hash:hash(recovery),is_founder:false,level:1,xp:0,custom_frame:'default',custom_avatar_frame:'default',custom_bg:'default',custom_pattern:'none',purchased_customizations:[],stickers:[],hide_balance:false,status_text:''}).select().single();if(error){showError('reg-error','??????: '+error.message);return}await sb.from('wallets').insert({user_id:newUser.id,balance:2000});await sb.from('usernames').insert({user_id:newUser.id,username,is_primary:true,category,history:[{userId:newUser.id,username,date:new Date().toISOString()}]});localStorage.setItem('aegis_temp_user',newUser.id);localStorage.setItem('aegis_temp_recovery',recovery);document.getElementById('recovery-code-display').textContent=recovery;showScreen('recovery-show')}catch(err){showError('reg-error','?????? ????');console.error(err)}}
+function copyRecoveryCode(){navigator.clipboard.writeText(document.getElementById('recovery-code-display').textContent).then(()=>toast('???????????'))}
+function finishRegistration(){const id=localStorage.getItem('aegis_temp_user');if(id){setSession(id);localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');showScreen('main')}else showScreen('login')}
+async function handleRecovery(e){if(e&&e.preventDefault)e.preventDefault();clearError('rec-error');try{const user=await findUserByUsername(document.getElementById('rec-username').value.trim());if(!user){showError('rec-error','?? ??????');return}if(user.recovery_code_hash!==hash(document.getElementById('rec-code').value.trim())){showError('rec-error','???????? ???');return}const np=document.getElementById('rec-newpass').value;if(np.length<4||np!==document.getElementById('rec-newpass2').value){showError('rec-error','?????? ??????');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('?????? ???????');showScreen('login')}catch(err){showError('rec-error','?????? ????');console.error(err)}}
+function handleLogout(){showModal('??????','????? ?? ?????????',[{text:'??????',outline:true,onClick:()=>{}},{text:'?????',onClick:()=>{setSession(null);showScreen('login')}}])}
+async function refreshMain(){const user=await getCurrentUser();if(!user){showScreen('login');return}const wallet=await getUserWallet(user.id);const bal=user.hide_balance?'----':formatAGS(wallet?wallet.balance:0);document.getElementById('main-balance').textContent=bal;document.getElementById('main-balance-usd').textContent=user.hide_balance?'':'? '+formatUSD(wallet?wallet.balance:0);document.getElementById('founder-dashboard-btn').style.display=isFounder(user)?'block':'none';const tasksData=getTodayTasks(user.id);document.getElementById('daily-tasks').innerHTML=tasksData.tasks.map(t=>`<div class="task-item"><div class="task-info"><div class="task-title">${t.title}</div><div class="task-reward">${t.progress}/${t.target}  +${t.reward} AGS</div></div><div>${t.done?'?':''}</div></div>`).join('');const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false}).limit(30);const myUns=await getUserUsernames(user.id);const myIds=myUns.map(u=>u.id);const myTxs=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).slice(0,5);document.getElementById('main-recent-tx').innerHTML=myTxs.length===0?'<div class="empty-state">??? ????????</div>':(await Promise.all(myTxs.map(t=>renderTxItem(t,user.id)))).join('')}
+let searchTimer=null;
+async function handleUserSearch(q){clearTimeout(searchTimer);const clean=q.replace('@','').toLowerCase().trim();const box=document.getElementById('search-results');if(clean.length<2){box.innerHTML='';return}searchTimer=setTimeout(async()=>{const{data:uns}=await sb.from('usernames').select('*').ilike('username',`%${clean}%`).limit(8);if(!uns||!uns.length){box.innerHTML='<div class="empty-state" style="padding:12px 0">?????? ?? ???????</div>';return}const html=await Promise.all(uns.map(async u=>{const{data:owner}=await sb.from('users').select('is_founder,level').eq('id',u.user_id).single();return`<div class="search-item"><div><div class="search-item-name">@${u.username} ${owner?.is_founder?'<span class="founder-badge">?</span>':''}</div><div class="search-item-cat">${u.category}  lvl ${owner?.level||1}</div></div><button class="search-item-btn" onclick="openPublicProfile('${u.user_id}')">???????</button></div>`}));box.innerHTML=html.join('')},180)}
+async function openPublicProfile(userId){const{data:user}=await sb.from('users').select('*').eq('id',userId).single();if(!user)return;const primary=await getPrimaryUsername(userId);const alts=(await getUserUsernames(userId)).filter(u=>!u.is_primary);const frame=CUSTOMIZATION_OPTIONS.frames.find(f=>f.id===(user.custom_frame||'default'));const bg=CUSTOMIZATION_OPTIONS.bgs.find(b=>b.id===(user.custom_bg||'default'));const pattern=CUSTOMIZATION_OPTIONS.patterns.find(p=>p.id===(user.custom_pattern||'none'));const isDark=['black','blue','red','purple','pink','green','orange','graphite','navy','yellow','light-blue'].includes(user.custom_bg)||user.is_founder;let classes=`profile-header ${frame?.class||''} ${bg?.class||''} ${pattern?.class||''}`;if(isDark)classes+=' dark-mode';if(user.is_founder)classes+=' founder';const stickersHtml=(user.stickers||[]).map(s=>`<div class="sticker" style="left:${s.x}%;top:${s.y}%;transform:rotate(${s.rotate||0}deg)">${s.emoji}</div>`).join('');document.getElementById('public-profile-content').innerHTML=`<div class="${classes}" style="position:relative">${stickersHtml}<div class="avatar-wrapper ${CUSTOMIZATION_OPTIONS.avatarFrames.find(f=>f.id===(user.custom_avatar_frame||'default'))?.class||''}">${user.avatar?`<img src="${escapeHtml(user.avatar)}">`:'<div class="avatar-placeholder">?</div>'}</div><div class="profile-username">@${escapeHtml(primary?.username||'?')}</div><div class="profile-meta"><span class="lvl-badge">lvl ${user.level||1}</span>${user.is_founder?'<span class="founder-badge">? FOUNDER</span>':''}</div>${user.status_text?`<div class="profile-status">${escapeHtml(user.status_text)}</div>`:''}${alts.length?`<div class="profile-alt-usernames">${alts.map(a=>`<span class="alt-un-badge">@${escapeHtml(a.username)}</span>`).join('')}</div>`:''}<div class="profile-date">? Aegis ? ${new Date(user.created_at).toLocaleDateString('ru')}</div></div><button class="btn btn-full" onclick="quickTransferTo('${escapeHtml(primary?.username||'')}')">?????????</button>`;showScreen('public-profile')}
+function quickTransferTo(username){showScreen('transfer');setTimeout(()=>{document.getElementById('tr-to').value='@'+username},40)}
+function founderBadgeHtml(u){return isFounder(u)?'<span class="founder-badge">? FOUNDER</span>':''}
+async function renderTxItem(tx,uid){const{data:sUn}=await sb.from('usernames').select('*').eq('id',tx.sender_username_id).maybeSingle();const{data:rUn}=await sb.from('usernames').select('*').eq('id',tx.receiver_username_id).maybeSingle();if(!sUn||!rUn)return'';const myUns=await getUserUsernames(uid);const isOut=myUns.some(u=>u.id===sUn.id);const other=isOut?rUn:sUn;const{data:otherUser}=await sb.from('users').select('is_founder').eq('id',other.user_id).single();return`<div class="tx-item" onclick="showTxDetail('${tx.id}')"><div class="tx-info"><div class="tx-title">${isOut?'??????? ':'????????? ?? '}@${other.username} ${founderBadgeHtml(otherUser)}</div><div class="tx-sub">${formatDate(tx.created_at)}</div></div><div class="tx-amount ${isOut?'negative':'positive'}">${isOut?'?':'+'}${formatAGS(tx.amount)} AGS</div></div>`}
+let pendingTransfer=null;
+async function handleTransferPreview(e){e.preventDefault();clearError('tr-error');const user=await getCurrentUser();if(!user)return;const toRaw=document.getElementById('tr-to').value.trim();const amount=parseInt(document.getElementById('tr-amount').value);const comment=document.getElementById('tr-comment').value.trim();if(!toRaw||!amount||amount<50){showError('tr-error','??????? 50 AGS');return}const toUn=await findUsernameRecord(toRaw);if(!toUn){showError('tr-error','???????????? ?? ??????');return}const fromUnId=document.getElementById('tr-from-username').value;const fromUn=await sb.from('usernames').select('*').eq('id',fromUnId).single();if(!fromUn.data||fromUn.data.user_id!==user.id){showError('tr-error','???????? ???????????');return}if(toUn.user_id===user.id){showError('tr-error','?????? ?????????? ????');return}const wallet=await getUserWallet(user.id);let fee=0;if(amount>=1000&&!isFounder(user))fee=Math.floor(amount*0.04);if(Number(wallet.balance)<amount+fee){showError('tr-error','???????????? ???????');return}pendingTransfer={fromUnId,toUnId:toUn.id,amount,fee,comment};document.getElementById('tc-summary').innerHTML=`<div class="summary-row"><span class="label">????</span><span>@${toUn.username}</span></div><div class="summary-row"><span class="label">?????</span><span>${formatAGS(amount)} AGS</span></div><div class="summary-row"><span class="label">????????</span><span>${formatAGS(fee)} AGS</span></div><div class="summary-row total"><span class="label">?????</span><span>${formatAGS(amount+fee)} AGS</span></div>`;showScreen('transfer-confirm')}
+async function handleTransferConfirm(){if(!pendingTransfer)return;const user=await getCurrentUser();if(!user)return;if(pendingTransfer.amount>=5000){if(!user.pin_hash){showModal('?????????? PIN','??? ????????? ?? 5000 AGS ????? 6-??????? PIN',[{text:'??????????',onClick:()=>showScreen('change-pin')},{text:'??????',outline:true,onClick:()=>{}}]);return}window.pinBuffer='';window.pinMode='transfer';window.pinAttempts=0;updatePinDisplay();clearError('pin-error');await showScreen('pin');return}await executeTransfer()}
+async function executeTransfer(){
+ const user=await getCurrentUser();
+ if(!pendingTransfer||!user)return;
+ const p={...pendingTransfer};
+ try{
+   const{data:toUn,error:toErr}=await sb.from('usernames').select('*').eq('id',p.toUnId).maybeSingle();
+   if(toErr||!toUn){toast('?????????? ?? ??????');return}
+   const senderWallet=await getUserWallet(user.id),receiverWallet=await getUserWallet(toUn.user_id);
+   if(!senderWallet||!receiverWallet){toast('??????? ?? ??????');return}
+   if(Number(senderWallet.balance)<p.amount+p.fee){toast('???????????? ???????');return}
+   const newSender=Number(senderWallet.balance)-p.amount-p.fee;
+   const senderUpdate=await sb.from('wallets').update({balance:newSender}).eq('id',senderWallet.id).eq('balance',Number(senderWallet.balance));
+   if(senderUpdate.error){toast('?? ??????? ???????');return}
+   const receiverUpdate=await sb.from('wallets').update({balance:Number(receiverWallet.balance)+p.amount}).eq('id',receiverWallet.id).eq('balance',Number(receiverWallet.balance));
+   if(receiverUpdate.error){await sb.from('wallets').update({balance:Number(senderWallet.balance)}).eq('id',senderWallet.id);toast('?????? ??????????');return}
+   if(p.fee>0){const{data:pool}=await sb.from('system_pool').select('id,balance').eq('id',1).maybeSingle();if(pool)await sb.from('system_pool').update({balance:Number(pool.balance||0)+p.fee}).eq('id',1)}
+   const tx={id:generateTxId(),sender_username_id:p.fromUnId,receiver_username_id:p.toUnId,amount:p.amount,fee:p.fee,status:'completed',comment:p.comment||null,created_at:new Date().toISOString()};
+   const txIns=await sb.from('transactions').insert(tx);
+   if(txIns.error){await sb.from('wallets').update({balance:Number(senderWallet.balance)}).eq('id',senderWallet.id);await sb.from('wallets').update({balance:Number(receiverWallet.balance)}).eq('id',receiverWallet.id);toast('?????? ?????? ? ???????: '+txIns.error.message);return}
+   await completeTask(user.id,'transfer');await addXP(user.id,15);pendingTransfer=null;
+   showModal('??????',`<div style="text-align:center;font-size:24px;font-weight:800">${formatAGS(p.amount)} AGS</div><div style="color:#666;margin-top:6px">?????????? @${toUn.username}</div>`,[{text:'OK',onClick:()=>showScreen('main')}]);
+ }catch(err){console.error(err);toast('?????? ????????')}
+}
+function pinInput(d){if(window.pinBuffer.length>=6)return;window.pinBuffer+=d;updatePinDisplay();if(window.pinBuffer.length===6)setTimeout(validatePin,120)}
+function pinDelete(){window.pinBuffer=window.pinBuffer.slice(0,-1);updatePinDisplay()}
+function updatePinDisplay(){document.querySelectorAll('#pin-display .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<window.pinBuffer.length))}
+async function validatePin(){const user=await getCurrentUser();if(user.pin_hash!==hash(window.pinBuffer)){window.pinAttempts=(window.pinAttempts||0)+1;if(window.pinAttempts>=5){showError('pin-error','PIN ????????????');setTimeout(()=>showScreen('main'),1500);return}showError('pin-error',`???????? PIN (${5-window.pinAttempts})`);window.pinBuffer='';updatePinDisplay();return}if(window.pinMode==='transfer')await executeTransfer()}
+async function refreshReceive(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const uname='@'+(primary?.username||'');document.getElementById('receive-username').textContent=uname;const cont=document.getElementById('qr-container');cont.innerHTML='';const deepLink=location.origin+location.pathname+'#transfer?to='+encodeURIComponent(primary?.username||'');try{if(typeof QRCode!=='undefined'){new QRCode(cont,{text:deepLink,width:168,height:168,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}else{const link=document.createElement('a');link.href=deepLink;link.textContent='??????? ???????';link.style.fontWeight='700';cont.appendChild(link)}}catch(e){cont.innerHTML='<div style="font-size:12px;color:#666;text-align:center;padding:20px">QR ??????????</div>'}}
+function copyReceiveUsername(){const t=document.getElementById('receive-username').textContent;if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('???????????')).catch(()=>toast(t));else toast(t)}
+let historyFilter='all';
+async function refreshHistory(){const user=await getCurrentUser();const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false});const myIds=(await getUserUsernames(user.id)).map(u=>u.id);let list=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id));if(historyFilter==='in')list=list.filter(t=>myIds.includes(t.receiver_username_id));if(historyFilter==='out')list=list.filter(t=>myIds.includes(t.sender_username_id));document.getElementById('history-list').innerHTML=list.length?(await Promise.all(list.map(t=>renderTxItem(t,user.id)))).join(''):'<div class="empty-state">??? ????????</div>'}
+function filterTx(f,el){historyFilter=f;document.querySelectorAll('#screen-history .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshHistory()}
+async function showTxDetail(id){const{data:tx}=await sb.from('transactions').select('*').eq('id',id).single();if(!tx)return;const{data:s}=await sb.from('usernames').select('username').eq('id',tx.sender_username_id).single();const{data:r}=await sb.from('usernames').select('username').eq('id',tx.receiver_username_id).single();document.getElementById('tx-detail-content').innerHTML=`<div class="summary-row"><span class="label">???</span><span>???????</span></div><div class="summary-row"><span class="label">?????</span><span>${formatAGS(tx.amount)} AGS</span></div><div class="summary-row"><span class="label">??</span><span>@${s?.username}</span></div><div class="summary-row"><span class="label">????</span><span>@${r?.username}</span></div><div class="summary-row"><span class="label">????</span><span>${formatDate(tx.created_at)}</span></div><div class="summary-row"><span class="label">ID</span><span style="font-family:monospace;font-size:12px">${tx.id}</span></div>`;showScreen('tx-detail')}
+async function refreshProfile(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const alts=(await getUserUsernames(user.id)).filter(u=>!u.is_primary);const frame=CUSTOMIZATION_OPTIONS.frames.find(f=>f.id===(user.custom_frame||'default'));const avFrame=CUSTOMIZATION_OPTIONS.avatarFrames.find(f=>f.id===(user.custom_avatar_frame||'default'));const bg=CUSTOMIZATION_OPTIONS.bgs.find(b=>b.id===(user.custom_bg||'default'));const pattern=CUSTOMIZATION_OPTIONS.patterns.find(p=>p.id===(user.custom_pattern||'none'));const isDark=['black','blue','red','purple','pink','green','orange','graphite','navy','yellow','light-blue'].includes(user.custom_bg)||user.is_founder;let classes=`profile-header ${frame?.class||''} ${bg?.class||''} ${pattern?.class||''}`;if(isDark)classes+=' dark-mode';if(user.is_founder)classes+=' founder';const stickersHtml=(user.stickers||[]).map(s=>`<div class="sticker" style="left:${s.x}%;top:${s.y}%;transform:rotate(${s.rotate||0}deg)">${s.emoji}</div>`).join('');document.getElementById('profile-header-container').innerHTML=`<div class="${classes}" style="position:relative">${stickersHtml}<div class="avatar-wrapper ${avFrame?.class||''}" onclick="document.getElementById('avatar-input')?.click()">${user.avatar?`<img src="${user.avatar}">`:'<div class="avatar-placeholder">?</div>'}<div class="avatar-edit-overlay">????????</div><input type="file" id="avatar-input" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)"></div><div class="profile-username">@${primary?.username||'?'}</div><div class="profile-meta"><span class="lvl-badge">lvl ${user.level||1}</span>${user.is_founder?'<span class="founder-badge">? FOUNDER</span>':''}</div>${user.status_text?`<div class="profile-status">${user.status_text}</div>`:''}${alts.length?`<div class="profile-alt-usernames">${alts.map(a=>`<span class="alt-un-badge">@${a.username}</span>`).join('')}</div>`:''}<div class="profile-date">? Aegis ? ${new Date(user.created_at).toLocaleDateString('ru')}</div>${user.is_founder?'<div class="profile-founder-tag">AEGIS FOUNDER</div>':''}<div class="profile-account-num">ACCOUNT #${String(user.account_number||0).padStart(4,'0')}</div></div>`;const uns=await getUserUsernames(user.id);document.getElementById('profile-usernames').innerHTML=uns.map(u=>{const canDelete=!u.is_primary&&uns.length>1;const isAuction=u.sale_status==='auction'&&u.auction_data&&u.auction_data.endTime>Date.now();return`<div style="padding:11px 0;border-bottom:1px solid #eee"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">@${u.username}</span><div>${u.is_primary?'<span class="username-badge">????????</span>':''}<span class="username-badge">${u.category}</span></div></div><div class="un-actions">${!u.sale_status&&!isAuction?`<button class="un-action-btn" onclick="openSellModal('${u.id}')">???????</button>`:''}${u.sale_status==='listed'?`<button class="un-action-btn" onclick="cancelSale('${u.id}')">?????</button>`:''}${isAuction?`<button class="un-action-btn" onclick="openAuction('${u.id}')">???????</button>`:''}<button class="un-action-btn" onclick="showUsernameHistory('${u.id}')">???????</button>${canDelete?`<button class="un-action-btn" onclick="confirmDelete('${u.id}')">???????</button>`:''}</div></div>`}).join('');document.getElementById('buy-username-btn').textContent=isFounder(user)?'+ ??????? username (?????????)':'+ ?????? username - 6000 AGS'}
+async function handleAvatarUpload(input){const file=input.files[0];if(!file)return;if(file.size>500*1024){toast('???? 500 ??');return}const reader=new FileReader();reader.onload=async e=>{const user=await getCurrentUser();await sb.from('users').update({avatar:e.target.result}).eq('id',user.id);toast('?????? ????????');refreshProfile()};reader.readAsDataURL(file)}
+async function refreshAppearance(){const user=await getCurrentUser();if(!user)return;const founder=isFounder(user);const render=(type,cid)=>{const cont=document.getElementById(cid);if(!cont)return;cont.innerHTML=CUSTOMIZATION_OPTIONS[type].map(opt=>{if(opt.founderOnly&&!founder)return'';const key=`${type}-${opt.id}`;const owned=founder||(user.purchased_customizations||[]).includes(key)||opt.price===0;const field=CUSTOM_FIELD_MAP[type];const selected=(user[field]||(type==='patterns'?'none':'default'))===opt.id;let prev='';if(type==='frames'||type==='avatarFrames'){prev=`border:3px solid ${opt.color};`;if(opt.id==='double')prev+=`border-style:double;border-width:5px;`;if(opt.id==='dashed')prev+=`border-style:dashed;`;if(opt.id==='thick')prev+=`border-width:5px;`}else if(type==='bgs')prev=`background:${opt.color}`;else prev=`background:#111;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff`;return`<div class="shop-item ${selected?'selected':''}" onclick="buyOrSelect('${type}','${opt.id}',${opt.price})"><div class="shop-item-preview" style="${prev}">${type==='patterns'?opt.icon:''}</div><div class="shop-item-name">${opt.name}</div><div class="shop-item-price">${selected?'?':(owned?'?????????':formatAGS(opt.price)+' AGS')}</div></div>`}).join('')};render('frames','shop-frames');render('avatarFrames','shop-avatarFrames');render('bgs','shop-bgs');render('patterns','shop-patterns')}
+async function buyOrSelect(type,id,price){const user=await getCurrentUser();if(!user)return;const founder=isFounder(user);const key=`${type}-${id}`;const owned=founder||(user.purchased_customizations||[]).includes(key)||price===0;const field=CUSTOM_FIELD_MAP[type];if(owned){await sb.from('users').update({[field]:id}).eq('id',user.id);toast('?????????');refreshAppearance();refreshProfile();return}const wallet=await getUserWallet(user.id);if(!wallet||Number(wallet.balance)<price){toast('???????????? ???????');return}showModal(`???????`,`?????????: ${formatAGS(price)} AGS`,[{text:'??????',outline:true,onClick:()=>{}},{text:'??????',onClick:async()=>{await sb.from('wallets').update({balance:Number(wallet.balance)-price}).eq('id',wallet.id);const purchased=[...(user.purchased_customizations||[]),key];await sb.from('users').update({[field]:id,purchased_customizations:purchased}).eq('id',user.id);await addXP(user.id,25);toast('???????!');refreshAppearance();refreshProfile()}}])}
+async function refreshStickers(){const user=await getCurrentUser();if(!user)return;const founder=isFounder(user);const stickers=user.stickers||[];document.getElementById('sticker-limit-text').textContent=founder?'Founder - ??? ???????????':`???????? ${MAX_STICKERS_NORMAL} ?????????  1 ?? = ${STICKER_PRICE} AGS`;document.getElementById('stickers-list').innerHTML=stickers.length?stickers.map((s,i)=>`<div style="border:1.5px solid #000;padding:10px;margin-bottom:8px;border-radius:7px"><div style="font-size:28px;margin-bottom:6px">${s.emoji}</div><div class="sticker-controls"><label>X%</label><input type="number" value="${s.x}" min="0" max="90" onchange="updateSticker(${i},'x',this.value)"><label>Y%</label><input type="number" value="${s.y}" min="0" max="80" onchange="updateSticker(${i},'y',this.value)"><label> </label><input type="number" value="${s.rotate||0}" min="0" max="360" onchange="updateSticker(${i},'rotate',this.value)"><button onclick="removeSticker(${i})">???????</button></div></div>`).join(''):'<div class="empty-state">???? ??? ?????????</div>'}
+async function addSticker(){const user=await getCurrentUser();const founder=isFounder(user);const stickers=user.stickers||[];if(!founder&&stickers.length>=MAX_STICKERS_NORMAL){toast('???????? 5 ?????????');return}if(!founder){const wallet=await getUserWallet(user.id);if(!wallet||Number(wallet.balance)<STICKER_PRICE){toast('???????????? ???????');return}}showModal('???????? ???????',`<div class="input-group"><label>???????</label><input type="text" id="new-sticker-emoji" maxlength="4" style="font-size:28px;text-align:center;padding:10px"></div>`,[{text:'??????',outline:true,onClick:()=>{}},{text:'????????',onClick:async()=>{const emoji=document.getElementById('new-sticker-emoji').value.trim();if(!emoji){toast('?????? ???????');return}if(!founder){const wallet=await getUserWallet(user.id);await sb.from('wallets').update({balance:Number(wallet.balance)-STICKER_PRICE}).eq('id',wallet.id)}const newStickers=[...stickers,{emoji,x:40+Math.random()*20,y:15+Math.random()*20,rotate:Math.floor(Math.random()*40-20)}];await sb.from('users').update({stickers:newStickers}).eq('id',user.id);await addXP(user.id,12);toast('?????????');refreshStickers();refreshProfile()}}])}
+async function updateSticker(i,prop,val){const user=await getCurrentUser();const stickers=[...(user.stickers||[])];stickers[i][prop]=Number(val);await sb.from('users').update({stickers}).eq('id',user.id);refreshProfile()}
+async function removeSticker(i){const user=await getCurrentUser();const stickers=[...(user.stickers||[])];stickers.splice(i,1);await sb.from('users').update({stickers}).eq('id',user.id);refreshStickers();refreshProfile()}
+async function toggleHideBalance(){const user=await getCurrentUser();await sb.from('users').update({hide_balance:!user.hide_balance}).eq('id',user.id);toast(user.hide_balance?'?????? ?????':'?????? ?????');refreshMain()}
+async function editStatus(){const user=await getCurrentUser();showModal('??????',`<div class="input-group"><label>????? ??????? (?? 32 ????????)</label><input type="text" id="status-input" maxlength="32" value="${user.status_text||''}"></div>`,[{text:'??????',outline:true,onClick:()=>{}},{text:'?????????',onClick:async()=>{await sb.from('users').update({status_text:document.getElementById('status-input').value.trim()}).eq('id',user.id);toast('?????? ????????');refreshProfile()}}])}
+async function showUsernameHistory(unId){const{data:un}=await sb.from('usernames').select('*').eq('id',unId).single();if(!un||!un.history)return;const html=(un.history||[]).slice().reverse().map(h=>`<div style="padding:8px 0;border-bottom:1px solid #eee">@${h.username||'?'}  ${new Date(h.date).toLocaleDateString('ru')}</div>`).join('');showModal('??????? @'+un.username,html||'??? ???????',[{text:'OK',onClick:()=>{}}])}
+async function openSellModal(unId){const{data:u}=await sb.from('usernames').select('*').eq('id',unId).single();if(!u)return;const{basePrice}=classifyUsername(u.username);showModal('??????? @'+u.username,`<div style="margin-bottom:10px">?????????????: <strong>${formatAGS(basePrice)} AGS</strong></div><div style="margin-bottom:12px"><label style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><input type="radio" name="sell-type" value="fixed" checked> ????????????? ????</label><label style="display:flex;align-items:center;gap:8px"><input type="radio" name="sell-type" value="auction"> ???????</label></div><div class="input-group"><label>???? / ????? (???. 50 AGS)</label><input type="number" id="sell-price-input" min="50" value="${Math.max(50,basePrice)}" style="padding:10px;border:1.5px solid #000;width:100%;border-radius:6px"></div><div class="input-group" id="auction-duration-group" style="display:none;margin-top:10px"><label>????????????</label><select id="auction-duration" style="padding:10px;border:1.5px solid #000;width:100%;border-radius:6px"><option value="3600000">1 ???</option><option value="21600000">6 ?????</option><option value="86400000">24 ????</option><option value="259200000">3 ???</option></select></div>`,[{text:'??????',outline:true,onClick:()=>{}},{text:'?????????',onClick:async()=>{const price=parseInt(document.getElementById('sell-price-input').value);if(!price||price<50){toast('??????? 50 AGS');return}const type=document.querySelector('input[name="sell-type"]:checked').value;if(type==='fixed'){await sb.from('usernames').update({sale_status:'listed',sale_price:price,auction_data:null}).eq('id',unId)}else{const duration=parseInt(document.getElementById('auction-duration').value);await sb.from('usernames').update({sale_status:'auction',auction_data:{startPrice:price,currentBid:price,currentBidder:null,endTime:Date.now()+duration,bids:[]}}).eq('id',unId)}toast(type==='fixed'?'??????????':'??????? ?????');showScreen('profile')}}]);setTimeout(()=>{document.querySelectorAll('input[name="sell-type"]').forEach(r=>{r.onchange=()=>{document.getElementById('auction-duration-group').style.display=r.value==='auction'?'block':'none'}})},50)}
+async function cancelSale(unId){await sb.from('usernames').update({sale_status:null,sale_price:null,auction_data:null}).eq('id',unId);toast('?????');showScreen('profile')}
+async function confirmDelete(unId){const{data:u}=await sb.from('usernames').select('username').eq('id',unId).single();showModal('??????? @'+u.username+'?','??????????',[{text:'??????',outline:true,onClick:()=>{}},{text:'???????',onClick:async()=>{await sb.from('usernames').delete().eq('id',unId);toast('??????');showScreen('profile')}}])}
+async function refreshBuyUsername(){const founder=isFounder(await getCurrentUser());document.getElementById('buy-username-hint').textContent=founder?'Founder ??????? ?????????':'????????? 6000 AGS';document.getElementById('buy-username-submit').textContent=founder?'???????':'?????? ?? 6000'}
+async function handleBuyUsername(e){e.preventDefault();clearError('buy-error');const user=await getCurrentUser();const username=document.getElementById('buy-username').value.trim().toLowerCase();const founder=isFounder(user);if(validateUsername(username)){showError('buy-error',validateUsername(username));return}if(await findUsernameRecord(username)){showError('buy-error','?????');return}if(isSacredUsername(username)&&!founder){showError('buy-error','?????? Founder');return}if(!founder){if((await getUserUsernames(user.id)).length>=4){showError('buy-error','???? 4');return}if(Number((await getUserWallet(user.id)).balance)<6000){showError('buy-error','????????????');return}}showModal(founder?'???????':'??????',`@${username}`,[{text:'??????',outline:true,onClick:()=>{}},{text:founder?'???????':'??????',onClick:async()=>{if(!founder){const w=await getUserWallet(user.id);await sb.from('wallets').update({balance:Number(w.balance)-6000}).eq('id',w.id)}const{category}=classifyUsername(username);await sb.from('usernames').insert({user_id:user.id,username,is_primary:false,category,history:[{userId:user.id,username,date:new Date().toISOString()}]});await addXP(user.id,40);toast('??????');showScreen('profile')}}])}
+async function refreshChangeUsername(){const user=await getCurrentUser();const uns=await getUserUsernames(user.id);document.getElementById('change-username-list').innerHTML=uns.map(u=>`<div class="menu-item" onclick="setPrimary('${u.id}')"><span>@${u.username} ${u.is_primary?'<span class="username-badge">????????</span>':''}</span><span>${u.is_primary?'?':'???????'}</span></div>`).join('')}
+async function setPrimary(unId){const user=await getCurrentUser();const uns=await getUserUsernames(user.id);for(const u of uns)await sb.from('usernames').update({is_primary:u.id===unId}).eq('id',u.id);toast('????????');showScreen('profile')}
+async function handleChangePassword(e){e.preventDefault();clearError('cp-error');const user=await getCurrentUser();if(user.password_hash!==hash(document.getElementById('cp-current').value)){showError('cp-error','???????? ??????');return}const np=document.getElementById('cp-new').value;if(np.length<4||np!==document.getElementById('cp-new2').value){showError('cp-error','??????');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('???????');showScreen('profile')}
+async function handleChangePin(e){e.preventDefault();clearError('cpi-error');const user=await getCurrentUser();if(user.pin_hash&&user.pin_hash!==hash(document.getElementById('cpi-current').value)){showError('cpi-error','???????? PIN');return}const np=document.getElementById('cpi-new').value;if(!/^[0-9]{6}$/.test(np)||np!==document.getElementById('cpi-new2').value){showError('cpi-error','6 ????');return}await sb.from('users').update({pin_hash:hash(np)}).eq('id',user.id);toast('PIN ???????');showScreen('profile')}
+async function getTodayTapData(uid){const today=new Date().toISOString().slice(0,10);let{data}=await sb.from('taps').select('*').eq('user_id',uid).eq('date',today).maybeSingle();if(!data){const{data:created}=await sb.from('taps').insert({user_id:uid,date:today,taps_count:0}).select().single();data=created}return data}
+let lastTapTs=0,tapPending=0,tapFlushTimer=null;
+async function refreshTap(){try{const user=await getCurrentUser();if(!user)return;const data=await getTodayTapData(user.id);const founder=isFounder(user),reward=founder?53:2,count=Number(data?.taps_count||0);document.getElementById('tap-count').textContent=count.toLocaleString('ru');document.getElementById('tap-earned').textContent=(count*reward).toLocaleString('ru');document.getElementById('tap-limit-display').textContent=founder?'(?)':'/ 10000';document.getElementById('tap-reward-text').textContent=founder?'1 ??????? = +53 AGS (Founder)':'1 ??????? = +2 AGS';const btn=document.getElementById('tap-btn');if(btn)btn.disabled=!founder&&count>=10000}catch(e){console.error(e)}}
+async function flushTaps(){if(tapPending<=0)return;const user=await getCurrentUser();if(!user){tapPending=0;return}const amount=tapPending;tapPending=0;const data=await getTodayTapData(user.id);const current=Number(data?.taps_count||0);const founder=isFounder(user),reward=founder?53:2;const finalCount=current+Math.min(amount,10000-current);const up=await sb.from('taps').update({taps_count:finalCount}).eq('id',data.id).eq('taps_count',current);if(up.error){tapPending+=amount;return}const w=await getUserWallet(user.id);if(!w)return;await sb.from('wallets').update({balance:Number(w.balance)+Math.min(amount,10000-current)*reward}).eq('id',w.id).eq('balance',Number(w.balance));if(finalCount%50===0)await addXP(user.id,10);await refreshTap()}
+function queueTap(){getCurrentUser().then(user=>{if(!user)return;const founder=isFounder(user),reward=founder?53:2;const displayed=Number(document.getElementById('tap-count').textContent.replace(/\s/g,''))||0;if(!founder&&displayed>=10000)return;tapPending++;document.getElementById('tap-count').textContent=(displayed+1).toLocaleString('ru');document.getElementById('tap-earned').textContent=((displayed+1)*reward).toLocaleString('ru');clearTimeout(tapFlushTimer);tapFlushTimer=setTimeout(flushTaps,280)})}
+function handleTap(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation()}const now=performance.now();if(now-lastTapTs<45)return;lastTapTs=now;const btn=document.getElementById('tap-btn');if(btn){btn.classList.remove('tap-press');void btn.offsetWidth;btn.classList.add('tap-press');setTimeout(()=>btn.classList.remove('tap-press'),80)}queueTap()}
+let marketTab='fixed';
+function setMarketTab(tab,el){marketTab=tab;document.querySelectorAll('#screen-username-market .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshMarket()}
+async function refreshMarket(){await finishExpiredAuctions();const{data:uns}=await sb.from('usernames').select('*');const cont=document.getElementById('market-list');let list=[];if(marketTab==='fixed')list=(uns||[]).filter(u=>u.sale_status==='listed');else list=(uns||[]).filter(u=>u.sale_status==='auction'&&u.auction_data&&u.auction_data.endTime>Date.now());if(!list.length){cont.innerHTML='<div class="empty-state">??? ???????????</div>';return}cont.innerHTML=(await Promise.all(list.map(async u=>{const seller=await getPrimaryUsername(u.user_id);if(marketTab==='fixed'){return`<div style="border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;cursor:pointer" onclick="buyFromMarket('${u.id}')"><div style="font-weight:700;font-size:16px">@${u.username}</div><div style="font-size:12px;color:#666;margin:3px 0">${u.category}  @${seller?.username||'?'}</div><div style="font-weight:700">${formatAGS(u.sale_price)} AGS</div></div>`}else{const left=Math.max(0,u.auction_data.endTime-Date.now());const mins=Math.floor(left/60000);return`<div style="border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;cursor:pointer" onclick="openAuction('${u.id}')"><div style="font-weight:700;font-size:16px">@${u.username}</div><div style="font-size:12px;color:#666;margin:3px 0">${u.category}  @${seller?.username||'?'}</div><div style="font-weight:700">${formatAGS(u.auction_data.currentBid)} AGS</div><div class="auction-timer">???????? ~${mins} ???</div></div>`}}))).join('')}
+async function buyFromMarket(unId){const user=await getCurrentUser();const{data:target}=await sb.from('usernames').select('*').eq('id',unId).single();if(!target||target.sale_status!=='listed')return;if(target.user_id===user.id){toast('??? ???');return}if(!isFounder(user)&&(await getUserUsernames(user.id)).length>=4){toast('???? 4 username');return}if(Number((await getUserWallet(user.id)).balance)<target.sale_price){toast('????????????');return}showModal(`?????? @${target.username}?`,`${formatAGS(target.sale_price)} AGS`,[{text:'??????',outline:true,onClick:()=>{}},{text:'??????',onClick:async()=>{const fee=Math.floor(target.sale_price*0.1);const buyerW=await getUserWallet(user.id);const sellerW=await getUserWallet(target.user_id);await sb.from('wallets').update({balance:Number(buyerW.balance)-target.sale_price}).eq('id',buyerW.id);await sb.from('wallets').update({balance:Number(sellerW.balance)+(target.sale_price-fee)}).eq('id',sellerW.id);const hist=[...(target.history||[]),{userId:user.id,username:target.username,date:new Date().toISOString()}];await sb.from('usernames').update({user_id:user.id,sale_status:null,sale_price:null,history:hist}).eq('id',unId);toast('???????!');refreshMarket()}}])}
+async function openAuction(unId){const{data:un}=await sb.from('usernames').select('*').eq('id',unId).single();if(!un||!un.auction_data)return;const left=Math.max(0,un.auction_data.endTime-Date.now());const mins=Math.floor(left/60000);const seller=await getPrimaryUsername(un.user_id);document.getElementById('auction-content').innerHTML=`<h2 style="font-size:20px;font-weight:700;margin-bottom:8px">@${un.username}</h2><div style="font-size:13px;color:#666;margin-bottom:12px">${un.category}  ???????? @${seller?.username||'?'}</div><div style="font-size:24px;font-weight:800;margin-bottom:4px">${formatAGS(un.auction_data.currentBid)} AGS</div><div class="auction-timer" style="margin-bottom:16px">???????? ~${mins} ???</div><div class="input-group"><label>???? ??????</label><input type="number" id="bid-amount" min="${un.auction_data.currentBid+1}" value="${Math.ceil(un.auction_data.currentBid*1.05)}" style="padding:12px;border:1.5px solid #000;border-radius:6px;width:100%"></div><button class="btn btn-full" style="margin-top:12px" onclick="placeBid('${unId}')">??????? ??????</button><div style="margin-top:16px"><div class="section-title">??????? ??????</div>${(un.auction_data.bids||[]).slice().reverse().map(b=>`<div class="bid-item">@${b.username} - ${formatAGS(b.amount)} AGS</div>`).join('')||'<div class="empty-state" style="padding:10px 0">???? ??? ??????</div>'}</div>`;showScreen('auction')}
+async function placeBid(unId){const user=await getCurrentUser();const{data:un}=await sb.from('usernames').select('*').eq('id',unId).single();if(!un||!un.auction_data||un.auction_data.endTime<Date.now()){toast('??????? ????????');return}const amount=parseInt(document.getElementById('bid-amount').value);if(!amount||amount<=un.auction_data.currentBid){toast('?????? ?????? ???? ????');return}const wallet=await getUserWallet(user.id);if(Number(wallet.balance)<amount){toast('???????????? ???????');return}if(un.auction_data.currentBidder){const prevW=await getUserWallet(un.auction_data.currentBidder);if(prevW)await sb.from('wallets').update({balance:Number(prevW.balance)+un.auction_data.currentBid}).eq('id',prevW.id)}await sb.from('wallets').update({balance:Number(wallet.balance)-amount}).eq('id',wallet.id);const primary=await getPrimaryUsername(user.id);const newAuction={...un.auction_data,currentBid:amount,currentBidder:user.id,bids:[...(un.auction_data.bids||[]),{userId:user.id,username:primary?.username,amount,time:Date.now()}]};await sb.from('usernames').update({auction_data:newAuction}).eq('id',unId);toast('?????? ???????!');openAuction(unId)}
+async function finishExpiredAuctions(){const{data:uns}=await sb.from('usernames').select('*').eq('sale_status','auction');for(const u of (uns||[])){if(u.auction_data&&u.auction_data.endTime<Date.now()){if(u.auction_data.currentBidder){const fee=Math.floor(u.auction_data.currentBid*0.1);const sellerW=await getUserWallet(u.user_id);if(sellerW)await sb.from('wallets').update({balance:Number(sellerW.balance)+(u.auction_data.currentBid-fee)}).eq('id',sellerW.id);const hist=[...(u.history||[]),{userId:u.auction_data.currentBidder,username:u.username,date:new Date().toISOString()}];await sb.from('usernames').update({user_id:u.auction_data.currentBidder,sale_status:null,auction_data:null,history:hist}).eq('id',u.id)}else{await sb.from('usernames').update({sale_status:null,auction_data:null}).eq('id',u.id)}}}}
+async function refreshLeaderboard(){await finishExpiredAuctions();const tab=window.lbTab||'level';const{data:users}=await sb.from('users').select('*');let list=[];if(tab==='level'){list=(users||[]).map(u=>({user:u,score:u.level||1,label:'lvl '+(u.level||1)})).sort((a,b)=>b.score-a.score).slice(0,20)}else if(tab==='earned'){list=await Promise.all((users||[]).map(async u=>{const w=await getUserWallet(u.id);return{user:u,score:w?Number(w.balance):0,label:formatAGS(w?w.balance:0)+' AGS'}}));list=list.sort((a,b)=>b.score-a.score).slice(0,20)}else{const{data:txs}=await sb.from('transactions').select('*');list=await Promise.all((users||[]).map(async u=>{const myIds=(await getUserUsernames(u.id)).map(x=>x.id);const vol=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).reduce((s,t)=>s+Number(t.amount),0);return{user:u,score:vol,label:formatAGS(vol)+' AGS'}}));list=list.sort((a,b)=>b.score-a.score).slice(0,20)}document.getElementById('leaderboard-list').innerHTML=(await Promise.all(list.map(async(item,i)=>{const primary=await getPrimaryUsername(item.user.id);return`<div class="lb-item"><div class="lb-rank">${i+1}</div><div class="lb-info"><div class="lb-name">@${primary?.username||'?'} ${item.user.is_founder?'?':''}</div><div class="lb-value">lvl ${item.user.level||1}</div></div><div class="lb-score">${item.label}</div></div>`}))).join('')}
+function setLbTab(tab,el){window.lbTab=tab;document.querySelectorAll('#screen-leaderboard .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshLeaderboard()}
+async function refreshFounderDashboard(){const user=await getCurrentUser();if(!isFounder(user)){showScreen('main');return}const{count:usersCount}=await sb.from('users').select('*',{count:'exact',head:true});const{data:allTx}=await sb.from('transactions').select('amount,fee,created_at');const now=Date.now();const day=86400000,week=7*day,month=30*day;let volDay=0,volWeek=0,volMonth=0,volAll=0,feeAll=0;(allTx||[]).forEach(t=>{const a=Number(t.amount)||0;const f=Number(t.fee)||0;const ts=new Date(t.created_at).getTime();volAll+=a;feeAll+=f;if(now-ts<day)volDay+=a;if(now-ts<week)volWeek+=a;if(now-ts<month)volMonth+=a});const founderFromFees=Math.floor(feeAll*FOUNDER_CONFIG.commissionShare);document.getElementById('fd-content').innerHTML=`<div style="background:#000;color:#fff;padding:14px;border-radius:8px;text-align:center;margin-bottom:14px"><div style="font-size:11px;opacity:.8">???????? ? ????????</div><div style="font-size:22px;font-weight:800">${formatAGS(user.total_dividends||founderFromFees)} AGS</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div style="border:1.5px solid #000;padding:12px;border-radius:7px;text-align:center"><div style="font-size:11px;color:#666">?????????????</div><div style="font-size:18px;font-weight:800">${usersCount||0}</div></div><div style="border:1.5px solid #000;padding:12px;border-radius:7px;text-align:center"><div style="font-size:11px;color:#666">??????????</div><div style="font-size:18px;font-weight:800">${(allTx||[]).length}</div></div></div><div class="section-title">??????? (????? ?????????)</div><div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>?? ?????</span><strong>${formatAGS(volDay)} AGS</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>?? ??????</span><strong>${formatAGS(volWeek)} AGS</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>?? ?????</span><strong>${formatAGS(volMonth)} AGS</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:7px;display:flex;justify-content:space-between"><span>?????</span><strong>${formatAGS(volAll)} AGS</strong></div>`}
+async function refreshFounderPool(){const box=document.getElementById('founder-pool-box');const user=await getCurrentUser();if(!box||!isFounder(user))return;const{data:pool}=await sb.from('system_pool').select('balance').eq('id',1).maybeSingle();const balance=pool?Number(pool.balance||0):0;box.innerHTML=`<div style="border:1.5px solid #000;padding:14px;border-radius:8px"><div class="section-title">????? ??? Aegis</div><div style="font-size:24px;font-weight:800;margin-bottom:10px">${formatAGS(balance)} AGS</div><div class="hint" style="margin-bottom:10px">Founder ????? ??????????? ???????? AGS ? ????????? ???.</div><button class="btn btn-full" onclick="founderDepositPool()">???????? AGS ? ???</button></div>`}
+async function founderDepositPool(){const user=await getCurrentUser();if(!isFounder(user))return;const w=await getUserWallet(user.id);if(!w)return;showModal('???????? ? ????? ???',`<div class="input-group"><label>????? AGS</label><input type="number" id="pool-deposit-amount" min="1" step="1" placeholder="1000"></div>`,[{text:'??????',outline:true,onClick:()=>{}},{text:'????????',onClick:async()=>{const amount=Number(document.getElementById('pool-deposit-amount').value);if(!Number.isSafeInteger(amount)||amount<=0){toast('??????? ?????');return}const current=await getUserWallet(user.id);if(!current||Number(current.balance)<amount){toast('???????????? AGS');return}const pool=await sb.from('system_pool').select('id,balance').eq('id',1).maybeSingle();if(pool.error||!pool.data){toast('??????? ???????? ??????? system_pool');return}const dec=await sb.from('wallets').update({balance:Number(current.balance)-amount}).eq('id',current.id).eq('balance',Number(current.balance));if(dec.error){toast('?? ??????? ??????? AGS');return}const inc=await sb.from('system_pool').update({balance:Number(pool.data.balance||0)+amount}).eq('id',1).eq('balance',Number(pool.data.balance||0));if(inc.error){await sb.from('wallets').update({balance:Number(current.balance)}).eq('id',current.id);toast('??? ?? ???????');return}toast(`? ??? ????????? ${formatAGS(amount)} AGS`);refreshFounderPool();refreshMain()}}])}
+function showConvertModal(){getCurrentUser().then(async user=>{const wallet=await getUserWallet(user.id);const ags=wallet?wallet.balance:0;showModal('???????????',`<div style="text-align:center;font-size:28px;font-weight:800;margin-bottom:12px">${formatAGS(ags)} AGS</div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>USD</span><strong>~${formatUSD(ags)}</strong></div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>EUR</span><strong>~?${(ags/108).toFixed(2)}</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:6px;display:flex;justify-content:space-between"><span>RUB</span><strong>~?${(ags*0.92).toFixed(0)}</strong></div>`,[{text:'???????',onClick:()=>{}}])})}
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+async function refreshTransferScreen(){const user=await getCurrentUser();if(!user)return;const uns=await getUserUsernames(user.id);const sel=document.getElementById('tr-from-username');sel.innerHTML=uns.map(u=>`<option value="${u.id}">@${u.username}${u.is_primary?' (????????)':''}</option>`).join('')}
+(function handleDeepLink(){const hash=location.hash||'';if(hash.startsWith('#transfer')){const params=new URLSearchParams(hash.split('?')[1]||'');const to=params.get('to');if(to){setTimeout(()=>{showScreen('transfer');setTimeout(()=>{document.getElementById('tr-to').value='@'+to.replace('@','')},50)},300)}}})();
+(async()=>{const user=await getCurrentUser();if(user)showScreen('main');else showScreen('login')})();
+
+/* ===== AEGIS NFT PATCH v1 ===== */
+const NFT_FX_RATES = Object.freeze({
+  AGS_TO_USD: 0.01,   // 100 AGS = $1
+  AGS_TO_EUR: 1/108,  // configurable
+  AGS_TO_RUB: 0.92     // configurable
+});
+const NFT_API_URL = SUPABASE_URL.replace(/\/$/, '') + '/functions/v1/nft-api';
+const AEGIS_SESSION_URL = SUPABASE_URL.replace(/\/$/, '') + '/functions/v1/aegis-session';
+
+function nftImagePath(n){
+  return n.image_path || ('assets/nfts/' + n.image);
+}
+function nftImageHtml(n, cls='nft-img'){
+  const src=escapeHtml(nftImagePath(n));
+  const alt=escapeHtml(n.name);
+  return `<div class="nft-image-wrap"><img class="${cls}" src="${src}" alt="${alt}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="nft-placeholder" style="display:none">NFT</div></div>`;
+}
+function formatNftDate(ts){
+  if(!ts)return '—';
+  const d=new Date(ts);
+  return [String(d.getDate()).padStart(2,'0'),String(d.getMonth()+1).padStart(2,'0'),d.getFullYear()].join('.');
+}
+function nftErrorMessage(e){
+  const s=String(e?.message||e||'Ошибка');
+  const map={
+    'insufficient balance':'Недостаточно AGS',
+    'insufficient balance for purchase':'Недостаточно AGS',
+    'NFT is not available':'NFT уже недоступен',
+    'listing is closed':'Листинг уже закрыт',
+    'auction is closed':'Аукцион уже завершён',
+    'bid must be higher':'Ставка должна быть выше текущей',
+    'cannot cancel after first bid':'После первой ставки отменить аукцион нельзя',
+    'not owner':'Вы не владелец этого NFT'
+  };
+  return map[s]||s;
+}
+async function nftApi(action,payload={}){
+  const token=localStorage.getItem('aegis_nft_session');
+  if(!token)throw new Error('NFT-сессия отсутствует. Выйдите и войдите снова.');
+  const r=await fetch(NFT_API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,token,...payload})});
+  let body={}; try{body=await r.json()}catch(_){}
+  if(!r.ok||body.error)throw new Error(body.error||'NFT API error');
+  return body.data;
+}
+async function issueNftSession(username,password){
+  const r=await fetch(AEGIS_SESSION_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',username,password})});
+  const body=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error('invalid_credentials');
+  localStorage.setItem('aegis_nft_session',body.token);
+  return body.user_id;
+}
+async function issueNftRecoverySession(username,recovery){
+  const r=await fetch(AEGIS_SESSION_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'recovery',username,recovery_code:recovery})});
+  const body=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error('invalid_recovery');
+  localStorage.setItem('aegis_nft_session',body.token);
+  return body.user_id;
+}
+function clearNftSession(){localStorage.removeItem('aegis_nft_session')}
+
+const _aegisHandleLogin = handleLogin;
+async function handleLogin(e){
+  if(e&&e.preventDefault)e.preventDefault();
+  clearError('login-error');
+  const un=document.getElementById('login-username').value.trim();
+  const pw=document.getElementById('login-password').value;
+  if(!un||!pw){showError('login-error','Введите данные');return}
+  try{
+    const user=await findUserByUsername(un);
+    if(!user){showError('login-error','Пользователь не найден');return}
+    if(user.password_hash!==hash(pw)){showError('login-error','Неверный пароль');return}
+    await issueNftSession(un,pw);
+    setSession(user.id);
+    await completeTask(user.id,'login');
+    showScreen('main');
+  }catch(err){
+    clearNftSession();
+    showError('login-error',err.message==='invalid_credentials'?'Неверный пароль':'Ошибка входа');
+    console.error(err);
+  }
+}
+const _aegisFinishRegistration = finishRegistration;
+async function finishRegistration(){
+  const id=localStorage.getItem('aegis_temp_user');
+  const recovery=localStorage.getItem('aegis_temp_recovery');
+  if(id){
+    try{
+      const user=await getCurrentUser();
+      const username=user?.username||'';
+      if(username&&recovery)await issueNftRecoverySession(username,recovery);
+    }catch(err){console.warn('NFT session issue after registration failed',err)}
+    setSession(id);
+    localStorage.removeItem('aegis_temp_user');
+    localStorage.removeItem('aegis_temp_recovery');
+    showScreen('main');
+  }else showScreen('login');
+}
+const _aegisHandleLogout = handleLogout;
+function handleLogout(){
+  clearNftSession();
+  _aegisHandleLogout();
+}
+
+async function refreshNftStore(){
+  const grid=document.getElementById('nft-store-grid'); if(!grid)return;
+  try{
+    const rows=await nftApi('catalog');
+    grid.innerHTML=(rows||[]).map(n=>`
+      <div class="nft-card">
+        <div class="nft-card-bg ${RARITY_CLASS[n.rarity]||''}">
+          <div class="nft-rarity">${escapeHtml(n.rarity)}</div>
+          ${nftImageHtml(n)}
+          <div class="nft-name">${escapeHtml(n.name)}</div>
+          <div class="nft-price">${formatAGS(n.price)} AGS</div>
+          <div class="nft-actions">
+            <button class="btn btn-outline btn-full" onclick="showNftConvert(${Number(n.price)})">Конвертировать</button>
+            <button class="btn btn-full" onclick="buyNft('${escapeHtml(n.id)}',this)">Купить себе</button>
+            <button class="btn btn-outline btn-full" onclick="buyAndGift('${escapeHtml(n.id)}')">Купить в подарок</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }catch(e){grid.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}
+}
+function showNftConvert(ags){
+  const a=Number(ags)||0;
+  showModal('Конвертация цены',`
+    <div class="summary-row"><span>AGS</span><strong>${formatAGS(a)} AGS</strong></div>
+    <div class="summary-row"><span>USD</span><strong>$${(a*NFT_FX_RATES.AGS_TO_USD).toFixed(2)}</strong></div>
+    <div class="summary-row"><span>EUR</span><strong>€${(a*NFT_FX_RATES.AGS_TO_EUR).toFixed(2)}</strong></div>
+    <div class="summary-row"><span>RUB</span><strong>₽${(a*NFT_FX_RATES.AGS_TO_RUB).toFixed(0)}</strong></div>`,
+    [{text:'Закрыть',onClick:()=>{}}]);
+}
+async function buyNft(catalogId,btn){
   if(btn)btn.disabled=true;
   try{
-    const user=await getCurrentUser();
-    if(!user)return;
-    const nft=getNft(catalogId);
-    if(!nft)return;
-    const wallet=await getUserWallet(user.id);
-    if(!wallet||Number(wallet.balance)<nft.price){
-      toast('Недостаточно AGS');
-      return;
-    }
-    const {error:e1}=await sb.from('wallets').update({balance:Number(wallet.balance)-nft.price})
-      .eq('id',wallet.id).eq('balance',Number(wallet.balance));
-    if(e1){toast('Ошибка списания');return;}
-    const {error:e2}=await sb.from('user_nfts').insert({
-      catalog_id:catalogId,
-      owner_id:user.id,
-      status:'owned',
-      purchase_price:nft.price,
-      acquired_type:'purchase',
-      acquired_at:new Date().toISOString()
-    });
-    if(e2){
-      await sb.from('wallets').update({balance:Number(wallet.balance)}).eq('id',wallet.id);
-      toast('Ошибка: '+e2.message);
-      return;
-    }
-    toast('NFT куплена!');
-    refreshMain();
-  }finally{if(btn)btn.disabled=false;}
+    const user=await getCurrentUser(); if(!user)throw new Error('Войдите в аккаунт');
+    await nftApi('purchase',{catalog_id:catalogId});
+    toast('NFT куплен!');
+    await refreshMain(); await refreshNftStore();
+  }catch(e){toast(nftErrorMessage(e))}
+  finally{if(btn)btn.disabled=false}
 }
-
 async function buyAndGift(catalogId){
-  const nft=getNft(catalogId);
-  if(!nft)return;
-  showModal('Купить и подарить',`
-    <div class="input-group"><label>Username получателя</label>
-    <input type="text" id="gift-username" placeholder="@username"></div>
-  `,[
-    {text:'Отмена',outline:true,onClick:()=>{}},
-    {text:'Купить и подарить',onClick:async()=>{
-      const to=await findUserByUsername(document.getElementById('gift-username').value.trim());
-      if(!to){toast('Пользователь не найден');return;}
-      const user=await getCurrentUser();
-      if(to.id===user.id){toast('Нельзя подарить себе');return;}
-      const wallet=await getUserWallet(user.id);
-      if(!wallet||Number(wallet.balance)<nft.price){toast('Недостаточно AGS');return;}
-      const {error:e1}=await sb.from('wallets').update({balance:Number(wallet.balance)-nft.price})
-        .eq('id',wallet.id).eq('balance',Number(wallet.balance));
-      if(e1){toast('Ошибка списания');return;}
-      const {error:e2}=await sb.from('user_nfts').insert({
-        catalog_id:catalogId,
-        owner_id:to.id,
-        status:'owned',
-        purchase_price:nft.price,
-        acquired_type:'gift',
-        gifted_from:user.id,
-        acquired_at:new Date().toISOString()
-      });
-      if(e2){
-        await sb.from('wallets').update({balance:Number(wallet.balance)}).eq('id',wallet.id);
-        toast('Ошибка: '+e2.message);return;
-      }
-      toast('NFT подарена!');
-    }}
-  ]);
+  const nft=NFT_CATALOG.find(x=>x.id===catalogId);
+  showModal('Купить в подарок',`
+    <div class="input-group"><label>Username получателя</label><input type="text" id="gift-username" placeholder="@username"></div>
+    <div class="hint">Стоимость: ${formatAGS(nft?.price||0)} AGS. Получатель ничего не платит.</div>`,
+    [{text:'Отмена',outline:true,onClick:()=>{}},{text:'Купить и подарить',onClick:async()=>{
+      try{
+        const user=await getCurrentUser();
+        const to=await findUserByUsername(document.getElementById('gift-username').value.trim());
+        if(!to)throw new Error('Получатель не найден');
+        if(to.id===user.id)throw new Error('Нельзя подарить NFT себе');
+        await nftApi('purchase',{catalog_id:catalogId,recipient_id:to.id});
+        toast('NFT подарен!');
+        await refreshMain();
+      }catch(e){toast(nftErrorMessage(e))}
+    }}]);
 }
-
-/* ===== МОИ NFT ===== */
 async function refreshMyNfts(){
-  const user=await getCurrentUser();
-  if(!user)return;
-  const {data}=await sb.from('user_nfts').select('*')
-    .eq('owner_id',user.id).eq('status','owned')
-    .order('acquired_at',{ascending:false});
-  const cont=document.getElementById('my-nfts-list');
-  if(!data||!data.length){
-    cont.innerHTML='<div class="empty-state">У вас пока нет NFT</div>';
-    return;
-  }
-  cont.innerHTML=data.map(item=>{
-    const n=getNft(item.catalog_id);
-    if(!n)return'';
-    return `<div class="nft-card" style="margin-bottom:12px" onclick="openMyNft('${item.id}')">
-      <div class="nft-card-bg ${RARITY_CLASS[n.rarity]}">
-        <div class="nft-rarity">${n.rarity}</div>
-        <img class="nft-img" src="assets/nfts/${n.image}" onerror="this.style.opacity=0.3">
-        <div class="nft-name">${n.name}</div>
-        <div class="nft-price">${formatAGS(n.price)} AGS</div>
-        ${item.acquired_type==='gift'?'<div style="font-size:11px;color:#666">Получено в подарок</div>':''}
-      </div>
-    </div>`;
-  }).join('');
+  const cont=document.getElementById('my-nfts-list');if(!cont)return;
+  try{
+    const data=await nftApi('my_nfts');
+    if(!data?.length){cont.innerHTML='<div class="empty-state">У вас пока нет NFT</div>';return}
+    cont.innerHTML=data.map(item=>{
+      const n=item.catalog||getNft(item.catalog_id);if(!n)return'';
+      const acquired=item.acquired_type==='gift_received'||item.acquired_type==='gift';
+      return `<div class="nft-card nft-owned-card" style="margin-bottom:12px" onclick="openMyNft('${item.id}')">
+        <div class="nft-card-bg ${RARITY_CLASS[n.rarity]||''}">
+          <div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}
+          <div class="nft-name">${escapeHtml(n.name)}</div>
+          <div class="nft-price">${formatAGS(n.price)} AGS</div>
+          ${acquired?'<div class="nft-gift-note">Получен в подарок</div>':''}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){cont.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}
 }
-
-async function openMyNft(userNftId){
-  const {data:item}=await sb.from('user_nfts').select('*').eq('id',userNftId).single();
-  if(!item)return;
-  const n=getNft(item.catalog_id);
-  if(!n)return;
-  const date=new Date(item.acquired_at).toLocaleDateString('ru');
+async function openMyNft(instanceId){
+  try{
+    const item=await nftApi('detail',{instance_id:instanceId});
+    await renderNftDetail(item,true);
+  }catch(e){toast(nftErrorMessage(e))}
+}
+async function renderNftDetail(item,isOwner){
+  const n=item.catalog||getNft(item.catalog_id);if(!n)return;
+  const ownerUser=item.owner?.id?await getPrimaryUsername(item.owner.id):null;
+  const purchaseText=(item.acquired_type==='gift_received'||item.acquired_type==='gift')?'Получен в подарок':`${formatAGS(item.purchase_price||n.price)} AGS`;
+  const ownerName=ownerUser?.username?`@${escapeHtml(ownerUser.username)}`:'—';
   document.getElementById('nft-detail-content').innerHTML=`
-    <div class="nft-card-bg ${RARITY_CLASS[n.rarity]}" style="border-radius:10px;padding:20px;margin-bottom:16px">
-      <div class="nft-rarity">${n.rarity}</div>
-      <img class="nft-detail-img" src="assets/nfts/${n.image}" onerror="this.style.opacity=0.3">
-      <div style="text-align:center;font-size:20px;font-weight:800;margin-bottom:6px">${n.name}</div>
-      <div style="text-align:center;font-size:16px;font-weight:700;margin-bottom:12px">${formatAGS(n.price)} AGS</div>
+    <div class="nft-detail-box ${RARITY_CLASS[n.rarity]||''}">
+      <div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n,'nft-detail-img')}
+      <div class="nft-detail-title">${escapeHtml(n.name)}</div>
+      <div class="nft-price">${formatAGS(n.price)} AGS</div>
     </div>
-    <div class="summary-row"><span class="label">Цена покупки</span><span>${formatAGS(item.purchase_price||n.price)} AGS</span></div>
-    <div class="summary-row"><span class="label">Дата</span><span>${date}</span></div>
-    <div class="summary-row"><span class="label">Тип</span><span>${item.acquired_type==='gift'?'Подарок':'Покупка'}</span></div>
-    <div style="height:16px"></div>
-    <button class="btn btn-full" style="margin-bottom:8px" onclick="sellMyNft('${item.id}')">Продать</button>
-    <button class="btn btn-outline btn-full" style="margin-bottom:8px" onclick="giftMyNft('${item.id}')">Подарить</button>
-    <button class="btn btn-outline btn-full" disabled>Прокачать (скоро)</button>
-  `;
+    <div class="summary-row"><span>Текущая цена</span><strong>${formatAGS(n.price)} AGS</strong></div>
+    <div class="summary-row"><span>Цена покупки</span><strong>${purchaseText}</strong></div>
+    <div class="summary-row"><span>Дата покупки</span><strong>${formatNftDate(item.acquired_at)}</strong></div>
+    <div class="summary-row"><span>Владелец</span><strong>${ownerName}</strong></div>
+    <div class="summary-row"><span>Статус</span><strong>${item.status==='owned'?'Owned':escapeHtml(item.status||'—')}</strong></div>
+    ${isOwner&&item.status==='owned'?`
+      <div class="nft-detail-actions">
+        <button class="btn btn-full" onclick="sellNft('${item.id}')">Продать</button>
+        <button class="btn btn-outline btn-full" onclick="giftNft('${item.id}')">Подарить</button>
+        <button class="btn btn-outline btn-full" onclick="auctionNft('${item.id}')">Выставить на аукцион</button>
+        <button class="btn btn-outline btn-full" disabled>Прокачать — Скоро</button>
+      </div>`:''}`;
   showScreen('nft-detail');
 }
-
-/* Добавляем кнопку NFT на главную и в профиль */
-async function showScreen(name){
-  // существующая логика showScreen остаётся
-  // + добавляем:
-  if(name==='nft-store') await refreshNftStore();
-  if(name==='my-nfts') await refreshMyNfts();
-  // ...
+async function sellNft(instanceId){
+  showModal('Продать NFT',`
+    <div class="input-group"><label>Цена в AGS</label><input type="number" id="nft-sale-price" min="50" step="1" placeholder="50"></div>
+    <div class="hint">Минимальная цена: 50 AGS. Комиссия Aegis: 0 AGS.</div>`,
+    [{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выставить',onClick:async()=>{
+      const price=Number(document.getElementById('nft-sale-price').value);
+      if(!Number.isSafeInteger(price)||price<50){toast('Минимальная цена — 50 AGS');return}
+      try{await nftApi('list',{instance_id:instanceId,price});toast('NFT выставлен');await refreshMyNfts();showScreen('my-nfts')}
+      catch(e){toast(nftErrorMessage(e))}
+    }}]);
+}
+async function giftNft(instanceId){
+  showModal('Подарить NFT',`<div class="input-group"><label>Username получателя</label><input type="text" id="nft-gift-to" placeholder="@username"></div>`,
+    [{text:'Отмена',outline:true,onClick:()=>{}},{text:'Подарить',onClick:async()=>{
+      try{
+        const to=await findUserByUsername(document.getElementById('nft-gift-to').value.trim());
+        const me=await getCurrentUser();if(!to)throw new Error('Получатель не найден');if(to.id===me.id)throw new Error('Нельзя подарить NFT себе');
+        await nftApi('gift',{instance_id:instanceId,recipient_id:to.id});
+        toast('NFT подарен');await refreshMyNfts();showScreen('my-nfts');
+      }catch(e){toast(nftErrorMessage(e))}
+    }}]);
+}
+async function auctionNft(instanceId){
+  showModal('Выставить на аукцион',`
+    <div class="input-group"><label>Стартовая цена, AGS</label><input type="number" id="nft-start-price" min="1" step="1" placeholder="100"></div>
+    <div class="input-group"><label>Длительность</label>
+      <select id="nft-duration"><option value="24">24 часа</option><option value="72">3 дня</option><option value="168">7 дней</option></select>
+    </div>`,
+    [{text:'Отмена',outline:true,onClick:()=>{}},{text:'Запустить',onClick:async()=>{
+      const price=Number(document.getElementById('nft-start-price').value);
+      const duration=Number(document.getElementById('nft-duration').value);
+      if(!Number.isSafeInteger(price)||price<1){toast('Введите стартовую цену');return}
+      try{await nftApi('create_auction',{instance_id:instanceId,starting_price:price,duration_hours:duration});toast('Аукцион запущен');await refreshMyNfts();showScreen('my-nfts')}
+      catch(e){toast(nftErrorMessage(e))}
+    }}]);
+}
+async function refreshNftMarketplace(){
+  const box=document.getElementById('nft-market-list');if(!box)return;
+  try{
+    const rows=await nftApi('marketplace');
+    if(!rows?.length){box.innerHTML='<div class="empty-state">Активных NFT-листингов нет</div>';return}
+    box.innerHTML=rows.map(l=>{
+      const n=l.nft?.catalog||getNft(l.nft?.catalog_id);if(!n)return'';
+      const seller=l.seller_username?`@${escapeHtml(l.seller_username)}`:'—';
+      return `<div class="market-nft-item">
+        <div class="${RARITY_CLASS[n.rarity]||''} nft-market-card">
+          <div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}
+          <div class="nft-name">${escapeHtml(n.name)}</div>
+          <div class="summary-row"><span>Продавец</span><strong>${seller}</strong></div>
+          <div class="summary-row"><span>Цена</span><strong>${formatAGS(l.price)} AGS</strong></div>
+          <div class="summary-row"><span>Листинг</span><strong>${formatNftDate(l.created_at)}</strong></div>
+          <button class="btn btn-full" onclick="buyNftListing('${l.id}')">Купить</button>
+          ${l.seller_id===getSessionId()?`<button class="btn btn-outline btn-full" onclick="cancelNftListing('${l.id}')">Снять с продажи</button>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){box.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}
+}
+async function buyNftListing(id){
+  try{await nftApi('buy_listing',{listing_id:id});toast('NFT куплен');await refreshNftMarketplace();await refreshMyNfts();await refreshMain()}
+  catch(e){toast(nftErrorMessage(e))}
+}
+async function cancelNftListing(id){
+  try{await nftApi('cancel_listing',{listing_id:id});toast('Листинг снят');await refreshNftMarketplace();await refreshMyNfts()}
+  catch(e){toast(nftErrorMessage(e))}
+}
+async function settleExpiredAuctions(rows){
+  const now=Date.now();
+  await Promise.all((rows||[]).filter(a=>new Date(a.ends_at).getTime()<=now).map(a=>nftApi('settle_auction',{auction_id:a.id}).catch(()=>null)));
+}
+async function refreshNftAuctions(){
+  const box=document.getElementById('nft-auctions-list');if(!box)return;
+  try{
+    let rows=await nftApi('auctions');
+    await settleExpiredAuctions(rows);
+    rows=await nftApi('auctions');
+    if(!rows?.length){box.innerHTML='<div class="empty-state">Активных аукционов нет</div>';return}
+    box.innerHTML=rows.map(a=>{
+      const n=a.nft?.catalog||getNft(a.nft?.catalog_id);if(!n)return'';
+      const current=a.current_bid||a.starting_price;
+      const isSeller=a.seller_id===getSessionId();
+      return `<div class="market-nft-item">
+        <div class="${RARITY_CLASS[n.rarity]||''} nft-market-card">
+          <div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}
+          <div class="nft-name">${escapeHtml(n.name)}</div>
+          <div class="summary-row"><span>Продавец</span><strong>@${escapeHtml(a.seller_username||'—')}</strong></div>
+          <div class="summary-row"><span>Старт</span><strong>${formatAGS(a.starting_price)} AGS</strong></div>
+          <div class="summary-row"><span>Текущая ставка</span><strong>${formatAGS(current)} AGS</strong></div>
+          <div class="summary-row"><span>До</span><strong>${formatNftDate(a.ends_at)}</strong></div>
+          ${isSeller&&!a.current_bidder_id?`<button class="btn btn-outline btn-full" onclick="cancelNftAuction('${a.id}')">Снять с аукциона</button>`:''}
+          ${!isSeller?`<button class="btn btn-full" onclick="placeNftBid('${a.id}',${Number(current)})">Сделать ставку</button>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){box.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}
+}
+async function placeNftBid(id,current){
+  showModal('Сделать ставку',`
+    <div class="hint">Текущая ставка: ${formatAGS(current)} AGS. Минимальный шаг: 1 AGS.</div>
+    <div class="input-group"><label>Новая ставка</label><input type="number" id="nft-bid-amount" min="${Number(current)+1}" step="1" value="${Number(current)+1}"></div>`,
+    [{text:'Отмена',outline:true,onClick:()=>{}},{text:'Ставка',onClick:async()=>{
+      const amount=Number(document.getElementById('nft-bid-amount').value);
+      if(!Number.isSafeInteger(amount)||amount<=current){toast('Ставка должна быть выше текущей');return}
+      try{await nftApi('bid',{auction_id:id,amount});toast('Ставка принята');await refreshNftAuctions();await refreshMain()}
+      catch(e){toast(nftErrorMessage(e))}
+    }}]);
+}
+async function cancelNftAuction(id){
+  try{await nftApi('cancel_auction',{auction_id:id});toast('Аукцион снят');await refreshNftAuctions();await refreshMyNfts()}
+  catch(e){toast(nftErrorMessage(e))}
 }
 
-/* В actions-grid на главной добавь кнопку:
-<button class="action-btn" onclick="showScreen('nft-store')">NFT</button>
-*/
+const _aegisShowScreen=showScreen;
+async function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const target=document.getElementById('screen-'+name);
+  if(!target)return;
+  target.classList.add('active');
+  const user=await getCurrentUser();
+  document.getElementById('bottom-nav').style.display=(user&&navScreens.includes(name))?'flex':'none';
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===name));
+  if(name==='main')await refreshMain();
+  if(name==='history')await refreshHistory();
+  if(name==='profile')await refreshProfile();
+  if(name==='transfer'){await refreshTransferScreen();document.getElementById('tr-to').value='@';}
+  if(name==='receive')await refreshReceive();
+  if(name==='tap')await refreshTap();
+  if(name==='appearance')await refreshAppearance();
+  if(name==='stickers')await refreshStickers();
+  if(name==='buy-username')await refreshBuyUsername();
+  if(name==='username-market')await refreshMarket();
+  if(name==='change-username')await refreshChangeUsername();
+  if(name==='founder-dashboard'){await refreshFounderDashboard();await refreshFounderPool();}
+  if(name==='leaderboard')await refreshLeaderboard();
+  if(name==='nft-store')await refreshNftStore();
+  if(name==='my-nfts')await refreshMyNfts();
+  if(name==='nft-marketplace')await refreshNftMarketplace();
+  if(name==='nft-auctions')await refreshNftAuctions();
+  window.scrollTo(0,0);
+}
+async function openPublicNft(instanceId){
+  try{
+    const item=await nftApi('detail',{instance_id:instanceId});
+    await renderNftDetail(item,false);
+  }catch(e){toast(nftErrorMessage(e))}
+}
+const _aegisOpenPublicProfile=openPublicProfile;
+async function openPublicProfile(userId){
+  await _aegisOpenPublicProfile(userId);
+  try{
+    const nfts=await nftApi('public_nfts',{user_id:userId});
+    const box=document.getElementById('public-profile-content');
+    if(!box)return;
+    const section=document.createElement('div');
+    section.className='public-nft-section';
+    section.innerHTML=`<div class="section-title">NFT</div><div class="nft-grid public-nft-grid">${(nfts||[]).map(item=>{
+      const n=item.catalog||getNft(item.catalog_id);if(!n)return'';
+      const acquired=item.acquired_type==='gift_received'||item.acquired_type==='gift';
+      return `<div class="nft-card" onclick="openPublicNft('${item.id}')"><div class="nft-card-bg ${RARITY_CLASS[n.rarity]||''}">
+        <div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}
+        <div class="nft-name">${escapeHtml(n.name)}</div><div class="nft-price">${formatAGS(n.price)} AGS</div>
+        ${acquired?'<div class="nft-gift-note">Получен в подарок</div>':''}
+      </div></div>`;
+    }).join('')}</div>`;
+    if(!(nfts||[]).length)section.innerHTML='<div class="section-title">NFT</div><div class="empty-state">NFT нет</div>';
+    box.appendChild(section);
+  }catch(e){console.warn('public NFT load failed',e)}
+}
 
-/* В профиле над «Мои username» добавь:
-<div class="menu-section">
-  <div class="menu-section-title">Мои NFT</div>
-  <div class="menu-item" onclick="showScreen('my-nfts')">Смотреть мои NFT</div>
-</div>
-*/
 </script>
 </body>
 </html>
