@@ -188,7 +188,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .lb-score{font-weight:700;font-size:15px}
 .auction-timer{font-size:12px;color:#c00;font-weight:600}
 .bid-item{padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
-
 </style>
 </head>
 <body>
@@ -476,7 +475,7 @@ const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7OkqftdOHRyTyIQP_mf-9A_SPdnYb1U';
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-const FOUNDER_CONFIG = { commissionShare: 0.5, dailyBonus: 500 }; // half of 4% fee → founder, half → pool (deducted)
+const FOUNDER_CONFIG = { commissionShare: 0.5, dailyBonus: 500 };
 const MAX_LEVEL = 999;
 const STICKER_PRICE = 550;
 const MAX_STICKERS_NORMAL = 5;
@@ -571,7 +570,22 @@ function finishRegistration(){const id=localStorage.getItem('aegis_temp_user');i
 async function handleRecovery(e){if(e&&e.preventDefault)e.preventDefault();clearError('rec-error');try{const user=await findUserByUsername(document.getElementById('rec-username').value.trim());if(!user){showError('rec-error','Не найден');return}if(user.recovery_code_hash!==hash(document.getElementById('rec-code').value.trim())){showError('rec-error','Неверный код');return}const np=document.getElementById('rec-newpass').value;if(np.length<4||np!==document.getElementById('rec-newpass2').value){showError('rec-error','Ошибка пароля');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('Пароль изменён');showScreen('login')}catch(err){showError('rec-error','Ошибка сети');console.error(err)}}
 function handleLogout(){showModal('Выйти?','Выйти из аккаунта?',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выйти',onClick:()=>{setSession(null);showScreen('login')}}])}
 async function refreshMain(){const user=await getCurrentUser();if(!user){showScreen('login');return}const wallet=await getUserWallet(user.id);const bal=user.hide_balance?'••••':formatAGS(wallet?wallet.balance:0);document.getElementById('main-balance').textContent=bal;document.getElementById('main-balance-usd').textContent=user.hide_balance?'':'≈ '+formatUSD(wallet?wallet.balance:0);document.getElementById('founder-dashboard-btn').style.display=isFounder(user)?'block':'none';const tasksData=getTodayTasks(user.id);document.getElementById('daily-tasks').innerHTML=tasksData.tasks.map(t=>`<div class="task-item"><div class="task-info"><div class="task-title">${t.title}</div><div class="task-reward">${t.progress}/${t.target} · +${t.reward} AGS</div></div><div>${t.done?'✓':''}</div></div>`).join('');const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false}).limit(30);const myUns=await getUserUsernames(user.id);const myIds=myUns.map(u=>u.id);const myTxs=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).slice(0,5);document.getElementById('main-recent-tx').innerHTML=myTxs.length===0?'<div class="empty-state">Нет операций</div>':(await Promise.all(myTxs.map(t=>renderTxItem(t,user.id)))).join('')}
-async function handleUserSearch(q){const clean=q.replace('@','').toLowerCase().trim();const box=document.getElementById('search-results');if(clean.length<2){box.innerHTML='';return}const{data:uns}=await sb.from('usernames').select('*').ilike('username',`%${clean}%`).limit(6);if(!uns||!uns.length){box.innerHTML='<div class="empty-state" style="padding:12px 0">Ничего не найдено</div>';return}const html=await Promise.all(uns.map(async u=>{const{data:owner}=await sb.from('users').select('is_founder,level').eq('id',u.user_id).single();return`<div class="search-item"><div><div class="search-item-name">@${u.username} ${owner?.is_founder?'<span class="founder-badge">◆</span>':''}</div><div class="search-item-cat">${u.category} · lvl ${owner?.level||1}</div></div><button class="search-item-btn" onclick="openPublicProfile('${u.user_id}')">Профиль</button></div>`}));box.innerHTML=html.join('')}
+let searchTimer=null;
+async function handleUserSearch(q){
+  clearTimeout(searchTimer);
+  const clean=q.replace('@','').toLowerCase().trim();
+  const box=document.getElementById('search-results');
+  if(clean.length<2){box.innerHTML='';return}
+  searchTimer=setTimeout(async()=>{
+    const{data:uns}=await sb.from('usernames').select('*').ilike('username',`%${clean}%`).limit(8);
+    if(!uns||!uns.length){box.innerHTML='<div class="empty-state" style="padding:12px 0">Ничего не найдено</div>';return}
+    const html=await Promise.all(uns.map(async u=>{
+      const{data:owner}=await sb.from('users').select('is_founder,level').eq('id',u.user_id).single();
+      return`<div class="search-item"><div><div class="search-item-name">@${u.username} ${owner?.is_founder?'<span class="founder-badge">◆</span>':''}</div><div class="search-item-cat">${u.category} · lvl ${owner?.level||1}</div></div><button class="search-item-btn" onclick="openPublicProfile('${u.user_id}')">Профиль</button></div>`;
+    }));
+    box.innerHTML=html.join('');
+  },180);
+}
 async function openPublicProfile(userId){
   const {data:user}=await sb.from('users').select('*').eq('id',userId).single();if(!user)return;
   const primary=await getPrimaryUsername(userId);const alts=(await getUserUsernames(userId)).filter(u=>!u.is_primary);
@@ -587,6 +601,7 @@ function founderBadgeHtml(u){return isFounder(u)?'<span class="founder-badge">�
 async function renderTxItem(tx,uid){const{data:sUn}=await sb.from('usernames').select('*').eq('id',tx.sender_username_id).maybeSingle();const{data:rUn}=await sb.from('usernames').select('*').eq('id',tx.receiver_username_id).maybeSingle();if(!sUn||!rUn)return'';const myUns=await getUserUsernames(uid);const isOut=myUns.some(u=>u.id===sUn.id);const other=isOut?rUn:sUn;const{data:otherUser}=await sb.from('users').select('is_founder').eq('id',other.user_id).single();return`<div class="tx-item" onclick="showTxDetail('${tx.id}')"><div class="tx-info"><div class="tx-title">${isOut?'Перевод ':'Получение от '}@${other.username} ${founderBadgeHtml(otherUser)}</div><div class="tx-sub">${formatDate(tx.created_at)}</div></div><div class="tx-amount ${isOut?'negative':'positive'}">${isOut?'−':'+'}${formatAGS(tx.amount)} AGS</div></div>`}
 let transferMode='transfer',pendingTransfer=null;
 function setTransferMode(mode){transferMode='transfer';}
+async function handleTransferPreview(e){e.preventDefault();clearError('tr-error');const user=await getCurrentUser();if(!user)return;const toRaw=document.getElementById('tr-to').value.trim();const amount=parseInt(document.getElementById('tr-amount').value);const comment=document.getElementById('tr-comment').value.trim();if(!toRaw||!amount||amount<50){showError('tr-error','Минимум 50 AGS');return}const toUn=await findUsernameRecord(toRaw);if(!toUn){showError('tr-error','Пользователь не найден');return}const fromUnId=document.getElementById('tr-from-username').value;const fromUn=await sb.from('usernames').select('*').eq('id',fromUnId).single();if(!fromUn.data||fromUn.data.user_id!==user.id){showError('tr-error','Неверный отправитель');return}if(toUn.user_id===user.id){showError('tr-error','Нельзя переводить себе');return}const wallet=await getUserWallet(user.id);let fee=0;if(amount>=1000&&!isFounder(user))fee=Math.floor(amount*0.04);if(Number(wallet.balance)<amount+fee){showError('tr-error','Недостаточно средств');return}pendingTransfer={fromUnId,toUnId:toUn.id,amount,fee,comment};document.getElementById('tc-summary').innerHTML=`<div class="summary-row"><span class="label">Кому</span><span>@${toUn.username}</span></div><div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(amount)} AGS</span></div><div class="summary-row"><span class="label">Комиссия</span><span>${formatAGS(fee)} AGS</span></div><div class="summary-row total"><span class="label">Итого</span><span>${formatAGS(amount+fee)} AGS</span></div>`;showScreen('transfer-confirm')}
 async function handleTransferConfirm(){
   if(!pendingTransfer)return;
   const user=await getCurrentUser();
@@ -606,15 +621,12 @@ async function executeTransfer(){
     if(toErr||!toUn){toast('Получатель не найден');return}
     const senderWallet=await getUserWallet(user.id), receiverWallet=await getUserWallet(toUn.user_id);
     if(!senderWallet||!receiverWallet){toast('Кошелёк отправителя или получателя не найден');return}
-    // Re-check balance immediately before mutation.
     if(Number(senderWallet.balance)<p.amount+p.fee){toast('Недостаточно средств');return}
-    // Prefer the atomic database function when installed. It performs balance updates + transaction insert together.
     const rpc=await sb.rpc('aegis_transfer_ags',{p_actor_user_id:user.id,p_sender_username_id:p.fromUnId,p_receiver_username_id:p.toUnId,p_amount:p.amount,p_fee:p.fee,p_comment:p.comment||null});
     if(!rpc.error){
       await completeTask(user.id,'transfer');await addXP(user.id,15);pendingTransfer=null;
       showModal('Готово',`<div style="text-align:center;font-size:24px;font-weight:800">${formatAGS(p.amount)} AGS</div><div style="color:#666;margin-top:6px">Отправлено @${escapeHtml(toUn.username)}</div>`,[{text:'OK',onClick:()=>showScreen('main')}]);return;
     }
-    // Compatibility fallback for databases that do not yet have the RPC. Roll back the sender if receiver update fails.
     const newSender=Number(senderWallet.balance)-p.amount-p.fee;
     const senderUpdate=await sb.from('wallets').update({balance:newSender}).eq('id',senderWallet.id).eq('balance',Number(senderWallet.balance));
     if(senderUpdate.error){console.error(senderUpdate.error);toast('Перевод не выполнен');return}
@@ -645,11 +657,13 @@ async function refreshReceive(){
   const primary=await getPrimaryUsername(user.id); const uname='@'+(primary?.username||'');
   document.getElementById('receive-username').textContent=uname;
   const cont=document.getElementById('qr-container');cont.innerHTML='';
+  // Deep-link сразу на перевод к этому username
+  const deepLink = location.origin + location.pathname + '#transfer?to=' + encodeURIComponent(primary?.username || '');
   try{
     if(typeof QRCode!=='undefined'){
-      new QRCode(cont,{text:'https://gr7ytqht6y-crypto.github.io/?#',width:168,height:168,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+      new QRCode(cont,{text:deepLink,width:168,height:168,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
     }else{
-      const link=document.createElement('a');link.href='https://gr7ytqht6y-crypto.github.io/?#';link.target='_blank';link.rel='noopener';link.textContent='Открыть Aegis';link.style.fontWeight='700';link.style.color='#000';cont.appendChild(link);
+      const link=document.createElement('a');link.href=deepLink;link.target='_blank';link.rel='noopener';link.textContent='Открыть перевод';link.style.fontWeight='700';link.style.color='#000';cont.appendChild(link);
     }
   }catch(e){console.error('QR',e);cont.innerHTML='<div style="font-size:12px;color:#666;text-align:center;padding:20px">Не удалось создать QR</div>'}
 }
@@ -688,11 +702,11 @@ async function handleChangePassword(e){e.preventDefault();clearError('cp-error')
 async function handleChangePin(e){e.preventDefault();clearError('cpi-error');const user=await getCurrentUser();if(user.pin_hash&&user.pin_hash!==hash(document.getElementById('cpi-current').value)){showError('cpi-error','Неверный PIN');return}const np=document.getElementById('cpi-new').value;if(!/^[0-9]{6}$/.test(np)||np!==document.getElementById('cpi-new2').value){showError('cpi-error','6 цифр');return}await sb.from('users').update({pin_hash:hash(np)}).eq('id',user.id);toast('PIN изменён');showScreen('profile')}
 async function getTodayTapData(uid){const today=new Date().toISOString().slice(0,10);let{data}=await sb.from('taps').select('*').eq('user_id',uid).eq('date',today).maybeSingle();if(!data){const{data:created}=await sb.from('taps').insert({user_id:uid,date:today,taps_count:0}).select().single();data=created}return data}
 let tapBusy=false,lastTapTs=0,tapPending=0,tapFlushTimer=null,tapBaseCount=0,tapBaseBalance=0;
-function animateTapValue(value){const btn=document.getElementById('tap-btn');if(!btn)return;const el=document.createElement('span');el.className='tap-float';el.textContent='+'+value+' AGS';const r=btn.getBoundingClientRect();el.style.left=(r.left+r.width/2-24)+'px';el.style.top=(r.top+r.height/2-8)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),550)}
 async function refreshTap(){try{const user=await getCurrentUser();if(!user)return;const data=await getTodayTapData(user.id);const founder=isFounder(user),reward=founder?53:2,count=Number(data?.taps_count||0);tapBaseCount=count;const w=await getUserWallet(user.id);tapBaseBalance=Number(w?.balance||0);document.getElementById('tap-count').textContent=count.toLocaleString('ru');document.getElementById('tap-earned').textContent=(count*reward).toLocaleString('ru');document.getElementById('tap-limit-display').textContent=founder?'(∞)':'/ 10000';document.getElementById('tap-reward-text').textContent=founder?'1 нажатие = +53 AGS (Founder)':'1 нажатие = +2 AGS';const btn=document.getElementById('tap-btn');if(btn)btn.disabled=!founder&&count>=10000}catch(e){console.error('refreshTap',e)}}
 async function flushTaps(){if(tapPending<=0)return;const user=await getCurrentUser();if(!user){tapPending=0;return}const amount=tapPending;tapPending=0;const data=await getTodayTapData(user.id);const current=Number(data?.taps_count||0);const founder=isFounder(user),reward=founder?53:2;const newCount=current+amount;if(!founder&&newCount>10000){const allowed=Math.max(0,10000-current);tapPending=Math.max(0,amount-allowed);if(allowed===0)return;}
  const finalCount=current+Math.min(amount,10000-current);const up=await sb.from('taps').update({taps_count:finalCount}).eq('id',data.id).eq('taps_count',current);if(up.error){tapPending+=amount;toast('Не удалось сохранить TAP');return}const w=await getUserWallet(user.id);if(!w){toast('Кошелёк не найден');return}const bu=await sb.from('wallets').update({balance:Number(w.balance)+Math.min(amount,10000-current)*reward}).eq('id',w.id).eq('balance',Number(w.balance));if(bu.error){await sb.from('taps').update({taps_count:current}).eq('id',data.id).eq('taps_count',finalCount);toast('TAP отменён');return}if(finalCount%50===0)await addXP(user.id,10);await refreshTap()}
-function queueTap(){const userPromise=getCurrentUser();userPromise.then(user=>{if(!user)return;const founder=isFounder(user),reward=founder?53:2;const displayed=Number(document.getElementById('tap-count').textContent.replace(/\s/g,''))||0;if(!founder&&displayed>=10000)return;tapPending++;document.getElementById('tap-count').textContent=(displayed+1).toLocaleString('ru');document.getElementById('tap-earned').textContent=((displayed+1)*reward).toLocaleString('ru');animateTapValue(reward);clearTimeout(tapFlushTimer);tapFlushTimer=setTimeout(flushTaps,280)})}
+function queueTap(){const userPromise=getCurrentUser();userPromise.then(user=>{if(!user)return;const founder=isFounder(user),reward=founder?53:2;const displayed=Number(document.getElementById('tap-count').textContent.replace(/\s/g,''))||0;if(!founder&&displayed>=10000)return;tapPending++;document.getElementById('tap-count').textContent=(displayed+1).toLocaleString('ru');document.getElementById('tap-earned').textContent=((displayed+1)*reward).toLocaleString('ru');// убрано всплывающее +X AGS
+clearTimeout(tapFlushTimer);tapFlushTimer=setTimeout(flushTaps,280)})}
 function handleTap(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation()}const now=performance.now();if(now-lastTapTs<45)return;lastTapTs=now;const btn=document.getElementById('tap-btn');if(btn){btn.classList.remove('tap-press');void btn.offsetWidth;btn.classList.add('tap-press');setTimeout(()=>btn.classList.remove('tap-press'),80)}queueTap()}
 let marketTab='fixed';
 function setMarketTab(tab,el){marketTab=tab;document.querySelectorAll('#screen-username-market .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshMarket()}
@@ -718,9 +732,25 @@ async function refreshFounderDashboard(){const user=await getCurrentUser();if(!i
 <div style="border:1.5px solid #000;padding:10px;border-radius:7px;margin-bottom:8px;display:flex;justify-content:space-between"><span>За месяц</span><strong>${formatAGS(volMonth)} AGS</strong></div>
 <div style="border:1.5px solid #000;padding:10px;border-radius:7px;display:flex;justify-content:space-between"><span>Всего</span><strong>${formatAGS(volAll)} AGS</strong></div>
 `}
-async function refreshFounderPool(){const box=document.getElementById('founder-pool-box');const user=await getCurrentUser();if(!box||!isFounder(user))return;const{data:pool}=await sb.from('system_pool').select('balance').eq('id',1).maybeSingle();const balance=pool?Number(pool.balance||0):0;box.innerHTML=`<div style="border:1.5px solid #000;padding:14px;border-radius:8px"><div class="section-title">Общий пул Aegis</div><div style="font-size:24px;font-weight:800;margin-bottom:10px">${formatAGS(balance)} AGS</div><div class="hint" style="margin-bottom:10px">Founder может добровольно добавить AGS в системный пул. Обычные пользователи не имеют доступа.</div><button class="btn btn-full" onclick="founderDepositPool()">Добавить AGS в пул</button></div>`}
+async function refreshFounderPool(){const box=document.getElementById('founder-pool-box');const user=await getCurrentUser();if(!box||!isFounder(user))return;const{data:pool}=await sb.from('system_pool').select('balance').eq('id',1).maybeSingle();const balance=pool?Number(pool.balance||0):0;box.innerHTML=`<div style="border:1.5px solid #000;padding:14px;border-radius:8px"><div class="section-title">Общий пул Aegis</div><div style="font-size:24px;font-weight:800;margin-bottom:10px">${formatAGS(balance)} AGS</div><div class="hint" style="margin-bottom:10px">Founder может добровольно добавить AGS в системный пул.</div><button class="btn btn-full" onclick="founderDepositPool()">Добавить AGS в пул</button></div>`}
 async function founderDepositPool(){const user=await getCurrentUser();if(!isFounder(user))return;const w=await getUserWallet(user.id);if(!w)return;showModal('Добавить в общий пул',`<div class="input-group"><label>Сумма AGS</label><input type="number" id="pool-deposit-amount" min="1" step="1" placeholder="1000"></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Добавить',onClick:async()=>{const amount=Number(document.getElementById('pool-deposit-amount').value);if(!Number.isSafeInteger(amount)||amount<=0){toast('Введите сумму');return}const current=await getUserWallet(user.id);if(!current||Number(current.balance)<amount){toast('Недостаточно AGS');return}const pool=await sb.from('system_pool').select('id,balance').eq('id',1).maybeSingle();if(pool.error||!pool.data){toast('Сначала создайте таблицу system_pool');return}const dec=await sb.from('wallets').update({balance:Number(current.balance)-amount}).eq('id',current.id).eq('balance',Number(current.balance));if(dec.error){toast('Не удалось списать AGS');return}const inc=await sb.from('system_pool').update({balance:Number(pool.data.balance||0)+amount}).eq('id',1).eq('balance',Number(pool.data.balance||0));if(inc.error){await sb.from('wallets').update({balance:Number(current.balance)}).eq('id',current.id).eq('balance',Number(current.balance)-amount);toast('Пул не изменён');return}await sb.from('audit_logs').insert({action:'FOUNDER_POOL_DEPOSIT',user_id:user.id,details:{amount}});toast(`В пул добавлено ${formatAGS(amount)} AGS`);refreshFounderPool();refreshMain()}}])}
 function showConvertModal(){getCurrentUser().then(async user=>{const wallet=await getUserWallet(user.id);const ags=wallet?wallet.balance:0;showModal('Конвертация',`<div style="text-align:center;font-size:28px;font-weight:800;margin-bottom:12px">${formatAGS(ags)} AGS</div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>USD</span><strong>~${formatUSD(ags)}</strong></div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>EUR</span><strong>~€${(ags/108).toFixed(2)}</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:6px;display:flex;justify-content:space-between"><span>RUB</span><strong>~₽${(ags*0.92).toFixed(0)}</strong></div>`,[{text:'Закрыть',onClick:()=>{}}])})}
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+async function refreshTransferScreen(){const user=await getCurrentUser();if(!user)return;const uns=await getUserUsernames(user.id);const sel=document.getElementById('tr-from-username');sel.innerHTML=uns.map(u=>`<option value="${u.id}">@${u.username}${u.is_primary?' (основной)':''}</option>`).join('')}
+// Deep-link обработка QR / ссылок
+(function handleDeepLink(){
+  const hash=location.hash||'';
+  if(hash.startsWith('#transfer')){
+    const params=new URLSearchParams(hash.split('?')[1]||'');
+    const to=params.get('to');
+    if(to){
+      setTimeout(()=>{
+        showScreen('transfer');
+        setTimeout(()=>{document.getElementById('tr-to').value='@'+to.replace('@','')},50);
+      },300);
+    }
+  }
+})();
 (async()=>{const user=await getCurrentUser();if(user)showScreen('main');else showScreen('login')})();
 </script>
 </body>
