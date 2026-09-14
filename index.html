@@ -219,6 +219,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </style>
 </head>
 <body>
+<div id="NFT-DEBUG-BANNER" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#111;color:#fff;padding:7px 10px;font:12px -apple-system,BlinkMacSystemFont,sans-serif;text-align:center">NFT DEBUG • автопроверка сессии</div>
 <div class="app"><div id="screen-login" class="screen active">
 <div class="logo"><span class="logo-circle">$</span>AEGI$</div>
 <div class="form" id="form-login">
@@ -522,7 +523,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div class="toast" id="toast"></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>if(typeof supabase==='undefined'){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
+<script>
+console.log("AEGIS_NFT_DEBUG_LOADED", location.href);if(typeof supabase==='undefined'){document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>')}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>if(typeof QRCode==='undefined'){document.write('<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"><\/script>')}</script>
 <script>const SUPABASE_URL = 'https://etxrbcfxkcumvedivusr.supabase.co';
