@@ -314,9 +314,9 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 <div class="balance-label">Ваш баланс</div>
 <div><span class="balance-amount" id="main-balance">0</span><span class="balance-currency">AGS</span></div>
 <div class="balance-usd" id="main-balance-usd">≈ $0.00</div>
+<div style="margin-top:10px"><button class="virtual-card-trigger" aria-label="Открыть виртуальную карту" onclick="showScreen('card')"></button></div>
 <div style="font-size:12px;color:#666;margin-top:6px" id="main-ags-market">AGS: <strong id="main-ags-price">$0.0100</strong> <span id="main-ags-change">0.00% за 24ч</span></div>
 <button class="balance-convert-btn" onclick="showConvertModal()">Конвертировать</button>
-<button class="virtual-card-trigger" aria-label="Открыть виртуальную карту" onclick="showScreen('card')"></button>
 
 </div>
 <div class="actions-grid">
@@ -738,7 +738,8 @@ const key='aegis_card_design_'+user.id;
 const ownedKey='aegis_owned_cards_'+user.id;
 let selected=localStorage.getItem(key)||'black';
 let owned=[];try{owned=JSON.parse(localStorage.getItem(ownedKey)||'[]')}catch(e){owned=[]}
-if(!owned.includes('black'))owned.push('black');
+const freeDesigns=['black','blue','red','purple','green','gold','white'];
+freeDesigns.forEach(id=>{if(!owned.includes(id))owned.push(id)});
 if(!owned.includes(selected))selected='black';
 container.innerHTML='<div class="card-loading">Загрузка карты…</div>';
 try{
