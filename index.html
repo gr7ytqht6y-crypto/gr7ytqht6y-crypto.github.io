@@ -784,7 +784,16 @@ async function toggleHideBalance(){const user=await getCurrentUser();await sb.fr
 async function editStatus(){const user=await getCurrentUser();showModal('Статус',`<div class="input-group"><label>Текст статуса (до 32 символов)</label><input type="text" id="status-input" maxlength="32" value="${user.status_text||''}"></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Сохранить',onClick:async()=>{await sb.from('users').update({status_text:document.getElementById('status-input').value.trim()}).eq('id',user.id);toast('Статус обновлён');refreshProfile()}}])}
 async function showUsernameHistory(unId){const{data:un}=await sb.from('usernames').select('*').eq('id',unId).single();if(!un||!un.history)return;const html=(un.history||[]).slice().reverse().map(h=>`<div style="padding:8px 0;border-bottom:1px solid #eee">@${h.username||'?'} · ${new Date(h.date).toLocaleDateString('ru')}</div>`).join('');showModal('История @'+un.username,html||'Нет истории',[{text:'OK',onClick:()=>{}}])}
 async function openSellModal(unId){const{data:u}=await sb.from('usernames').select('*').eq('id',unId).single();if(!u)return;const{basePrice}=classifyUsername(u.username);showModal('Продажа @'+u.username,`<div style="margin-bottom:10px">Рекомендуемая: <strong>${formatAGS(basePrice)} AGS</strong></div><div style="margin-bottom:12px"><label style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><input type="radio" name="sell-type" value="fixed" checked> Фиксированная цена</label><label style="display:flex;align-items:center;gap:8px"><input type="radio" name="sell-type" value="auction"> Аукцион</label></div><div class="input-group"><label>Цена / Старт (мин. 50 AGS)</label><input type="number" id="sell-price-input" min="50" value="${Math.max(50,basePrice)}" style="padding:10px;border:1.5px solid #000;width:100%;border-radius:6px"></div><div class="input-group" id="auction-duration-group" style="display:none;margin-top:10px"><label>Длительность</label><select id="auction-duration" style="padding:10px;border:1.5px solid #000;width:100%;border-radius:6px"><option value="3600000">1 час</option><option value="21600000">6 часов</option><option value="86400000">24 часа</option><option value="259200000">3 дня</option></select></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выставить',onClick:async()=>{const price=parseInt(document.getElementById('sell-price-input').value);if(!price||price<50){toast('Минимум 50 AGS');return}const type=document.querySelector('input[name="sell-type"]:checked').value;if(type==='fixed'){await sb.from('usernames').update({sale_status:'listed',sale_price:price,auction_data:null}).eq('id',unId)}else{const duration=parseInt(document.getElementById('auction-duration').value);await sb.from('usernames').update({sale_status:'auction',auction_data:{startPrice:price,currentBid:price,currentBidder:null,endTime:Date.now()+duration,bids:[]}}).eq('id',unId)}toast(type==='fixed'?'Выставлено':'Аукцион начат');showScreen('profile')}}]);setTimeout(()=>{document.querySelectorAll('input[name="sell-type"]').forEach(r=>{r.onchange=()=>{document.getElementById('auction-duration-group').style.display=r.value==='auction'?'block':'none'}})},50)}
-async function cancelSale(unId){await sb.from('usernames').update({sale_status:null,sale_price:null,auction_data:null}).eq('id',unId);toast('Снято');showScreen('profile')}
+async function cancelSale(unId){await sb.from('usernames').update({sale_status:null,sale_price:null,auction_data:null}).eq('id',unId);toast('Снято');showScreen('profile')} 
+async function cancelAuction(unId){
+  const user=await getCurrentUser(); if(!user)return;
+  const {data:u,error}=await sb.from('usernames').select('*').eq('id',unId).single();
+  if(error||!u||u.user_id!==user.id){toast('Нельзя снять этот аукцион');return}
+  if(u.sale_status!=='auction'){toast('Аукцион уже не активен');return}
+  await sb.from('usernames').update({sale_status:null,sale_price:null,auction_data:null}).eq('id',unId).eq('user_id',user.id);
+  toast('Аукцион снят');
+  showScreen('profile');
+}
 async function confirmDelete(unId){const{data:u}=await sb.from('usernames').select('username').eq('id',unId).single();showModal('Удалить @'+u.username+'?','Необратимо',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Удалить',onClick:async()=>{await sb.from('usernames').delete().eq('id',unId);toast('Удалён');showScreen('profile')}}])}
 async function refreshBuyUsername(){const founder=isFounder(await getCurrentUser());document.getElementById('buy-username-hint').textContent=founder?'Founder создаёт бесплатно':'Стоимость 6000 AGS';document.getElementById('buy-username-submit').textContent=founder?'Создать':'Купить за 6000'}
 async function handleBuyUsername(e){e.preventDefault();clearError('buy-error');const user=await getCurrentUser();const username=document.getElementById('buy-username').value.trim().toLowerCase();const founder=isFounder(user);if(validateUsername(username)){showError('buy-error',validateUsername(username));return}if(await findUsernameRecord(username)){showError('buy-error','Занят');return}if(isSacredUsername(username)&&!founder){showError('buy-error','Только Founder');return}if(!founder){if((await getUserUsernames(user.id)).length>=4){showError('buy-error','Макс 4');return}if(Number((await getUserWallet(user.id)).balance)<6000){showError('buy-error','Недостаточно');return}}showModal(founder?'Создать':'Купить',`@${username}`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:founder?'Создать':'Купить',onClick:async()=>{if(!founder){const w=await getUserWallet(user.id);await sb.from('wallets').update({balance:Number(w.balance)-6000}).eq('id',w.id)}const{category}=classifyUsername(username);await sb.from('usernames').insert({user_id:user.id,username,is_primary:false,category,history:[{userId:user.id,username,date:new Date().toISOString()}]});await addXP(user.id,40);toast('Готово');showScreen('profile')}}])}
@@ -792,12 +801,122 @@ async function refreshChangeUsername(){const user=await getCurrentUser();const u
 async function setPrimary(unId){const user=await getCurrentUser();const uns=await getUserUsernames(user.id);for(const u of uns)await sb.from('usernames').update({is_primary:u.id===unId}).eq('id',u.id);toast('Изменено');showScreen('profile')}
 async function handleChangePassword(e){e.preventDefault();clearError('cp-error');const user=await getCurrentUser();if(user.password_hash!==hash(document.getElementById('cp-current').value)){showError('cp-error','Неверный пароль');return}const np=document.getElementById('cp-new').value;if(np.length<4||np!==document.getElementById('cp-new2').value){showError('cp-error','Ошибка');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('Изменён');showScreen('profile')}
 async function handleChangePin(e){e.preventDefault();clearError('cpi-error');const user=await getCurrentUser();if(user.pin_hash&&user.pin_hash!==hash(document.getElementById('cpi-current').value)){showError('cpi-error','Неверный PIN');return}const np=document.getElementById('cpi-new').value;if(!/^[0-9]{6}$/.test(np)||np!==document.getElementById('cpi-new2').value){showError('cpi-error','6 цифр');return}await sb.from('users').update({pin_hash:hash(np)}).eq('id',user.id);toast('PIN изменён');showScreen('profile')}
-async function getTodayTapData(uid){const today=new Date().toISOString().slice(0,10);let{data}=await sb.from('taps').select('*').eq('user_id',uid).eq('date',today).maybeSingle();if(!data){const{data:created}=await sb.from('taps').insert({user_id:uid,date:today,taps_count:0}).select().single();data=created}return data}
-let lastTapTs=0,tapPending=0,tapFlushTimer=null;
-async function refreshTap(){try{const user=await getCurrentUser();if(!user)return;const data=await getTodayTapData(user.id);const founder=isFounder(user),reward=founder?53:2,count=Number(data?.taps_count||0);document.getElementById('tap-count').textContent=count.toLocaleString('ru');document.getElementById('tap-earned').textContent=(count*reward).toLocaleString('ru');document.getElementById('tap-limit-display').textContent=founder?'(∞)':'/ 10000';document.getElementById('tap-reward-text').textContent=founder?'1 нажатие = +53 AGS (Founder)':'1 нажатие = +2 AGS';const btn=document.getElementById('tap-btn');if(btn)btn.disabled=!founder&&count>=10000}catch(e){console.error(e)}}
-async function flushTaps(){if(tapPending<=0)return;const user=await getCurrentUser();if(!user){tapPending=0;return}const amount=tapPending;tapPending=0;const data=await getTodayTapData(user.id);const current=Number(data?.taps_count||0);const founder=isFounder(user),reward=founder?53:2;const finalCount=current+Math.min(amount,10000-current);const up=await sb.from('taps').update({taps_count:finalCount}).eq('id',data.id).eq('taps_count',current);if(up.error){tapPending+=amount;return}const w=await getUserWallet(user.id);if(!w)return;await sb.from('wallets').update({balance:Number(w.balance)+Math.min(amount,10000-current)*reward}).eq('id',w.id).eq('balance',Number(w.balance));if(finalCount%50===0)await addXP(user.id,10);await completeTask(user.id,'tap',Math.min(amount,10000-current));await refreshTap()}
-function queueTap(){getCurrentUser().then(user=>{if(!user)return;const founder=isFounder(user),reward=founder?53:2;const displayed=Number(document.getElementById('tap-count').textContent.replace(/\s/g,''))||0;if(!founder&&displayed>=10000)return;tapPending++;document.getElementById('tap-count').textContent=(displayed+1).toLocaleString('ru');document.getElementById('tap-earned').textContent=((displayed+1)*reward).toLocaleString('ru');clearTimeout(tapFlushTimer);tapFlushTimer=setTimeout(flushTaps,280)})}
-function handleTap(e){if(e){if(e.cancelable)e.preventDefault();e.stopPropagation()}const now=performance.now();if(now-lastTapTs<45)return;lastTapTs=now;const btn=document.getElementById('tap-btn');if(btn){btn.classList.remove('tap-press');void btn.offsetWidth;btn.classList.add('tap-press');setTimeout(()=>btn.classList.remove('tap-press'),80)}queueTap()}
+async function getTodayTapData(uid){
+  const today=new Date().toISOString().slice(0,10);
+  let {data,error}=await sb.from('taps').select('*').eq('user_id',uid).eq('date',today).maybeSingle();
+  if(error) throw error;
+  if(!data){
+    const {data:created,error:insertError}=await sb.from('taps').insert({user_id:uid,date:today,taps_count:0}).select().single();
+    if(insertError) throw insertError;
+    data=created;
+  }
+  return data;
+}
+
+let lastTapTs=0;
+let tapQueue=0;
+let tapFlushTimer=null;
+let tapFlushBusy=false;
+let tapDisplayCount=null;
+
+async function refreshTap(){
+  try{
+    const user=await getCurrentUser(); if(!user)return;
+    const data=await getTodayTapData(user.id);
+    const founder=isFounder(user), reward=founder?53:2;
+    const count=Number(data?.taps_count||0);
+    tapDisplayCount=count;
+    const countEl=document.getElementById('tap-count');
+    const earnedEl=document.getElementById('tap-earned');
+    const limitEl=document.getElementById('tap-limit-display');
+    const rewardEl=document.getElementById('tap-reward-text');
+    if(countEl)countEl.textContent=count.toLocaleString('ru-RU');
+    if(earnedEl)earnedEl.textContent=(count*reward).toLocaleString('ru-RU');
+    if(limitEl)limitEl.textContent=founder?'(∞)':'/ 10000';
+    if(rewardEl)rewardEl.textContent=founder?'1 нажатие = +53 AGS (Founder)':'1 нажатие = +2 AGS';
+    const btn=document.getElementById('tap-btn');
+    if(btn)btn.disabled=!founder&&count>=10000;
+  }catch(e){console.error('refreshTap',e)}
+}
+
+async function flushTaps(){
+  if(tapFlushBusy||tapQueue<=0)return;
+  tapFlushBusy=true;
+  try{
+    const user=await getCurrentUser();
+    if(!user){tapQueue=0;return}
+    const founder=isFounder(user), reward=founder?53:2;
+    const queued=tapQueue;
+    tapQueue=0;
+    const data=await getTodayTapData(user.id);
+    const current=Number(data?.taps_count||0);
+    const allowed=founder?queued:Math.min(queued,Math.max(0,10000-current));
+    if(allowed<=0){await refreshTap();return}
+    const next=current+allowed;
+
+    const up=await sb.from('taps').update({taps_count:next}).eq('id',data.id).eq('taps_count',current);
+    if(up.error){tapQueue+=allowed;return}
+
+    const w=await getUserWallet(user.id);
+    if(!w){tapQueue+=allowed;await refreshTap();return}
+    const walletUpdate=await sb.from('wallets').update({
+      balance:Number(w.balance)+allowed*reward
+    }).eq('id',w.id).eq('balance',Number(w.balance));
+    if(walletUpdate.error){toast('Не удалось начислить награду');return}
+
+    // Progress is based on the actual number of taps, not the tap batch size.
+    await completeTask(user.id,'tap',allowed);
+    await refreshTap();
+  }catch(e){
+    console.error('flushTaps',e);
+  }finally{
+    tapFlushBusy=false;
+    if(tapQueue>0){
+      clearTimeout(tapFlushTimer);
+      tapFlushTimer=setTimeout(flushTaps,120);
+    }
+  }
+}
+
+function queueTap(){
+  const userPromise=getCurrentUser();
+  userPromise.then(user=>{
+    if(!user)return;
+    const founder=isFounder(user);
+    const reward=founder?53:2;
+    if(tapDisplayCount===null){
+      const el=document.getElementById('tap-count');
+      tapDisplayCount=Number((el?.textContent||'0').replace(/\s/g,''))||0;
+    }
+    if(!founder&&tapDisplayCount>=10000)return;
+
+    tapDisplayCount+=1;
+    tapQueue+=1;
+
+    const countEl=document.getElementById('tap-count');
+    const earnedEl=document.getElementById('tap-earned');
+    if(countEl)countEl.textContent=tapDisplayCount.toLocaleString('ru-RU');
+    if(earnedEl)earnedEl.textContent=(tapDisplayCount*reward).toLocaleString('ru-RU');
+
+    // Persist quickly, but never let a refresh reset the visible counter mid-tap.
+    clearTimeout(tapFlushTimer);
+    tapFlushTimer=setTimeout(flushTaps,180);
+  });
+}
+
+function handleTap(e){
+  if(e){if(e.cancelable)e.preventDefault();e.stopPropagation()}
+  const now=performance.now();
+  if(now-lastTapTs<45)return;
+  lastTapTs=now;
+  const btn=document.getElementById('tap-btn');
+  if(btn){
+    btn.classList.remove('tap-press');void btn.offsetWidth;btn.classList.add('tap-press');
+    setTimeout(()=>btn.classList.remove('tap-press'),80);
+  }
+  queueTap();
+}
+
 let marketTab='fixed';
 function setMarketTab(tab,el){marketTab=tab;document.querySelectorAll('#screen-username-market .filter-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');refreshMarket()}
 async function refreshMarket(){await finishExpiredAuctions();const{data:uns}=await sb.from('usernames').select('*');const cont=document.getElementById('market-list');let list=[];if(marketTab==='fixed')list=(uns||[]).filter(u=>u.sale_status==='listed');else list=(uns||[]).filter(u=>u.sale_status==='auction'&&u.auction_data&&u.auction_data.endTime>Date.now());if(!list.length){cont.innerHTML='<div class="empty-state">Нет предложений</div>';return}cont.innerHTML=(await Promise.all(list.map(async u=>{const seller=await getPrimaryUsername(u.user_id);if(marketTab==='fixed'){return`<div style="border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;cursor:pointer" onclick="buyFromMarket('${u.id}')"><div style="font-weight:700;font-size:16px">@${u.username}</div><div style="font-size:12px;color:#666;margin:3px 0">${u.category} · @${seller?.username||'?'}</div><div style="font-weight:700">${formatAGS(u.sale_price)} AGS</div></div>`}else{const left=Math.max(0,u.auction_data.endTime-Date.now());const mins=Math.floor(left/60000);return`<div style="border:1.5px solid #000;padding:12px;margin-bottom:8px;border-radius:7px;cursor:pointer" onclick="openAuction('${u.id}')"><div style="font-weight:700;font-size:16px">@${u.username}</div><div style="font-size:12px;color:#666;margin:3px 0">${u.category} · @${seller?.username||'?'}</div><div style="font-weight:700">${formatAGS(u.auction_data.currentBid)} AGS</div><div class="auction-timer">Осталось ~${mins} мин</div></div>`}}))).join('')}
