@@ -47,6 +47,51 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 .virtual-card-trigger::before{content:'$';font-size:12px;font-weight:800;line-height:1}
 .virtual-card-trigger:active{transform:scale(.94)}
 .card-page{padding-top:8px}
+.card-colors{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.card-color-btn{width:42px;height:30px;border-radius:8px;border:2px solid #000;cursor:pointer;position:relative;touch-action:manipulation}
+.card-color-btn.selected::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;text-shadow:0 1px 2px #000}
+.card-color-btn[data-color=white].selected::after{color:#000;text-shadow:none}
+
+/* AEGIS card collection */
+.card-designs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.card-design-btn{min-height:68px;border:1.5px solid #000;border-radius:10px;padding:9px;background:#fff;cursor:pointer;text-align:left;font-family:inherit;touch-action:manipulation;position:relative}
+.card-design-btn.selected{box-shadow:inset 0 0 0 2px #000}
+.card-design-name{font-size:13px;font-weight:800;display:block}
+.card-design-price{font-size:11px;color:#666;margin-top:4px;display:block}
+.card-design-btn.owned .card-design-price{color:#16844a}
+.card-design-btn.locked{opacity:.72}
+.virtual-card.starred:before{content:'✦';position:absolute;top:15px;left:18px;font-size:22px;font-weight:800}
+.virtual-card{position:relative;overflow:hidden}
+.virtual-card.theme-ace{background:#f7f7f7;color:#111;border:2px solid #111}
+.virtual-card.theme-ace .card-art{font-size:54px;font-weight:900;line-height:1}
+.virtual-card.theme-uno{background:linear-gradient(135deg,#e52323,#f5c400,#1689d7);color:#fff}
+.virtual-card.theme-uno .card-art{font-size:28px;font-weight:900;letter-spacing:1px;background:#fff;color:#d71920;border-radius:12px;padding:7px 12px;display:inline-block;transform:rotate(-6deg)}
+.virtual-card.theme-spongebob{background:#f5d43a;color:#111}
+.virtual-card.theme-spongebob .card-art{font-size:44px;line-height:1}
+.virtual-card.theme-roblox{background:#dfe4ea;color:#111}
+.virtual-card.theme-roblox .card-art{width:52px;height:52px;background:#ef3340;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900}
+.virtual-card.theme-minesweeper{background:#c6c6c6;color:#111;border:2px solid #777}
+.virtual-card.theme-minesweeper .card-art{font-family:ui-monospace,monospace;font-size:25px;font-weight:900;letter-spacing:2px}
+.virtual-card.theme-luxe{background:#171717;color:#e7c86e}
+.virtual-card.theme-luxe .card-art{font-size:20px;letter-spacing:5px;font-weight:800;opacity:.9}
+.virtual-card.theme-cola{background:#b91422;color:#fff}
+.virtual-card.theme-cola .card-art{font-size:22px;font-weight:900;font-style:italic;letter-spacing:-1px}
+.virtual-card.theme-market{background:#f6f1dc;color:#1457a6}
+.virtual-card.theme-market .card-art{font-size:22px;font-weight:900;letter-spacing:-1px}
+.virtual-card.theme-iron{background:linear-gradient(145deg,#34383c,#8b9298,#2d3135);color:#e5e7e9;border:1px solid #111}
+.virtual-card.theme-iron .card-art{font-size:30px;font-weight:900;letter-spacing:3px;text-shadow:1px 1px #111,-1px -1px #c9cdd0}
+.virtual-card.theme-diamond{background:linear-gradient(135deg,#dff7ff,#78cbe8,#e9fbff);color:#123b52}
+.virtual-card.theme-diamond .card-art{font-size:34px;font-weight:900;letter-spacing:4px}
+.virtual-card.theme-cosmic{background:radial-gradient(circle at 75% 25%,#7357c7 0,#191338 35%,#05050d 75%);color:#fff}
+.virtual-card.theme-cosmic .card-art{font-size:27px;letter-spacing:4px;font-weight:800}
+.virtual-card.theme-black{background:#000;color:#fff}
+.virtual-card.theme-blue{background:#1769e0;color:#fff}
+.virtual-card.theme-red{background:#d92d20;color:#fff}
+.virtual-card.theme-purple{background:#7a3db8;color:#fff}
+.virtual-card.theme-green{background:#16844a;color:#fff}
+.virtual-card.theme-gold{background:#b8870b;color:#fff}
+.virtual-card.theme-white{background:#fff;color:#000;border:1px solid #bbb}
+.card-art-wrap{min-height:52px;display:flex;align-items:center;justify-content:center;margin-top:4px}
 .virtual-card{background:#000;color:#fff;border-radius:18px;padding:22px 20px 18px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.16)}
 .virtual-card-top{display:flex;justify-content:flex-end}
 .virtual-card-logo{width:42px;height:42px;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:700}
@@ -303,6 +348,10 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 <button class="back-btn" onclick="showScreen('main')">Назад</button>
 <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Виртуальная карта</h2>
 <div id="virtual-card-container"><div class="card-loading">Загрузка карты…</div></div>
+<div style="margin-top:16px">
+<div class="section-title">Дизайн карты</div>
+<div id="card-colors" class="card-designs"></div>
+</div>
 </div>
 <div id="screen-leaderboard" class="screen">
 <button class="back-btn" onclick="showScreen('main')">Назад</button>
@@ -671,6 +720,32 @@ const user=await getCurrentUser();
 if(!user){showScreen('login');return}
 const container=document.getElementById('virtual-card-container');
 if(!container)return;
+const designs=[
+{id:'black',name:'Чёрная',price:0,theme:'theme-black',art:'AEGIS'},
+{id:'blue',name:'Синяя',price:0,theme:'theme-blue',art:'AEGIS'},
+{id:'red',name:'Красная',price:0,theme:'theme-red',art:'AEGIS'},
+{id:'purple',name:'Фиолетовая',price:0,theme:'theme-purple',art:'AEGIS'},
+{id:'green',name:'Зелёная',price:0,theme:'theme-green',art:'AEGIS'},
+{id:'gold',name:'Золотая',price:0,theme:'theme-gold',art:'AEGIS'},
+{id:'white',name:'Белая',price:0,theme:'theme-white',art:'AEGIS'},
+{id:'ace',name:'Туз пик',price:1500,theme:'theme-ace',art:'♠ A'},
+{id:'uno',name:'UNO',price:4000,theme:'theme-uno',art:'UNO'},
+{id:'minesweeper',name:'Сапёр',price:7500,theme:'theme-minesweeper',art:'💣 1 2 1'},
+{id:'spongebob',name:'Спанчбоб',price:15000,theme:'theme-spongebob',art:'😄'},
+{id:'roblox',name:'Roblox',price:22500,theme:'theme-roblox',art:'R'},
+{id:'luxe',name:'Luxe Monogram',price:45000,theme:'theme-luxe',art:'AEGIS ✦'},
+{id:'cola',name:'Retro Cola',price:75000,theme:'theme-cola',art:'RETRO COLA'},
+{id:'market',name:'Market',price:150000,theme:'theme-market',art:'MARKET'},
+{id:'iron',name:'IRON AEGI$',price:250000,theme:'theme-iron',art:'AEGI$'},
+{id:'diamond',name:'DIAMOND',price:500000,theme:'theme-diamond',art:'◆ A ◆'},
+{id:'cosmic',name:'COSMIC',price:1000000,theme:'theme-cosmic',art:'AEGIS ✦'}
+];
+const key='aegis_card_design_'+user.id;
+const ownedKey='aegis_owned_cards_'+user.id;
+let selected=localStorage.getItem(key)||'black';
+let owned=[];try{owned=JSON.parse(localStorage.getItem(ownedKey)||'[]')}catch(e){owned=[]}
+if(!owned.includes('black'))owned.push('black');
+if(!owned.includes(selected))selected='black';
 container.innerHTML='<div class="card-loading">Загрузка карты…</div>';
 try{
 const primary=await getPrimaryUsername(user.id);
@@ -681,19 +756,44 @@ if(!card?.card_number||!card?.cvv)throw new Error('Карта не получе�
 const number=String(card.card_number).replace(/\D/g,'').padStart(16,'0').slice(0,16);
 const formatted=number.replace(/(.{4})/g,'$1 ').trim();
 const owner='@'+(primary?.username||'?');
-container.innerHTML=`<div class="virtual-card">
-<div class="virtual-card-top"><div class="virtual-card-logo">$</div></div>
+const theme=designs.find(d=>d.id===selected)||designs[0];
+container.innerHTML=`<div class="virtual-card starred ${theme.theme}">
+<div class="virtual-card-top"><div class="virtual-card-logo" style="border-color:currentColor;color:inherit">$</div></div>
+<div class="card-art-wrap"><div class="card-art">${escapeHtml(theme.art)}</div></div>
 <div class="virtual-card-number">${formatted}</div>
 <div class="virtual-card-bottom">
 <div class="virtual-card-owner">${escapeHtml(owner)}</div>
-<div><div class="virtual-card-cvv-label">CVV</div><div class="virtual-card-cvv">${escapeHtml(String(card.cvv))}</div></div>
-</div>
-</div>`;
-}catch(err){
-console.error(err);
-container.innerHTML='<div class="card-loading">Не удалось загрузить карту</div>';
+<div><div class="virtual-card-cvv-label" style="color:inherit;opacity:.65">CVV</div><div class="virtual-card-cvv">${escapeHtml(String(card.cvv))}</div></div>
+</div></div>`;
+const colorBox=document.getElementById('card-colors');
+if(colorBox){
+colorBox.innerHTML=designs.map(d=>{
+const isOwned=owned.includes(d.id),isSelected=d.id===selected;
+return `<button class="card-design-btn ${isSelected?'selected ':''}${isOwned?'owned':'locked'}" onclick="${isOwned?`setCardDesign('${d.id}')`:`buyCardDesign('${d.id}')`}">
+<span class="card-design-name">${escapeHtml(d.name)}</span>
+<span class="card-design-price">${d.price===0?'Бесплатно':(isOwned?'Куплено':d.price.toLocaleString('ru-RU')+' AGS')}</span></button>`;
+}).join('');
 }
+localStorage.setItem(ownedKey,JSON.stringify(owned));
+}catch(err){console.error(err);container.innerHTML='<div class="card-loading">Не удалось загрузить карту</div>';}
 }
+function setCardDesign(design){
+const user=getSessionId();if(!user)return;
+localStorage.setItem('aegis_card_design_'+user,design);refreshVirtualCard();
+}
+async function buyCardDesign(designId){
+const user=await getCurrentUser();if(!user)return;
+const prices={ace:1500,uno:4000,minesweeper:7500,spongebob:15000,roblox:22500,luxe:45000,cola:75000,market:150000,iron:250000,diamond:500000,cosmic:1000000};
+const price=Number(prices[designId]||0);if(!price){setCardDesign(designId);return;}
+const ownedKey='aegis_owned_cards_'+user.id;let owned=[];try{owned=JSON.parse(localStorage.getItem(ownedKey)||'[]')}catch(e){owned=[]}
+if(owned.includes(designId)){setCardDesign(designId);return;}
+const w=await getUserWallet(user.id);if(!w){toast('Кошелёк не найден');return;}
+const balance=Number(w.balance||0);if(balance<price){toast(`Недостаточно AGS. Нужно ${price.toLocaleString('ru-RU')} AGS`);return;}
+const up=await sb.from('wallets').update({balance:balance-price}).eq('id',w.id).eq('balance',balance);
+if(up.error){toast('Не удалось купить дизайн');return;}
+owned.push(designId);localStorage.setItem(ownedKey,JSON.stringify(owned));localStorage.setItem('aegis_card_design_'+user.id,designId);toast(`Дизайн куплен за ${price.toLocaleString('ru-RU')} AGS`);refreshVirtualCard();
+}
+
 async function showScreen(name){
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
 document.getElementById('screen-'+name).classList.add('active');
