@@ -2,12 +2,20 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AEGIS">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>AEGIS</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;color:#000;min-height:100vh;display:flex;justify-content:center}
-.app{width:100%;max-width:420px;min-height:100vh;position:relative;padding-bottom:80px}
+.app{width:100%;max-width:420px;min-height:100vh;min-height:100dvh;position:relative;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
 .screen{display:none;padding:20px 16px}
 .screen.active{display:block;animation:fadeIn .25s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -74,7 +82,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .tx-amount.positive::before{content:'+'}
 .tx-amount.negative::before{content:'−'}
 .empty-state{text-align:center;padding:26px 14px;color:#666;font-size:14px;line-height:1.45}
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:8px 0 11px;z-index:100}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:#fff;border-top:1.5px solid #000;display:flex;justify-content:space-around;padding:8px 0 calc(11px + env(safe-area-inset-bottom));z-index:100}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;font-size:11px;color:#666;padding:3px 9px}
 .nav-item.active{color:#000;font-weight:700}
 .nav-icon{font-size:17px}
@@ -806,6 +814,11 @@ async function refreshTransferScreen(){const user=await getCurrentUser();if(!use
 (function handleDeepLink(){const hash=location.hash||'';if(hash.startsWith('#transfer')){const params=new URLSearchParams(hash.split('?')[1]||'');const to=params.get('to');if(to){setTimeout(()=>{showScreen('transfer');setTimeout(()=>{document.getElementById('tr-to').value='@'+to.replace('@','')},50)},300)}}})();
 if(typeof supabase==='undefined'||typeof createClient==='undefined'){const b=document.getElementById('login-error');if(b){b.textContent='Не удалось загрузить модуль Aegis. Обновите страницу и попробуйте ещё раз.';b.classList.add('show')}}
 (async()=>{try{const user=await getCurrentUser();if(!user){setSession(null);await showScreen('login');return}await showScreen('main')}catch(err){setSession(null);const box=document.getElementById('login-error');if(box){box.textContent='Ошибка запуска: '+(err?.message||err);box.classList.add('show')}await showScreen('login')}})();
+</script>
+<script>
+if('serviceWorker' in navigator && location.protocol !== 'file:'){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
 </script>
 </body>
 </html>
