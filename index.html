@@ -188,34 +188,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .lb-score{font-weight:700;font-size:15px}
 .auction-timer{font-size:12px;color:#c00;font-weight:600}
 .bid-item{padding:8px 0;border-bottom:1px solid #eee;font-size:13px}
-/* NFT styles */
-.nft-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
-.nft-card{border:1.5px solid #000;border-radius:10px;overflow:hidden;position:relative}
-.nft-card-bg{padding:12px 10px 14px;min-height:190px;display:flex;flex-direction:column;align-items:center}
-.nft-rarity{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.75);color:#fff;z-index:2}
-.nft-img{width:90px;height:90px;object-fit:contain;margin:8px 0 6px}
-.nft-name{font-size:13px;font-weight:700;text-align:center;margin-bottom:4px;line-height:1.25}
-.nft-price{font-size:14px;font-weight:800;margin-bottom:8px}
-.nft-actions{display:flex;flex-direction:column;gap:5px;width:100%}
-.nft-actions .btn{padding:8px 6px;font-size:12px}
-.rarity-common{background:#f0f0f0}
-.rarity-rare{background:#d6eaff}
-.rarity-epic{background:#e8d5ff}
-.rarity-mythic{background:#ffd6d6}
-.rarity-legendary{background:#ffe08a}
-.nft-detail-img{width:160px;height:160px;object-fit:contain;display:block;margin:0 auto 14px}
-.nft-image-wrap{width:90px;height:90px;display:flex;align-items:center;justify-content:center;margin:8px 0 6px}
-.nft-image-wrap .nft-img{margin:0}
-.nft-placeholder{width:90px;height:90px;border:1.5px dashed #000;border-radius:8px;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.nft-detail-box{position:relative;border-radius:10px;padding:20px;margin-bottom:16px;text-align:center}
-.nft-detail-title{font-size:20px;font-weight:800;margin-bottom:6px}
-.nft-detail-actions{display:flex;flex-direction:column;gap:8px;margin-top:16px}
-.nft-gift-note{font-size:11px;color:#555;margin-bottom:4px}
-.public-nft-section{margin-top:16px}
-.nft-market-card{position:relative;border:1.5px solid #000;border-radius:10px;padding:14px;margin-bottom:12px}
-.nft-market-card .nft-image-wrap{margin:6px auto 10px}
-.market-nft-item{margin-bottom:8px}
-@media(max-width:360px){.nft-grid{gap:8px}.nft-card-bg{padding-left:7px;padding-right:7px}.nft-actions .btn{font-size:11px}}
 </style>
 </head>
 <body>
@@ -277,7 +249,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <button class="action-btn" onclick="showScreen('transfer')">Перевести</button>
 <button class="action-btn" onclick="showScreen('receive')">Получить</button>
 <button class="action-btn" onclick="showScreen('tap')">Tap AGS</button>
-<button class="action-btn" onclick="showScreen('nft-store');refreshNftStore()">NFT</button>
 </div>
 <div class="search-box">
 <input type="text" id="user-search" placeholder="Поиск по username..." oninput="handleUserSearch(this.value)">
@@ -364,10 +335,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 <div id="screen-profile" class="screen">
 <div id="profile-header-container"></div>
-<div class="menu-section">
-<div class="menu-section-title">Мои NFT</div>
-<div class="menu-item" onclick="showScreen('my-nfts');refreshMyNfts()">Смотреть мои NFT</div>
-</div>
 <div class="menu-section">
 <div class="menu-section-title">Мои username</div>
 <div id="profile-usernames"></div>
@@ -482,31 +449,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Детали</h2>
 <div id="tx-detail-content"></div>
 </div>
-<!-- ===== NFT SCREENS ===== -->
-<div id="screen-nft-store" class="screen">
-<button class="back-btn" onclick="showScreen('main')">Назад</button>
-<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">NFT Store</h2>
-<div class="nft-grid" id="nft-store-grid"></div>
-</div>
-<div id="screen-my-nfts" class="screen">
-<button class="back-btn" onclick="showScreen('profile')">Назад</button>
-<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Мои NFT</h2>
-<div id="my-nfts-list"></div>
-</div>
-<div id="screen-nft-detail" class="screen">
-<button class="back-btn" onclick="showScreen('my-nfts')">Назад</button>
-<div id="nft-detail-content"></div>
-</div>
-<div id="screen-nft-marketplace" class="screen">
-<button class="back-btn" onclick="showScreen('main')">Назад</button>
-<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">NFT Marketplace</h2>
-<div id="nft-market-list"></div>
-</div>
-<div id="screen-nft-auctions" class="screen">
-<button class="back-btn" onclick="showScreen('main')">Назад</button>
-<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Аукционы NFT</h2>
-<div id="nft-auctions-list"></div>
-</div>
 <div class="bottom-nav" id="bottom-nav" style="display:none">
 <div class="nav-item active" data-nav="main" onclick="navTo('main')"><div class="nav-icon">◉</div><div>Главная</div></div>
 <div class="nav-item" data-nav="transfer" onclick="navTo('transfer')"><div class="nav-icon">↑</div><div>Переводы</div></div>
@@ -589,32 +531,6 @@ patterns: [
 ]
 };
 const CUSTOM_FIELD_MAP = {frames:'custom_frame',avatarFrames:'custom_avatar_frame',bgs:'custom_bg',patterns:'custom_pattern'};
-/* ===== NFT CATALOG ===== */
-const NFT_CATALOG = [
-{id:'statue-of-liberty',name:'Statue of Liberty',price:940,rarity:'Rare',image:'statue-of-liberty.png'},
-{id:'star',name:'Star',price:320,rarity:'Common',image:'star.png'},
-{id:'dice',name:'Dice',price:380,rarity:'Common',image:'dice.png'},
-{id:'harry-potter-wand',name:"Harry Potter’s Wand",price:640,rarity:'Rare',image:'harry-potter-wand.png'},
-{id:'oleg',name:'oLeg',price:1320,rarity:'Epic',image:'oleg.png'},
-{id:'pickaxe',name:'Pickaxe',price:480,rarity:'Common',image:'pickaxe.png'},
-{id:'sw-lightsaber',name:'SW Lightsaber',price:990,rarity:'Epic',image:'sw-lightsaber.png'},
-{id:'joker',name:'Joker',price:2040,rarity:'Epic',image:'joker.png'},
-{id:'diesel-bag',name:'Diesel Bag',price:1760,rarity:'Epic',image:'diesel-bag.png'},
-{id:'rolex-watch',name:'Rolex Watch',price:3990,rarity:'Mythic',image:'rolex.png'},
-{id:'perfume',name:'Perfume',price:2110,rarity:'Epic',image:'perfume.png'},
-{id:'mjs-glove',name:"MJ’s Glove",price:7290,rarity:'Legendary',image:'mj-glove.png'},
-{id:'masquerade',name:'Masquerade',price:7690,rarity:'Legendary',image:'masquerade.png'},
-{id:'olympus',name:'Olympus',price:5460,rarity:'Mythic',image:'olympus.png'},
-{id:'mclaren',name:'McLaren',price:9990,rarity:'Legendary',image:'mclaren.png'},
-{id:'marilyn-monroe-dress',name:"Marilyn Monroe’s Dress",price:8700,rarity:'Legendary',image:'marilyn-monroe-dress.png'},
-{id:'reverse',name:'Reverse',price:6540,rarity:'Mythic',image:'reverse.png'},
-{id:'777',name:'777',price:6250,rarity:'Mythic',image:'777.png'},
-{id:'spirit-of-ecstasy',name:'Spirit of Ecstasy',price:12540,rarity:'Legendary',image:'spirit-of-ecstasy.png'},
-{id:'african-drum',name:'African Drum',price:4890,rarity:'Mythic',image:'african-drum.png'},
-{id:'ralph-lauren',name:'Ralph Lauren',price:5380,rarity:'Mythic',image:'ralph-lauren.png'}
-];
-const RARITY_CLASS = {'Common':'rarity-common','Rare':'rarity-rare','Epic':'rarity-epic','Mythic':'rarity-mythic','Legendary':'rarity-legendary'};
-function getNft(id){return NFT_CATALOG.find(n=>n.id===id)}
 function hash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return 'h_'+Math.abs(h).toString(36)+'_'+s.length}
 function generateRecoveryCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='';for(let i=0;i<32;i++)r+=c[Math.floor(Math.random()*c.length)];return r}
 function generateTxId(){const c='0123456789ABCDEF';let id='AEG-';for(let i=0;i<8;i++)id+=c[Math.floor(Math.random()*c.length)];return id}
@@ -661,61 +577,16 @@ if(name==='username-market')await refreshMarket();
 if(name==='change-username')await refreshChangeUsername();
 if(name==='founder-dashboard'){await refreshFounderDashboard();await refreshFounderPool();}
 if(name==='leaderboard')await refreshLeaderboard();
-if(name==='nft-store')await refreshNftStore();
-if(name==='my-nfts')await refreshMyNfts();
 window.scrollTo(0,0);
 }
 function navTo(n){showScreen(n)}
-/* ===== NFT FUNCTIONS ===== */
-const NFT_FX_RATES = Object.freeze({AGS_TO_USD:0.01,AGS_TO_EUR:1/108,AGS_TO_RUB:0.92});
-const NFT_API_URL = SUPABASE_URL.replace(/\/$/,'') + '/functions/v1/nft-api';
-const AEGIS_SESSION_URL = SUPABASE_URL.replace(/\/$/,'') + '/functions/v1/aegis-session';
-function nftImagePath(n){return n.image_path || ('assets/nfts/' + n.image)}
-function nftImageHtml(n,cls='nft-img'){const src=escapeHtml(nftImagePath(n)),alt=escapeHtml(n.name);return `<div class="nft-image-wrap"><img class="${cls}" src="${src}" alt="${alt}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="nft-placeholder" style="display:none">NFT</div></div>`}
-function formatNftDate(ts){if(!ts)return '—';const d=new Date(ts);return [String(d.getDate()).padStart(2,'0'),String(d.getMonth()+1).padStart(2,'0'),d.getFullYear()].join('.')}
-function nftErrorMessage(e){const s=String(e?.message||e||'Ошибка');const map={'insufficient balance':'Недостаточно AGS','insufficient balance for purchase':'Недостаточно AGS','NFT is not available':'NFT уже недоступен','listing is closed':'Листинг уже закрыт','auction is closed':'Аукцион уже завершён','bid must be higher':'Ставка должна быть выше текущей','cannot cancel after first bid':'После первой ставки отменить аукцион нельзя','not owner':'Вы не владелец этого NFT'};return map[s]||s}
-let nftSessionMemory='';
-let nftLoginUsername='';
-let nftLoginPassword='';
-function getNftSession(){try{return localStorage.getItem('aegis_nft_session')||nftSessionMemory}catch(_){return nftSessionMemory}}
-function setNftSession(token){nftSessionMemory=String(token||'');try{if(nftSessionMemory)localStorage.setItem('aegis_nft_session',nftSessionMemory);else localStorage.removeItem('aegis_nft_session')}catch(_){}return !!nftSessionMemory}
-async function issueNftSession(username,password){const r=await fetch(AEGIS_SESSION_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({action:'login',username,password})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body.error||('session_http_'+r.status));if(!body.token)throw new Error('session_token_missing');setNftSession(body.token);return body.user_id}
-async function ensureNftSession(){let token=getNftSession();if(token)return token;if(!nftLoginUsername||!nftLoginPassword)throw new Error('NFT-сессия отсутствует. Войдите в аккаунт ещё раз.');await issueNftSession(nftLoginUsername,nftLoginPassword);token=getNftSession();if(!token)throw new Error('NFT-сессия не сохранилась');return token}
-async function nftApi(action,payload={},retry=true){let token='';if(action!=='catalog')token=await ensureNftSession();const headers={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};const bodyPayload={action,...payload};if(token)bodyPayload.token=token;const r=await fetch(NFT_API_URL,{method:'POST',headers,body:JSON.stringify(bodyPayload)});let body={};try{body=await r.json()}catch(_){}if((r.status===401||r.status===403)&&retry&&action!=='catalog'){clearNftSession();await issueNftSession(nftLoginUsername,nftLoginPassword);return nftApi(action,payload,false)}if(r.status===401||r.status===403){if(action!=='catalog')clearNftSession();throw new Error(action==='catalog'?'NFT API не авторизован':'NFT-сессия истекла. Войдите в аккаунт ещё раз.')}if(body.error)throw new Error(body.error);if(!r.ok)throw new Error('Ошибка NFT API: '+r.status);return body.data}
-async function issueNftRecoverySession(username,recovery){const r=await fetch(AEGIS_SESSION_URL,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({action:'recovery',username,recovery_code:recovery})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body.error||('recovery_http_'+r.status));if(!body.token)throw new Error('session_token_missing');setNftSession(body.token);nftLoginUsername=username;nftLoginPassword='';return body.user_id}
-function clearNftSession(){nftSessionMemory='';try{localStorage.removeItem('aegis_nft_session')}catch(_){}}
-
-
-async function refreshNftStore(){const grid=document.getElementById('nft-store-grid');if(!grid)return;try{const rows=await nftApi('catalog');grid.innerHTML=(rows||[]).map(n=>`<div class="nft-card"><div class="nft-card-bg ${RARITY_CLASS[n.rarity]||''}"><div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}<div class="nft-name">${escapeHtml(n.name)}</div><div class="nft-price">${formatAGS(n.price)} AGS</div><div class="nft-actions"><button class="btn btn-outline btn-full" onclick="showNftConvert(${Number(n.price)})">Конвертировать</button><button class="btn btn-full" onclick="buyNft('${escapeHtml(n.id)}',this)">Купить себе</button><button class="btn btn-outline btn-full" onclick="buyAndGift('${escapeHtml(n.id)}')">Купить в подарок</button></div></div></div>`).join('')}catch(e){grid.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}}
-function showNftConvert(ags){const a=Number(ags)||0;showModal('Конвертация цены',`<div class="summary-row"><span>AGS</span><strong>${formatAGS(a)} AGS</strong></div><div class="summary-row"><span>USD</span><strong>$${(a*NFT_FX_RATES.AGS_TO_USD).toFixed(2)}</strong></div><div class="summary-row"><span>EUR</span><strong>€${(a*NFT_FX_RATES.AGS_TO_EUR).toFixed(2)}</strong></div><div class="summary-row"><span>RUB</span><strong>₽${(a*NFT_FX_RATES.AGS_TO_RUB).toFixed(0)}</strong></div>`,[{text:'Закрыть',onClick:()=>{}}])}
-async function buyNft(catalogId,btn){if(btn)btn.disabled=true;try{if(!await getCurrentUser())throw new Error('Войдите в аккаунт');await nftApi('purchase',{catalog_id:catalogId});toast('NFT куплен!');await refreshMain();await refreshNftStore()}catch(e){toast(nftErrorMessage(e))}finally{if(btn)btn.disabled=false}}
-async function buyAndGift(catalogId){const nft=getNft(catalogId);showModal('Купить в подарок',`<div class="input-group"><label>Username получателя</label><input type="text" id="gift-username" placeholder="@username"></div><div class="hint">Стоимость: ${formatAGS(nft?.price||0)} AGS. Получатель ничего не платит.</div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Купить и подарить',onClick:async()=>{try{const me=await getCurrentUser(),to=await findUserByUsername(document.getElementById('gift-username').value.trim());if(!to)throw new Error('Получатель не найден');if(!me)throw new Error('Войдите в аккаунт');if(to.id===me.id)throw new Error('Нельзя подарить NFT себе');await nftApi('purchase_gift',{catalog_id:catalogId,recipient_id:to.id});toast('NFT подарен!');await refreshMain()}catch(e){toast(nftErrorMessage(e))}}}])}
-async function refreshMyNfts(){const cont=document.getElementById('my-nfts-list');if(!cont)return;try{const data=await nftApi('my_nfts');if(!data?.length){cont.innerHTML='<div class="empty-state">У вас пока нет NFT</div>';return}cont.innerHTML=data.map(item=>{const n=item.catalog||getNft(item.catalog_id);if(!n)return'';const acquired=item.acquired_type==='gift_received'||item.acquired_type==='gift';return `<div class="nft-card" style="margin-bottom:12px" onclick="openMyNft('${item.id}')"><div class="nft-card-bg ${RARITY_CLASS[n.rarity]||''}"><div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}<div class="nft-name">${escapeHtml(n.name)}</div><div class="nft-price">${formatAGS(n.price)} AGS</div>${acquired?'<div class="nft-gift-note">Получен в подарок</div>':''}</div></div>`}).join('')}catch(e){cont.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}}
-async function openMyNft(instanceId){try{const item=await nftApi('detail',{instance_id:instanceId});await renderNftDetail(item,true)}catch(e){toast(nftErrorMessage(e))}}
-async function renderNftDetail(item,isOwner){const n=item.catalog||getNft(item.catalog_id);if(!n)return;const ownerName=item.owner_username?`@${escapeHtml(item.owner_username)}`:'—';const gifted=item.acquired_type==='gift_received'||item.acquired_type==='gift';document.getElementById('nft-detail-content').innerHTML=`<div class="nft-detail-box ${RARITY_CLASS[n.rarity]||''}"><div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n,'nft-detail-img')}<div class="nft-detail-title">${escapeHtml(n.name)}</div><div class="nft-price">${formatAGS(n.price)} AGS</div></div><div class="summary-row"><span>Текущая цена</span><strong>${formatAGS(n.price)} AGS</strong></div><div class="summary-row"><span>Цена покупки</span><strong>${gifted?'Получен в подарок':formatAGS(item.purchase_price||n.price)+' AGS'}</strong></div><div class="summary-row"><span>Дата покупки</span><strong>${formatNftDate(item.acquired_at)}</strong></div><div class="summary-row"><span>Владелец</span><strong>${ownerName}</strong></div><div class="summary-row"><span>Статус</span><strong>${item.status==='owned'?'Owned':escapeHtml(item.status||'—')}</strong></div>${isOwner&&item.status==='owned'?`<div class="nft-detail-actions"><button class="btn btn-full" onclick="sellNft('${item.id}')">Продать</button><button class="btn btn-outline btn-full" onclick="giftNft('${item.id}')">Подарить</button><button class="btn btn-outline btn-full" onclick="auctionNft('${item.id}')">Выставить на аукцион</button><button class="btn btn-outline btn-full" disabled>Прокачать — Скоро</button></div>`:''}`;showScreen('nft-detail')}
-async function sellNft(instanceId){showModal('Продать NFT',`<div class="input-group"><label>Цена в AGS</label><input type="number" id="nft-sale-price" min="50" step="1" placeholder="50"></div><div class="hint">Минимальная цена: 50 AGS. Комиссия Aegis: 0 AGS.</div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выставить',onClick:async()=>{const price=Number(document.getElementById('nft-sale-price').value);if(!Number.isSafeInteger(price)||price<50){toast('Минимальная цена — 50 AGS');return}try{await nftApi('list',{instance_id:instanceId,price});toast('NFT выставлен');await refreshMyNfts();showScreen('my-nfts')}catch(e){toast(nftErrorMessage(e))}}}])}
-async function giftNft(instanceId){showModal('Подарить NFT',`<div class="input-group"><label>Username получателя</label><input type="text" id="nft-gift-to" placeholder="@username"></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Подарить',onClick:async()=>{try{const to=await findUserByUsername(document.getElementById('nft-gift-to').value.trim()),me=await getCurrentUser();if(!to)throw new Error('Получатель не найден');if(!me)throw new Error('Войдите в аккаунт');if(to.id===me.id)throw new Error('Нельзя подарить NFT себе');await nftApi('gift',{instance_id:instanceId,recipient_id:to.id});toast('NFT подарен');await refreshMyNfts();showScreen('my-nfts')}catch(e){toast(nftErrorMessage(e))}}}])}
-async function auctionNft(instanceId){showModal('Выставить на аукцион',`<div class="input-group"><label>Стартовая цена, AGS</label><input type="number" id="nft-start-price" min="1" step="1" placeholder="100"></div><div class="input-group"><label>Длительность</label><select id="nft-duration"><option value="24">24 часа</option><option value="72">3 дня</option><option value="168">7 дней</option></select></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Запустить',onClick:async()=>{const price=Number(document.getElementById('nft-start-price').value),duration=Number(document.getElementById('nft-duration').value);if(!Number.isSafeInteger(price)||price<1){toast('Введите стартовую цену');return}try{await nftApi('create_auction',{instance_id:instanceId,starting_price:price,duration_hours:duration});toast('Аукцион запущен');await refreshMyNfts();showScreen('my-nfts')}catch(e){toast(nftErrorMessage(e))}}}])}
-async function refreshNftMarketplace(){const box=document.getElementById('nft-market-list');if(!box)return;try{const rows=await nftApi('marketplace');if(!rows?.length){box.innerHTML='<div class="empty-state">Активных NFT-листингов нет</div>';return}box.innerHTML=rows.map(l=>{const n=l.nft?.catalog||getNft(l.nft?.catalog_id);if(!n)return'';return `<div class="market-nft-item"><div class="${RARITY_CLASS[n.rarity]||''} nft-market-card"><div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}<div class="nft-name">${escapeHtml(n.name)}</div><div class="summary-row"><span>Продавец</span><strong>@${escapeHtml(l.seller_username||'—')}</strong></div><div class="summary-row"><span>Цена</span><strong>${formatAGS(l.price)} AGS</strong></div><div class="summary-row"><span>Листинг</span><strong>${formatNftDate(l.created_at)}</strong></div><button class="btn btn-full" onclick="buyNftListing('${l.id}')">Купить</button>${l.seller_id===getSessionId()?`<button class="btn btn-outline btn-full" onclick="cancelNftListing('${l.id}')">Снять с продажи</button>`:''}</div></div>`}).join('')}catch(e){box.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}}
-async function buyNftListing(id){try{await nftApi('buy_listing',{listing_id:id});toast('NFT куплен');await refreshNftMarketplace();await refreshMyNfts();await refreshMain()}catch(e){toast(nftErrorMessage(e))}}
-async function cancelNftListing(id){try{await nftApi('cancel_listing',{listing_id:id});toast('Листинг снят');await refreshNftMarketplace();await refreshMyNfts()}catch(e){toast(nftErrorMessage(e))}}
-async function refreshNftAuctions(){const box=document.getElementById('nft-auctions-list');if(!box)return;try{let rows=await nftApi('auctions');const now=Date.now();await Promise.all((rows||[]).filter(a=>new Date(a.ends_at).getTime()<=now).map(a=>nftApi('settle_auction',{auction_id:a.id}).catch(()=>null)));rows=await nftApi('auctions');if(!rows?.length){box.innerHTML='<div class="empty-state">Активных аукционов нет</div>';return}box.innerHTML=rows.map(a=>{const n=a.nft?.catalog||getNft(a.nft?.catalog_id);if(!n)return'';const current=a.current_bid||a.starting_price,isSeller=a.seller_id===getSessionId();return `<div class="market-nft-item"><div class="${RARITY_CLASS[n.rarity]||''} nft-market-card"><div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}<div class="nft-name">${escapeHtml(n.name)}</div><div class="summary-row"><span>Продавец</span><strong>@${escapeHtml(a.seller_username||'—')}</strong></div><div class="summary-row"><span>Старт</span><strong>${formatAGS(a.starting_price)} AGS</strong></div><div class="summary-row"><span>Текущая ставка</span><strong>${formatAGS(current)} AGS</strong></div><div class="summary-row"><span>До</span><strong>${formatNftDate(a.ends_at)}</strong></div>${isSeller&&!a.current_bidder_id?`<button class="btn btn-outline btn-full" onclick="cancelNftAuction('${a.id}')">Снять с аукциона</button>`:''}${!isSeller?`<button class="btn btn-full" onclick="placeNftBid('${a.id}',${Number(current)})">Сделать ставку</button>`:''}</div></div>`}).join('')}catch(e){box.innerHTML=`<div class="empty-state">${escapeHtml(nftErrorMessage(e))}</div>`}}
-async function placeNftBid(id,current){showModal('Сделать ставку',`<div class="hint">Текущая ставка: ${formatAGS(current)} AGS. Минимальный шаг: 1 AGS.</div><div class="input-group"><label>Новая ставка</label><input type="number" id="nft-bid-amount" min="${Number(current)+1}" step="1" value="${Number(current)+1}"></div>`,[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Ставка',onClick:async()=>{const amount=Number(document.getElementById('nft-bid-amount').value);if(!Number.isSafeInteger(amount)||amount<=current){toast('Ставка должна быть выше текущей');return}try{await nftApi('bid',{auction_id:id,amount});toast('Ставка принята');await refreshNftAuctions();await refreshMain()}catch(e){toast(nftErrorMessage(e))}}}])}
-async function cancelNftAuction(id){try{await nftApi('cancel_auction',{auction_id:id});toast('Аукцион снят');await refreshNftAuctions();await refreshMyNfts()}catch(e){toast(nftErrorMessage(e))}}
-
-const _aegisShowScreen=showScreen;
-async function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const target=document.getElementById('screen-'+name);if(!target)return;target.classList.add('active');const user=await getCurrentUser();document.getElementById('bottom-nav').style.display=(user&&navScreens.includes(name))?'flex':'none';document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.dataset.nav===name));if(name==='main')await refreshMain();if(name==='history')await refreshHistory();if(name==='profile')await refreshProfile();if(name==='transfer'){await refreshTransferScreen();document.getElementById('tr-to').value='@'}if(name==='receive')await refreshReceive();if(name==='tap')await refreshTap();if(name==='appearance')await refreshAppearance();if(name==='stickers')await refreshStickers();if(name==='buy-username')await refreshBuyUsername();if(name==='username-market')await refreshMarket();if(name==='change-username')await refreshChangeUsername();if(name==='founder-dashboard'){await refreshFounderDashboard();await refreshFounderPool()}if(name==='leaderboard')await refreshLeaderboard();if(name==='nft-store')await refreshNftStore();if(name==='my-nfts')await refreshMyNfts();if(name==='nft-marketplace')await refreshNftMarketplace();if(name==='nft-auctions')await refreshNftAuctions();window.scrollTo(0,0)}
-async function openPublicNft(instanceId){try{const item=await nftApi('detail',{instance_id:instanceId});await renderNftDetail(item,false)}catch(e){toast(nftErrorMessage(e))}}
-const _aegisOpenPublicProfile=openPublicProfile;
-async function openPublicProfile(userId){await _aegisOpenPublicProfile(userId);try{const nfts=await nftApi('public_nfts',{user_id:userId});const box=document.getElementById('public-profile-content');if(!box)return;const section=document.createElement('div');section.className='public-nft-section';section.innerHTML=`<div class="section-title">NFT</div><div class="nft-grid public-nft-grid">${(nfts||[]).map(item=>{const n=item.catalog||getNft(item.catalog_id);if(!n)return'';const acquired=item.acquired_type==='gift_received'||item.acquired_type==='gift';return `<div class="nft-card" onclick="openPublicNft('${item.id}')"><div class="nft-card-bg ${RARITY_CLASS[n.rarity]||''}"><div class="nft-rarity">${escapeHtml(n.rarity)}</div>${nftImageHtml(n)}<div class="nft-name">${escapeHtml(n.name)}</div><div class="nft-price">${formatAGS(n.price)} AGS</div>${acquired?'<div class="nft-gift-note">Получен в подарок</div>':''}</div></div>`}).join('')}</div>`;if(!(nfts||[]).length)section.innerHTML='<div class="section-title">NFT</div><div class="empty-state">NFT нет</div>';box.appendChild(section)}catch(e){console.warn('public NFT load failed',e)}}
-
 /* ===== ОРИГИНАЛЬНЫЕ ФУНКЦИИ AEGIS (без изменений) ===== */
-async function handleLogin(e){if(e&&e.preventDefault)e.preventDefault();const errBox=document.getElementById('login-error');clearError('login-error');const btn=document.getElementById('btn-login');const un=(document.getElementById('login-username')?.value||'').trim();const pw=document.getElementById('login-password')?.value||'';if(!un||!pw){showError('login-error','Заполните поля');return}if(btn)btn.disabled=true;try{const user=await findUserByUsername(un);if(!user){showError('login-error','Пользователь не найден');return}if(user.password_hash!==hash(pw)){showError('login-error','Неверный пароль');return}nftLoginUsername=un;nftLoginPassword=pw;setSession(user.id);await issueNftSession(un,pw);await completeTask(user.id,'login');await showScreen('main')}catch(err){setSession(null);clearNftSession();const msg=err?.message||String(err)||'Ошибка сети';showError('login-error',msg);console.error('AEGIS login failed',err)}finally{if(btn)btn.disabled=false}}
+async function handleLogin(e){if(e&&e.preventDefault)e.preventDefault();const errBox=document.getElementById('login-error');clearError('login-error');const btn=document.getElementById('btn-login');const un=(document.getElementById('login-username')?.value||'').trim();const pw=document.getElementById('login-password')?.value||'';if(!un||!pw){showError('login-error','Заполните поля');return}if(btn)btn.disabled=true;try{const user=await findUserByUsername(un);if(!user){showError('login-error','Пользователь не найден');return}if(user.password_hash!==hash(pw)){showError('login-error','Неверный пароль');return}setSession(user.id);await completeTask(user.id,'login');await showScreen('main')}catch(err){setSession(null);const msg=err?.message||String(err)||'Ошибка сети';showError('login-error',msg);console.error('AEGIS login failed',err)}finally{if(btn)btn.disabled=false}}
 async function handleRegister(e){if(e&&e.preventDefault)e.preventDefault();clearError('reg-error');const username=document.getElementById('reg-username').value.trim().toLowerCase();const pass=document.getElementById('reg-password').value;const pass2=document.getElementById('reg-password2').value;if(validateUsername(username)){showError('reg-error',validateUsername(username));return}if(pass.length<4){showError('reg-error','Минимум 4 символа');return}if(pass!==pass2){showError('reg-error','Пароли не совпадают');return}try{if(await findUsernameRecord(username)){showError('reg-error','Уже занят');return}if(isSacredUsername(username)){showError('reg-error','Только для Founder');return}const recovery=generateRecoveryCode();const{category}=classifyUsername(username);const{data:newUser,error}=await sb.from('users').insert({username,password_hash:hash(pass),recovery_code_hash:hash(recovery),is_founder:false,level:1,xp:0,custom_frame:'default',custom_avatar_frame:'default',custom_bg:'default',custom_pattern:'none',purchased_customizations:[],stickers:[],hide_balance:false,status_text:''}).select().single();if(error){showError('reg-error','Ошибка: '+error.message);return}await sb.from('wallets').insert({user_id:newUser.id,balance:2000});await sb.from('usernames').insert({user_id:newUser.id,username,is_primary:true,category,history:[{userId:newUser.id,username,date:new Date().toISOString()}]});localStorage.setItem('aegis_temp_user',newUser.id);localStorage.setItem('aegis_temp_recovery',recovery);document.getElementById('recovery-code-display').textContent=recovery;showScreen('recovery-show')}catch(err){showError('reg-error',err?.message||'Ошибка сети');console.error(err)}}
 function copyRecoveryCode(){navigator.clipboard.writeText(document.getElementById('recovery-code-display').textContent).then(()=>toast('Скопировано'))}
-async function finishRegistration(){const id=localStorage.getItem('aegis_temp_user');const recovery=localStorage.getItem('aegis_temp_recovery');if(!id){showScreen('login');return}try{const{data:un}=await sb.from('usernames').select('username').eq('user_id',id).order('is_primary',{ascending:false}).limit(1).maybeSingle();if(un?.username&&recovery){await issueNftRecoverySession(un.username,recovery);setSession(id)}}catch(err){console.warn('NFT session issue after registration failed',err);clearNftSession();setSession(null);toast('Аккаунт создан. Войдите обычным способом, чтобы открыть NFT.');localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');await showScreen('login');return}localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');await showScreen('main')}
+async function finishRegistration(){const id=localStorage.getItem('aegis_temp_user');const recovery=localStorage.getItem('aegis_temp_recovery');if(!id){showScreen('login');return}try{setSession(id)}catch(err){setSession(null);toast('Аккаунт создан. Войдите обычным способом.');localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');await showScreen('login');return}localStorage.removeItem('aegis_temp_user');localStorage.removeItem('aegis_temp_recovery');await showScreen('main')}
 async function handleRecovery(e){if(e&&e.preventDefault)e.preventDefault();clearError('rec-error');try{const user=await findUserByUsername(document.getElementById('rec-username').value.trim());if(!user){showError('rec-error','Не найден');return}if(user.recovery_code_hash!==hash(document.getElementById('rec-code').value.trim())){showError('rec-error','Неверный код');return}const np=document.getElementById('rec-newpass').value;if(np.length<4||np!==document.getElementById('rec-newpass2').value){showError('rec-error','Ошибка пароля');return}await sb.from('users').update({password_hash:hash(np)}).eq('id',user.id);toast('Пароль изменён');showScreen('login')}catch(err){showError('rec-error','Ошибка сети');console.error(err)}}
-function handleLogout(){showModal('Выйти?','Выйти из аккаунта?',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выйти',onClick:()=>{clearNftSession();nftLoginUsername='';nftLoginPassword='';setSession(null);showScreen('login')}}])}
+function handleLogout(){showModal('Выйти?','Выйти из аккаунта?',[{text:'Отмена',outline:true,onClick:()=>{}},{text:'Выйти',onClick:()=>{setSession(null);showScreen('login')}}])}
 async function refreshMain(){const user=await getCurrentUser();if(!user){showScreen('login');return}const wallet=await getUserWallet(user.id);const bal=user.hide_balance?'••••':formatAGS(wallet?wallet.balance:0);document.getElementById('main-balance').textContent=bal;document.getElementById('main-balance-usd').textContent=user.hide_balance?'':'≈ '+formatUSD(wallet?wallet.balance:0);document.getElementById('founder-dashboard-btn').style.display=isFounder(user)?'block':'none';const tasksData=getTodayTasks(user.id);document.getElementById('daily-tasks').innerHTML=tasksData.tasks.map(t=>`<div class="task-item"><div class="task-info"><div class="task-title">${t.title}</div><div class="task-reward">${t.progress}/${t.target} · +${t.reward} AGS</div></div><div>${t.done?'✓':''}</div></div>`).join('');const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false}).limit(30);const myUns=await getUserUsernames(user.id);const myIds=myUns.map(u=>u.id);const myTxs=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id)).slice(0,5);document.getElementById('main-recent-tx').innerHTML=myTxs.length===0?'<div class="empty-state">Нет операций</div>':(await Promise.all(myTxs.map(t=>renderTxItem(t,user.id)))).join('')}
 let searchTimer=null;
 async function handleUserSearch(q){clearTimeout(searchTimer);const clean=q.replace('@','').toLowerCase().trim();const box=document.getElementById('search-results');if(clean.length<2){box.innerHTML='';return}searchTimer=setTimeout(async()=>{const{data:uns}=await sb.from('usernames').select('*').ilike('username',`%${clean}%`).limit(8);if(!uns||!uns.length){box.innerHTML='<div class="empty-state" style="padding:12px 0">Ничего не найдено</div>';return}const html=await Promise.all(uns.map(async u=>{const{data:owner}=await sb.from('users').select('is_founder,level').eq('id',u.user_id).single();return`<div class="search-item"><div><div class="search-item-name">@${u.username} ${owner?.is_founder?'<span class="founder-badge">◆</span>':''}</div><div class="search-item-cat">${u.category} · lvl ${owner?.level||1}</div></div><button class="search-item-btn" onclick="openPublicProfile('${u.user_id}')">Профиль</button></div>`}));box.innerHTML=html.join('')},180)}
@@ -802,7 +673,7 @@ function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'
 async function refreshTransferScreen(){const user=await getCurrentUser();if(!user)return;const uns=await getUserUsernames(user.id);const sel=document.getElementById('tr-from-username');sel.innerHTML=uns.map(u=>`<option value="${u.id}">@${u.username}${u.is_primary?' (основной)':''}</option>`).join('')}
 (function handleDeepLink(){const hash=location.hash||'';if(hash.startsWith('#transfer')){const params=new URLSearchParams(hash.split('?')[1]||'');const to=params.get('to');if(to){setTimeout(()=>{showScreen('transfer');setTimeout(()=>{document.getElementById('tr-to').value='@'+to.replace('@','')},50)},300)}}})();
 if(typeof supabase==='undefined'||typeof createClient==='undefined'){const b=document.getElementById('login-error');if(b){b.textContent='Не удалось загрузить модуль Aegis. Обновите страницу и попробуйте ещё раз.';b.classList.add('show')}}
-(async()=>{try{const user=await getCurrentUser();if(!user){setSession(null);clearNftSession();await showScreen('login');return}if(!getNftSession()){setSession(null);clearNftSession();await showScreen('login');return}await showScreen('main')}catch(err){setSession(null);clearNftSession();const box=document.getElementById('login-error');if(box){box.textContent='Ошибка запуска: '+(err?.message||err);box.classList.add('show')}await showScreen('login')}})();
+(async()=>{try{const user=await getCurrentUser();if(!user){setSession(null);await showScreen('login');return}await showScreen('main')}catch(err){setSession(null);const box=document.getElementById('login-error');if(box){box.textContent='Ошибка запуска: '+(err?.message||err);box.classList.add('show')}await showScreen('login')}})();
 </script>
 </body>
 </html>
