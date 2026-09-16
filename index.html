@@ -56,7 +56,7 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 .card-designs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
 .card-design-btn{min-height:68px;border:1.5px solid #000;border-radius:10px;padding:9px;background:#fff;cursor:pointer;text-align:left;font-family:inherit;touch-action:manipulation;position:relative}
 .card-design-btn.selected{box-shadow:inset 0 0 0 2px #000}
-.card-design-name{font-size:13px;font-weight:800;display:block}
+.card-design-icon{float:right;font-size:20px;line-height:1}.card-design-name{font-size:13px;font-weight:800;display:block}
 .card-design-price{font-size:11px;color:#666;margin-top:4px;display:block}
 .card-design-btn.owned .card-design-price{color:#16844a}
 .card-design-btn.locked{opacity:.72}
@@ -91,7 +91,7 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 .virtual-card-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:22px}
 .virtual-card-owner{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
 .virtual-card-cvv-label{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
-.virtual-card-cvv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:2px}
+.virtual-card-cvv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:2px;background:transparent;border:0;padding:0;margin:0;color:inherit;cursor:pointer;appearance:none;-webkit-appearance:none}
 .card-loading{text-align:center;padding:30px 10px;color:#666;font-size:14px}
 
 .balance-label{font-size:12px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
@@ -320,7 +320,6 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 
 </div>
 <div class="actions-grid">
-<button class="action-btn" onclick="showScreen('topup')">Пополнить</button>
 <button class="action-btn" onclick="showScreen('transfer')">Перевести</button>
 <button class="action-btn" onclick="showScreen('receive')">Получить</button>
 <button class="action-btn" onclick="showScreen('tap')">Tap AGS</button>
@@ -403,11 +402,6 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 <div id="qr-container" style="width:180px;height:180px;margin:16px auto;border:1.5px solid #000;display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden;background:#fff"></div>
 <div style="text-align:center;font-size:22px;font-weight:700;margin:12px 0" id="receive-username"></div>
 <button class="btn btn-outline btn-full" onclick="copyReceiveUsername()">Скопировать</button>
-</div>
-<div id="screen-topup" class="screen">
-<button class="back-btn" onclick="showScreen('main')">Назад</button>
-<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Пополнение</h2>
-<div class="empty-state">Пополнение скоро появится</div>
 </div>
 <div id="screen-history" class="screen">
 <h2 style="font-size:20px;font-weight:700;margin-bottom:12px">История</h2>
@@ -741,6 +735,7 @@ const cardAccent={black:'#fff',blue:'#fff',red:'#fff',purple:'#fff',green:'#fff'
 const key='aegis_card_design_'+user.id;
 const ownedKey='aegis_owned_cards_'+user.id;
 let selected=localStorage.getItem(key)||'black';
+try{if(user.card_design&&designs.some(d=>d.id===user.card_design))selected=user.card_design}catch(e){}
 let owned=[];try{owned=JSON.parse(localStorage.getItem(ownedKey)||'[]')}catch(e){owned=[]}const dbOwned=Array.isArray(user.purchased_customizations)?user.purchased_customizations.filter(k=>String(k).startsWith('card-')).map(k=>String(k).slice(5)):[];owned=Array.from(new Set([...owned,...dbOwned]));
 const freeDesigns=['black','blue','red','purple','green','gold','white'];
 freeDesigns.forEach(id=>{if(!owned.includes(id))owned.push(id)});
@@ -773,7 +768,7 @@ if(colorBox){
 colorBox.innerHTML=designs.map(d=>{
 const isOwned=owned.includes(d.id),isSelected=d.id===selected;
 return `<button class="card-design-btn ${isSelected?'selected ':''}${isOwned?'owned':'locked'}" onclick="${isOwned?`setCardDesign('${d.id}')`:`buyCardDesign('${d.id}')`}">
-<span class="card-design-name">${escapeHtml(d.name)}</span>
+<span class="card-design-icon" style="color:${cardAccent[d.id]||'#111'}">✦</span><span class="card-design-name">${escapeHtml(d.name)}</span>
 <span class="card-design-price">${d.price===0?'Бесплатно':(isOwned?'Куплено':d.price.toLocaleString('ru-RU')+' AGS')}</span></button>`;
 }).join('');
 }
@@ -795,9 +790,11 @@ const accents={luxe:'#e7c86e',cola:'#b91422',market:'#f6f1dc',iron:'#8b9298',dia
 btn.style.background=accents[id]||'#000';btn.style.color=(id==='market'||id==='diamond'||id==='luxe')?'#111':'#fff';btn.style.borderColor=(id==='market'||id==='diamond'||id==='luxe')?accents[id]||'#111':'#000';
 }
 }
-function setCardDesign(design){
-const user=getSessionId();if(!user)return;
-localStorage.setItem('aegis_card_design_'+user,design);refreshVirtualCard();syncMainCardTrigger();
+async function setCardDesign(design){
+const user=await getCurrentUser();if(!user)return;
+localStorage.setItem('aegis_card_design_'+user.id,design);
+try{const latest=(await sb.from('users').select('purchased_customizations').eq('id',user.id).single()).data?.purchased_customizations||[];if(!latest.includes('card-'+design)&&!['black','blue','red','purple','green','gold','white'].includes(design)){await sb.from('users').update({purchased_customizations:[...latest,'card-'+design]}).eq('id',user.id)}}catch(e){}
+syncMainCardTrigger();refreshVirtualCard();
 }
 async function buyCardDesign(designId){
 const user=await getCurrentUser();if(!user)return;
@@ -809,7 +806,7 @@ const w=await getUserWallet(user.id);if(!w){toast('Кошелёк не найд�
 const balance=Number(w.balance||0);if(balance<price){toast(`Недостаточно AGS. Нужно ${price.toLocaleString('ru-RU')} AGS`);return;}
 const up=await sb.from('wallets').update({balance:balance-price}).eq('id',w.id).eq('balance',balance);
 if(up.error){toast('Не удалось купить дизайн');return;}
-owned.push(designId);localStorage.setItem(ownedKey,JSON.stringify(owned));localStorage.setItem('aegis_card_design_'+user.id,designId);const latest=(await sb.from('users').select('purchased_customizations').eq('id',user.id).single()).data?.purchased_customizations||[];await sb.from('users').update({purchased_customizations:Array.from(new Set([...latest,'card-'+designId]))}).eq('id',user.id);toast(`Дизайн куплен за ${price.toLocaleString('ru-RU')} AGS`);refreshVirtualCard();
+owned.push(designId);localStorage.setItem(ownedKey,JSON.stringify(Array.from(new Set(owned))));localStorage.setItem('aegis_card_design_'+user.id,designId);const latest=(await sb.from('users').select('purchased_customizations').eq('id',user.id).single()).data?.purchased_customizations||[];await sb.from('users').update({purchased_customizations:Array.from(new Set([...latest,'card-'+designId]))}).eq('id',user.id);toast(`Дизайн куплен за ${price.toLocaleString('ru-RU')} AGS`);refreshVirtualCard();
 }
 
 async function showScreen(name){
@@ -908,7 +905,7 @@ function pinInput(d){if(window.pinBuffer.length>=6)return;window.pinBuffer+=d;up
 function pinDelete(){window.pinBuffer=window.pinBuffer.slice(0,-1);updatePinDisplay()}
 function updatePinDisplay(){document.querySelectorAll('#pin-display .pin-dot').forEach((d,i)=>d.classList.toggle('filled',i<window.pinBuffer.length))}
 async function validatePin(){const user=await getCurrentUser();if(user.pin_hash!==hash(window.pinBuffer)){window.pinAttempts=(window.pinAttempts||0)+1;if(window.pinAttempts>=5){showError('pin-error','PIN заблокирован');setTimeout(()=>showScreen('main'),1500);return}showError('pin-error',`Неверный PIN (${5-window.pinAttempts})`);window.pinBuffer='';updatePinDisplay();return}if(window.pinMode==='transfer')startTransferCountdown()}
-async function refreshReceive(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const uname='@'+(primary?.username||'');document.getElementById('receive-username').textContent=uname;const cont=document.getElementById('qr-container');cont.innerHTML='';const deepLink=location.origin+location.pathname+'#transfer?to='+encodeURIComponent(primary?.username||'');try{if(typeof QRCode!=='undefined'){new QRCode(cont,{text:deepLink,width:168,height:168,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}else{const link=document.createElement('a');link.href=deepLink;link.textContent='Открыть перевод';link.style.fontWeight='700';cont.appendChild(link)}}catch(e){cont.innerHTML='<div style="font-size:12px;color:#666;text-align:center;padding:20px">QR недоступен</div>'}}
+async function refreshReceive(){const user=await getCurrentUser();if(!user)return;const primary=await getPrimaryUsername(user.id);const uname='@'+(primary?.username||'');document.getElementById('receive-username').textContent=uname;const cont=document.getElementById('qr-container');cont.innerHTML='';const base=location.origin+location.pathname;const deepLink=base+'?qr=1&to='+encodeURIComponent(primary?.username||'');try{if(typeof QRCode!=='undefined'){new QRCode(cont,{text:deepLink,width:168,height:168,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}else{const link=document.createElement('a');link.href=deepLink;link.textContent='Открыть перевод';link.style.fontWeight='700';cont.appendChild(link)}}catch(e){cont.innerHTML='<div style="font-size:12px;color:#666;text-align:center;padding:20px">QR недоступен</div>'}}
 function copyReceiveUsername(){const t=document.getElementById('receive-username').textContent;if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('Скопировано')).catch(()=>toast(t));else toast(t)}
 let historyFilter='all';
 async function refreshHistory(){const user=await getCurrentUser();const{data:txs}=await sb.from('transactions').select('*').order('created_at',{ascending:false});const myIds=(await getUserUsernames(user.id)).map(u=>u.id);let list=(txs||[]).filter(t=>myIds.includes(t.sender_username_id)||myIds.includes(t.receiver_username_id));if(historyFilter==='in')list=list.filter(t=>myIds.includes(t.receiver_username_id));if(historyFilter==='out')list=list.filter(t=>myIds.includes(t.sender_username_id));document.getElementById('history-list').innerHTML=list.length?(await Promise.all(list.map(t=>renderTxItem(t,user.id)))).join(''):'<div class="empty-state">Нет операций</div>'}
@@ -973,8 +970,10 @@ async function refreshTap(){
     const earnedEl=document.getElementById('tap-earned');
     const limitEl=document.getElementById('tap-limit-display');
     const rewardEl=document.getElementById('tap-reward-text');
-    if(countEl)countEl.textContent=count.toLocaleString('ru-RU');
-    if(earnedEl)earnedEl.textContent=(count*reward).toLocaleString('ru-RU');
+    const displayCount=Math.max(count,Number(tapDisplayCount||0));
+    if(countEl)countEl.textContent=displayCount.toLocaleString('ru-RU');
+    if(earnedEl)earnedEl.textContent=(displayCount*reward).toLocaleString('ru-RU');
+    if(tapQueue<=0)tapDisplayCount=count;
     if(limitEl)limitEl.textContent=founder?'(∞)':'/ 10000';
     if(rewardEl)rewardEl.textContent=founder?'1 нажатие = +53 AGS (Founder)':'1 нажатие = +2 AGS';
     const btn=document.getElementById('tap-btn');
@@ -1067,8 +1066,8 @@ async function founderDepositPool(){const user=await getCurrentUser();if(!isFoun
 function showConvertModal(){getCurrentUser().then(async user=>{await refreshAGSPrice();const wallet=await getUserWallet(user.id);const ags=wallet?Number(wallet.balance):0;const usd=ags*agsMarket.price;const eur=usd*0.92;const rub=usd*92;showModal('Конвертация',`<div style="text-align:center;font-size:28px;font-weight:800;margin-bottom:12px">${formatAGS(ags)} AGS</div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>USD</span><strong>~$${usd.toFixed(2)}</strong></div><div style="border:1.5px solid #000;padding:10px;margin-bottom:6px;border-radius:6px;display:flex;justify-content:space-between"><span>EUR</span><strong>~€${eur.toFixed(2)}</strong></div><div style="border:1.5px solid #000;padding:10px;border-radius:6px;display:flex;justify-content:space-between"><span>RUB</span><strong>~₽${rub.toFixed(0)}</strong></div><div class="hint" style="margin-top:10px;text-align:center">Курс AGS плавающий и рассчитывается по активности сети.</div>`,[{text:'Закрыть',onClick:()=>{}}])})}
 function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 async function refreshTransferScreen(){const user=await getCurrentUser();if(!user)return;const uns=await getUserUsernames(user.id);const sel=document.getElementById('tr-from-username');sel.innerHTML=uns.map(u=>`<option value="${u.id}">@${u.username}${u.is_primary?' (основной)':''}</option>`).join('')}
-async function consumeQrTransfer(){const to=localStorage.getItem('aegis_pending_qr_to');if(!to)return false;localStorage.removeItem('aegis_pending_qr_to');await showScreen('transfer');setTimeout(()=>{const el=document.getElementById('tr-to');if(el)el.value='@'+to.replace('@','')},80);return true}
-(function handleDeepLink(){const hash=location.hash||'';if(hash.startsWith('#transfer')){const params=new URLSearchParams(hash.split('?')[1]||'');const to=params.get('to');if(to){localStorage.setItem('aegis_pending_qr_to',to);history.replaceState(null,'',location.pathname+location.search);setTimeout(async()=>{const user=await getCurrentUser();if(user)await consumeQrTransfer();else await showScreen('login')},100)}}})();
+async function consumeQrTransfer(){const to=localStorage.getItem('aegis_pending_qr_to');if(!to)return false;localStorage.removeItem('aegis_pending_qr_to');await showScreen('transfer');setTransferMode('username');const el=document.getElementById('tr-to');if(el)el.value='@'+to.replace('@','');return true}
+(function handleDeepLink(){const params=new URLSearchParams(location.search||'');let to=params.get('to');const hash=location.hash||'';if(!to&&hash.startsWith('#transfer')){to=new URLSearchParams(hash.split('?')[1]||'').get('to')}if(params.get('qr')==='1'&&to||hash.startsWith('#transfer')&&to){localStorage.setItem('aegis_pending_qr_to',String(to).replace('@',''));history.replaceState(null,'',location.pathname+location.hash.replace(/^#transfer.*$/,''));setTimeout(async()=>{const user=await getCurrentUser();if(user)await consumeQrTransfer();else await showScreen('login')},0)}})();
 if(typeof supabase==='undefined'||typeof createClient==='undefined'){const b=document.getElementById('login-error');if(b){b.textContent='Не удалось загрузить модуль Aegis. Обновите страницу и попробуйте ещё раз.';b.classList.add('show')}}
 (async()=>{try{const user=await getCurrentUser();if(!user){setSession(null);await showScreen('login');return}if(!(await consumeQrTransfer()))await showScreen('main')}catch(err){setSession(null);const box=document.getElementById('login-error');if(box){box.textContent='Ошибка запуска: '+(err?.message||err);box.classList.add('show')}await showScreen('login')}})();
 </script>
