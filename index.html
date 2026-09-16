@@ -768,7 +768,7 @@ if(colorBox){
 colorBox.innerHTML=designs.map(d=>{
 const isOwned=owned.includes(d.id),isSelected=d.id===selected;
 return `<button class="card-design-btn ${isSelected?'selected ':''}${isOwned?'owned':'locked'}" onclick="${isOwned?`setCardDesign('${d.id}')`:`buyCardDesign('${d.id}')`}">
-<span class="card-design-icon" style="color:${cardAccent[d.id]||'#111'}">✦</span><span class="card-design-name">${escapeHtml(d.name)}</span>
+<span class="card-design-name">${escapeHtml(d.name)}</span>
 <span class="card-design-price">${d.price===0?'Бесплатно':(isOwned?'Куплено':d.price.toLocaleString('ru-RU')+' AGS')}</span></button>`;
 }).join('');
 }
