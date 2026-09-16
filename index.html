@@ -35,6 +35,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .link{text-align:center;margin-top:16px;font-size:14px}
 .link a{color:#000;text-decoration:underline;cursor:pointer}
 .balance-section{text-align:center;padding:20px 0 16px;border-bottom:1.5px solid #000;margin-bottom:14px}
+.virtual-card-trigger{margin-top:10px;display:inline-flex;align-items:center;justify-content:center;width:34px;height:22px;background:#000;color:#fff;border:none;border-radius:4px;cursor:pointer;touch-action:manipulation;-webkit-appearance:none;appearance:none}
+.virtual-card-trigger::before{content:'$';font-size:12px;font-weight:800;line-height:1}
+.virtual-card-trigger:active{transform:scale(.94)}
+.card-page{padding-top:8px}
+.virtual-card{background:#000;color:#fff;border-radius:18px;padding:22px 20px 18px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.virtual-card-top{display:flex;justify-content:flex-end}
+.virtual-card-logo{width:42px;height:42px;border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:700}
+.virtual-card-number{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:21px;letter-spacing:1.7px;white-space:nowrap;margin-top:18px}
+.virtual-card-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:22px}
+.virtual-card-owner{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+.virtual-card-cvv-label{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.virtual-card-cvv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:2px}
+.card-loading{text-align:center;padding:30px 10px;color:#666;font-size:14px}
+
 .balance-label{font-size:12px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
 .balance-amount{font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1}
 .balance-currency{font-size:18px;color:#666;margin-left:4px;font-weight:600}
@@ -243,6 +257,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div><span class="balance-amount" id="main-balance">0</span><span class="balance-currency">AGS</span></div>
 <div class="balance-usd" id="main-balance-usd">≈ $0.00</div>
 <button class="balance-convert-btn" onclick="showConvertModal()">Конвертировать</button>
+<button class="virtual-card-trigger" aria-label="Открыть виртуальную карту" onclick="showScreen('card')"></button>
 </div>
 <div class="actions-grid">
 <button class="action-btn" onclick="showScreen('topup')">Пополнить</button>
@@ -261,6 +276,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 <div id="daily-tasks"></div>
 <div class="section-title" style="margin-top:14px">Последние операции</div>
 <div id="main-recent-tx"></div>
+</div>
+<div id="screen-card" class="screen card-page">
+<button class="back-btn" onclick="showScreen('main')">Назад</button>
+<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Виртуальная карта</h2>
+<div id="virtual-card-container"><div class="card-loading">Загрузка карты…</div></div>
 </div>
 <div id="screen-leaderboard" class="screen">
 <button class="back-btn" onclick="showScreen('main')">Назад</button>
@@ -558,6 +578,34 @@ async function addXP(userId,amount){const{data:u}=await sb.from('users').select(
 function getTodayTasks(userId){const key=new Date().toDateString();let data=JSON.parse(localStorage.getItem('aegis_daily_tasks')||'{}');const current=data[userId];const bad=current&&current.date===key&&Array.isArray(current.tasks)&&current.tasks.some(t=>/[?]{2,}|[.]{4,}|[•·…]{2,}/.test(String(t.title||'')));if(!current||current.date!==key||bad){data[userId]={date:key,tasks:[{id:'transfer',title:'Сделать 1 перевод',progress:0,target:1,reward:80,done:false},{id:'tap',title:'Сделать 20 тапов',progress:0,target:20,reward:60,done:false},{id:'login',title:'Зайти в приложение',progress:1,target:1,reward:30,done:false}]};localStorage.setItem('aegis_daily_tasks',JSON.stringify(data))}return data[userId]}
 async function completeTask(userId,taskId,amount=1){const data=JSON.parse(localStorage.getItem('aegis_daily_tasks')||'{}');const today=getTodayTasks(userId);const task=today.tasks.find(t=>t.id===taskId);if(!task||task.done)return;task.progress=Math.min(task.target,task.progress+amount);if(task.progress>=task.target){task.done=true;const w=await getUserWallet(userId);if(w)await sb.from('wallets').update({balance:Number(w.balance)+task.reward}).eq('id',w.id);await addXP(userId,20);toast(`Задание выполнено! +${task.reward} AGS`)}data[userId]=today;localStorage.setItem('aegis_daily_tasks',JSON.stringify(data))}
 const navScreens=['main','transfer','history','profile'];
+async function refreshVirtualCard(){
+const user=await getCurrentUser();
+if(!user){showScreen('login');return}
+const container=document.getElementById('virtual-card-container');
+if(!container)return;
+container.innerHTML='<div class="card-loading">Загрузка карты…</div>';
+try{
+const primary=await getPrimaryUsername(user.id);
+const {data,error}=await sb.rpc('get_or_create_virtual_card',{p_user_id:user.id});
+if(error)throw error;
+const card=Array.isArray(data)?data[0]:data;
+if(!card?.card_number||!card?.cvv)throw new Error('Карта не получена');
+const number=String(card.card_number).replace(/\D/g,'').padStart(16,'0').slice(0,16);
+const formatted=number.replace(/(.{4})/g,'$1 ').trim();
+const owner='@'+(primary?.username||'?');
+container.innerHTML=`<div class="virtual-card">
+<div class="virtual-card-top"><div class="virtual-card-logo">$</div></div>
+<div class="virtual-card-number">${formatted}</div>
+<div class="virtual-card-bottom">
+<div class="virtual-card-owner">${escapeHtml(owner)}</div>
+<div><div class="virtual-card-cvv-label">CVV</div><div class="virtual-card-cvv">${escapeHtml(String(card.cvv))}</div></div>
+</div>
+</div>`;
+}catch(err){
+console.error(err);
+container.innerHTML='<div class="card-loading">Не удалось загрузить карту</div>';
+}
+}
 async function showScreen(name){
 document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
 document.getElementById('screen-'+name).classList.add('active');
@@ -570,6 +618,7 @@ if(name==='profile')await refreshProfile();
 if(name==='transfer'){await refreshTransferScreen();document.getElementById('tr-to').value='@';}
 if(name==='receive')await refreshReceive();
 if(name==='tap')await refreshTap();
+if(name==='card')await refreshVirtualCard();
 if(name==='appearance')await refreshAppearance();
 if(name==='stickers')await refreshStickers();
 if(name==='buy-username')await refreshBuyUsername();
