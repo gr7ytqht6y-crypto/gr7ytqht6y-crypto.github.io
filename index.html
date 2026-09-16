@@ -91,7 +91,8 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 .virtual-card-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:22px}
 .virtual-card-owner{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
 .virtual-card-cvv-label{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
-.virtual-card-cvv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:2px}
+.virtual-card-cvv{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;font-weight:700;letter-spacing:2px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.virtual-card-cvv.hidden{letter-spacing:3px}
 .card-loading{text-align:center;padding:30px 10px;color:#666;font-size:14px}
 
 .balance-label{font-size:12px;color:#666;margin-bottom:5px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
@@ -320,7 +321,6 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 
 </div>
 <div class="actions-grid">
-<button class="action-btn" onclick="showScreen('topup')">Пополнить</button>
 <button class="action-btn" onclick="showScreen('transfer')">Перевести</button>
 <button class="action-btn" onclick="showScreen('receive')">Получить</button>
 <button class="action-btn" onclick="showScreen('tap')">Tap AGS</button>
@@ -368,7 +368,13 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 <h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Перевод</h2>
 <form class="form" onsubmit="handleTransferPreview(event)">
 <div class="input-group"><label>Отправить от</label><select id="tr-from-username"></select></div>
-<div class="input-group"><label>Кому</label><input type="text" id="tr-to" placeholder="@username" required></div>
+<div class="input-group"><label>Кому</label>
+<div style="display:flex;gap:8px;margin-bottom:8px">
+<button type="button" class="filter-chip active" id="tr-mode-username" onclick="setTransferMode('username')">Username</button>
+<button type="button" class="filter-chip" id="tr-mode-card" onclick="setTransferMode('card')">Номер карты</button>
+</div>
+<input type="text" id="tr-to" placeholder="@username" required>
+</div>
 <div class="input-group"><label>Сумма</label><input type="number" id="tr-amount" min="50" step="1" required><div class="hint">Минимум 50 AGS</div></div>
 <div class="hint" style="margin-top:-4px">Комиссия 4% применяется только при переводе от 1 000 AGS. Для Founder комиссия не взимается.</div>
 <div class="input-group"><label>Комментарий</label><input type="text" id="tr-comment"></div>
@@ -403,11 +409,6 @@ body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bot
 <div id="qr-container" style="width:180px;height:180px;margin:16px auto;border:1.5px solid #000;display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden;background:#fff"></div>
 <div style="text-align:center;font-size:22px;font-weight:700;margin:12px 0" id="receive-username"></div>
 <button class="btn btn-outline btn-full" onclick="copyReceiveUsername()">Скопировать</button>
-</div>
-<div id="screen-topup" class="screen">
-<button class="back-btn" onclick="showScreen('main')">Назад</button>
-<h2 style="font-size:20px;font-weight:700;margin-bottom:14px">Пополнение</h2>
-<div class="empty-state">Пополнение скоро появится</div>
 </div>
 <div id="screen-history" class="screen">
 <h2 style="font-size:20px;font-weight:700;margin-bottom:12px">История</h2>
@@ -762,7 +763,7 @@ container.innerHTML=`<div class="virtual-card starred ${theme.theme}" style="--c
 <div class="virtual-card-number">${formatted}</div>
 <div class="virtual-card-bottom">
 <div class="virtual-card-owner">${escapeHtml(owner)}</div>
-<div><div class="virtual-card-cvv-label" style="color:inherit;opacity:.65">CVV</div><div class="virtual-card-cvv">${escapeHtml(String(card.cvv))}</div></div>
+<div><div class="virtual-card-cvv-label" style="color:inherit;opacity:.65">CVV</div><div class="virtual-card-cvv" id="card-cvv-value" onclick="toggleCardCvv(this,'${escapeHtml(String(card.cvv))}')" title="Нажмите, чтобы скрыть/показать">${escapeHtml(String(card.cvv))}</div></div>
 </div></div>`;
 const colorBox=document.getElementById('card-colors');
 if(colorBox){
@@ -776,6 +777,7 @@ return `<button class="card-design-btn ${isSelected?'selected ':''}${isOwned?'ow
 localStorage.setItem(ownedKey,JSON.stringify(owned));
 }catch(err){console.error(err);container.innerHTML='<div class="card-loading">Не удалось загрузить карту</div>';}
 }
+function toggleCardCvv(el,value){if(!el)return;const hidden=el.dataset.hidden==='1';if(hidden){el.textContent=value;el.dataset.hidden='0'}else{el.textContent='•••';el.dataset.hidden='1'}}
 function syncMainCardTrigger(){
 const btn=document.querySelector('.virtual-card-trigger');
 if(!btn)return;
@@ -817,7 +819,7 @@ document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active',n.
 if(name==='main')await refreshMain();
 if(name==='history')await refreshHistory();
 if(name==='profile')await refreshProfile();
-if(name==='transfer'){await refreshTransferScreen();document.getElementById('tr-to').value='@';}
+if(name==='transfer'){await refreshTransferScreen();setTransferMode('username');document.getElementById('tr-to').value='';}
 if(name==='receive')await refreshReceive();
 if(name==='tap')await refreshTap();
 if(name==='card')await refreshVirtualCard();
@@ -844,11 +846,15 @@ async function refreshMain(){const user=await getCurrentUser();if(!user){showScr
 let searchTimer=null;
 async function handleUserSearch(q){clearTimeout(searchTimer);const clean=q.replace('@','').toLowerCase().trim();const box=document.getElementById('search-results');if(clean.length<2){box.innerHTML='';return}searchTimer=setTimeout(async()=>{const{data:uns}=await sb.from('usernames').select('*').ilike('username',`%${clean}%`).limit(8);if(!uns||!uns.length){box.innerHTML='<div class="empty-state" style="padding:12px 0">Ничего не найдено</div>';return}const html=await Promise.all(uns.map(async u=>{const{data:owner}=await sb.from('users').select('is_founder,level').eq('id',u.user_id).single();return`<div class="search-item"><div><div class="search-item-name">@${u.username} ${owner?.is_founder?'<span class="founder-badge">◆</span>':''}</div><div class="search-item-cat">${u.category} · lvl ${owner?.level||1}</div></div><button class="search-item-btn" onclick="openPublicProfile('${u.user_id}')">Профиль</button></div>`}));box.innerHTML=html.join('')},180)}
 async function openPublicProfile(userId){const{data:user}=await sb.from('users').select('*').eq('id',userId).single();if(!user)return;const primary=await getPrimaryUsername(userId);const alts=(await getUserUsernames(userId)).filter(u=>!u.is_primary);const frame=CUSTOMIZATION_OPTIONS.frames.find(f=>f.id===(user.custom_frame||'default'));const bg=CUSTOMIZATION_OPTIONS.bgs.find(b=>b.id===(user.custom_bg||'default'));const pattern=CUSTOMIZATION_OPTIONS.patterns.find(p=>p.id===(user.custom_pattern||'none'));const isDark=['black','blue','red','purple','pink','green','orange','graphite','navy','yellow','light-blue'].includes(user.custom_bg)||user.is_founder;let classes=`profile-header ${frame?.class||''} ${bg?.class||''} ${pattern?.class||''}`;if(isDark)classes+=' dark-mode';if(user.is_founder)classes+=' founder';const stickersHtml=(user.stickers||[]).map(s=>`<div class="sticker" style="left:${s.x}%;top:${s.y}%;transform:rotate(${s.rotate||0}deg)">${s.emoji}</div>`).join('');document.getElementById('public-profile-content').innerHTML=`<div class="${classes}" style="position:relative">${stickersHtml}<div class="avatar-wrapper ${CUSTOMIZATION_OPTIONS.avatarFrames.find(f=>f.id===(user.custom_avatar_frame||'default'))?.class||''}">${user.avatar?`<img src="${escapeHtml(user.avatar)}">`:'<div class="avatar-placeholder">👤</div>'}</div><div class="profile-username">@${escapeHtml(primary?.username||'?')}</div><div class="profile-meta"><span class="lvl-badge">lvl ${user.level||1}</span>${user.is_founder?'<span class="founder-badge">◆ FOUNDER</span>':''}</div>${user.status_text?`<div class="profile-status">${escapeHtml(user.status_text)}</div>`:''}${alts.length?`<div class="profile-alt-usernames">${alts.map(a=>`<span class="alt-un-badge">@${escapeHtml(a.username)}</span>`).join('')}</div>`:''}<div class="profile-date">В Aegis с ${new Date(user.created_at).toLocaleDateString('ru')}</div></div><button class="btn btn-full" onclick="quickTransferTo('${escapeHtml(primary?.username||'')}')">Перевести</button>`;showScreen('public-profile')}
-function quickTransferTo(username){showScreen('transfer');setTimeout(()=>{document.getElementById('tr-to').value='@'+username},40)}
+function quickTransferTo(username){showScreen('transfer');setTimeout(()=>{setTransferMode('username');document.getElementById('tr-to').value='@'+username},40)}
 function founderBadgeHtml(u){return isFounder(u)?'<span class="founder-badge">◆ FOUNDER</span>':''}
 async function renderTxItem(tx,uid){const{data:sUn}=await sb.from('usernames').select('*').eq('id',tx.sender_username_id).maybeSingle();const{data:rUn}=await sb.from('usernames').select('*').eq('id',tx.receiver_username_id).maybeSingle();if(!sUn||!rUn)return'';const myUns=await getUserUsernames(uid);const isOut=myUns.some(u=>u.id===sUn.id);const other=isOut?rUn:sUn;const{data:otherUser}=await sb.from('users').select('is_founder').eq('id',other.user_id).single();return`<div class="tx-item" onclick="showTxDetail('${tx.id}')"><div class="tx-info"><div class="tx-title">${isOut?'Перевод ':'Получение от '}@${other.username} ${founderBadgeHtml(otherUser)}</div><div class="tx-sub">${formatDate(tx.created_at)}</div></div><div class="tx-amount ${isOut?'negative':'positive'}">${isOut?'−':'+'}${formatAGS(tx.amount)} AGS</div></div>`}
+let transferMode='username';
+function setTransferMode(mode){transferMode=mode==='card'?'card':'username';const input=document.getElementById('tr-to');if(input){input.placeholder=transferMode==='card'?'16-значный номер карты':'@username';input.value=''}document.getElementById('tr-mode-username')?.classList.toggle('active',transferMode==='username');document.getElementById('tr-mode-card')?.classList.toggle('active',transferMode==='card')}
+async function findUserByCardNumber(cardNumber){const clean=String(cardNumber||'').replace(/\D/g,'');if(clean.length!==16)return null;const {data,error}=await sb.rpc('get_user_by_card_number',{p_card_number:clean});if(error){console.error(error);return null}return Array.isArray(data)?data[0]:data}
 let pendingTransfer=null;
-async function handleTransferPreview(e){e.preventDefault();clearError('tr-error');const user=await getCurrentUser();if(!user)return;const toRaw=document.getElementById('tr-to').value.trim();const amount=parseInt(document.getElementById('tr-amount').value);const comment=document.getElementById('tr-comment').value.trim();if(!toRaw||!amount||amount<50){showError('tr-error','Минимум 50 AGS');return}const toUn=await findUsernameRecord(toRaw);if(!toUn){showError('tr-error','Пользователь не найден');return}const fromUnId=document.getElementById('tr-from-username').value;const fromUn=await sb.from('usernames').select('*').eq('id',fromUnId).single();if(!fromUn.data||fromUn.data.user_id!==user.id){showError('tr-error','Неверный отправитель');return}if(toUn.user_id===user.id){showError('tr-error','Нельзя переводить себе');return}const wallet=await getUserWallet(user.id);let fee=0;if(amount>=1000&&!isFounder(user))fee=Math.floor(amount*0.04);if(Number(wallet.balance)<amount+fee){showError('tr-error','Недостаточно средств');return}pendingTransfer={fromUnId,toUnId:toUn.id,amount,fee,comment};document.getElementById('tc-summary').innerHTML=`<div class="summary-row"><span class="label">Кому</span><span>@${toUn.username}</span></div><div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(amount)} AGS</span></div><div class="summary-row"><span class="label">Комиссия</span><span>${formatAGS(fee)} AGS</span></div><div class="summary-row total"><span class="label">Итого</span><span>${formatAGS(amount+fee)} AGS</span></div>`;showScreen('transfer-confirm')}
+async function handleTransferPreview(e){e.preventDefault();clearError('tr-error');const user=await getCurrentUser();if(!user)return;const toRaw=document.getElementById('tr-to').value.trim();const amount=parseInt(document.getElementById('tr-amount').value);const comment=document.getElementById('tr-comment').value.trim();if(!toRaw||!amount||amount<50){showError('tr-error','Минимум 50 AGS');return}let toUn=null;if(transferMode==='card'){const recipient=await findUserByCardNumber(toRaw);if(!recipient?.user_id){showError('tr-error','Карта не найдена');return}const primary=await getPrimaryUsername(recipient.user_id);if(!primary){showError('tr-error','У получателя нет username');return}toUn={id:primary.id,user_id:recipient.user_id,username:primary.username}}else{toUn=await findUsernameRecord(toRaw);if(!toUn){showError('tr-error','Пользователь не найден');return}}const fromUnId=document.getElementById('tr-from-username').value;const fromUn=await sb.from('usernames').select('*').eq('id',fromUnId).single();if(!fromUn.data||fromUn.data.user_id!==user.id){showError('tr-error','Неверный отправитель');return}if(toUn.user_id===user.id){showError('tr-error','Нельзя переводить себе');return}const wallet=await getUserWallet(user.id);let fee=0;if(amount>=1000&&!isFounder(user))fee=Math.floor(amount*0.04);if(!wallet||Number(wallet.balance)<amount+fee){showError('tr-error','Недостаточно средств');return}pendingTransfer={fromUnId,toUnId:toUn.id,amount,fee,comment};document.getElementById('tc-summary').innerHTML=`<div class="summary-row"><span class="label">Кому</span><span>@${toUn.username}</span></div><div class="summary-row"><span class="label">Сумма</span><span>${formatAGS(amount)} AGS</span></div><div class="summary-row"><span class="label">Комиссия</span><span>${formatAGS(fee)} AGS</span></div><div class="summary-row total"><span class="label">Итого</span><span>${formatAGS(amount+fee)} AGS</span></div>`;showScreen('transfer-confirm')}
+
 let transferCancelTimer=null,transferCountdownTimer=null;
 function cancelPendingTransfer(){if(transferCancelTimer){clearTimeout(transferCancelTimer);transferCancelTimer=null}if(transferCountdownTimer){clearInterval(transferCountdownTimer);transferCountdownTimer=null}pendingTransfer=null;hideModal();toast('Перевод отменён')}
 function startTransferCountdown(){if(!pendingTransfer)return;if(transferCancelTimer)clearTimeout(transferCancelTimer);if(transferCountdownTimer)clearInterval(transferCountdownTimer);let left=5;showModal('Перевод подготовлен',`<div style="text-align:center"><div style="font-size:28px;font-weight:800" id="transfer-countdown">${left}</div><div style="margin-top:6px;color:#666">Перевод будет выполнен через 5 секунд</div></div>`,[{text:'Отменить перевод',outline:true,onClick:cancelPendingTransfer}]);transferCountdownTimer=setInterval(()=>{left--;const el=document.getElementById('transfer-countdown');if(el)el.textContent=left;if(left<=0){clearInterval(transferCountdownTimer);transferCountdownTimer=null}},1000);transferCancelTimer=setTimeout(async()=>{transferCancelTimer=null;hideModal();await executeTransfer()},5000)}
