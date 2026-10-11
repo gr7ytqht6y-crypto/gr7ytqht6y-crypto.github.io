@@ -1,67 +1,483 @@
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#09090b">
-<title>Aegis — цифровое пространство</title>
-<meta name="description" content="Aegis — профиль, виртуальный кошелёк и социальное пространство.">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aegis Social</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js"></script>
 <style>
-:root{color-scheme:dark;--bg:#09090b;--panel:#111114;--panel2:#17171b;--line:#29292f;--text:#f5f5f7;--muted:#92929d;--accent:#d4d4d8;--danger:#a1a1aa;--ok:#d4d4d8;--r:20px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#27272a 0%,transparent 58%),var(--bg);color:var(--text);font:15px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.wrap{width:min(1120px,100% - 32px);margin:auto}.topbar{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff0d}.brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:.15em}.brand-mark{height:34px;width:34px;border-radius:11px;background:linear-gradient(145deg,#f4f4f5,#71717a);display:grid;place-items:center;color:#09090b;font-weight:900;font-size:18px;letter-spacing:0}.status{display:none}.dot{height:7px;width:7px;border-radius:50%;background:#71717a}.dot.on{background:#d4d4d8;box-shadow:0 0 12px #a1a1aa66}main{padding:38px 0 100px}.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:stretch}.panel{background:linear-gradient(160deg,#151518,#101013);border:1px solid var(--line);border-radius:var(--r);padding:26px;box-shadow:0 18px 60px #00000020}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.17em;color:var(--accent);font-weight:800}.hero h1{font-size:clamp(34px,5vw,57px);line-height:1.02;letter-spacing:-.055em;margin:15px 0}.hero p{color:var(--muted);max-width:480px;margin:0}.intro{display:flex;flex-direction:column;justify-content:space-between;min-height:330px}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid #52525b;border-radius:999px;padding:7px 11px;font-size:12px;color:#e4e4e7;background:#27272a;width:max-content}.auth{display:flex;flex-direction:column;gap:14px}.auth h2,.section-title{font-size:21px;letter-spacing:-.03em;margin:0}.sub{font-size:13px;color:var(--muted);margin:4px 0 5px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);background:#0a0a0c;border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}.tab{border:0;border-radius:9px;padding:10px;background:transparent;color:var(--muted)}.tab.active{background:#27272a;color:var(--text)}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;color:#c7c7d0}.field input{width:100%;border:1px solid #303037;background:#0b0b0e;color:var(--text);border-radius:12px;padding:13px 14px;min-width:0}.field input::placeholder{color:#666672}.primary,.secondary,.ghost{border-radius:12px;padding:12px 15px;border:1px solid transparent;font-weight:700;transition:.18s}.primary{background:var(--accent);color:#09090b}.primary:hover{background:#e4e4e7;transform:translateY(-1px)}.secondary{background:#27272a;border-color:#52525b;color:#f4f4f5}.ghost{background:transparent;border-color:var(--line);color:var(--text)}button:disabled{opacity:.45;cursor:not-allowed}.notice{display:none;white-space:pre-wrap;padding:11px 12px;border-radius:12px;font-size:13px;border:1px solid var(--line);color:#d4d4dc;overflow-wrap:anywhere}.notice.show{display:block}.notice.error{border-color:#52525b;color:#e4e4e7;background:#27272a}.notice.success{border-color:#52525b;color:#e4e4e7;background:#27272a}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.feature{padding:20px;border-radius:17px;border:1px solid var(--line);background:#101013}.ico{height:37px;width:37px;border-radius:12px;background:#27272a;color:var(--accent);display:grid;place-items:center;font-size:18px;margin-bottom:15px}.feature h3{font-size:15px;margin:0 0 6px}.feature p{font-size:13px;color:var(--muted);margin:0}.app{display:none}.app.show{display:block}.auth-view.hide{display:none}.app-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.userline{display:flex;align-items:center;gap:12px}.avatar{width:44px;height:44px;min-width:44px;min-height:44px;aspect-ratio:1/1;flex:0 0 44px;border-radius:50%;background:#27272a;border:1px solid #52525b;display:grid;place-items:center;font-weight:800;color:#e4e4e7;font-size:17px;overflow:hidden;position:relative}.avatar img{display:block;width:100%;height:100%;min-width:100%;min-height:100%;object-fit:cover;aspect-ratio:1/1;border-radius:50%}.user-meta strong{display:block}.user-meta span{font-size:12px;color:var(--muted)}.app-grid{display:grid;grid-template-columns:220px 1fr;gap:18px}.side{padding:12px;align-self:start}.navbtn{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:12px;border:0;border-radius:11px;background:transparent;color:#b4b4be;margin:2px 0}.navbtn:hover,.navbtn.active{background:#27272a;color:#fff}.navbtn .ni{width:22px;text-align:center;color:var(--accent)}.mainpanel{min-height:360px}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;align-items:start;gap:14px;margin-bottom:22px}.page-head h2{font-size:25px;letter-spacing:-.04em;margin:0}.page-head p{color:var(--muted);font-size:13px;margin:5px 0 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{border:1px solid var(--line);border-radius:15px;padding:16px;background:#0d0d10}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:22px;margin-top:5px}.empty{border:1px dashed #3b3b45;border-radius:15px;padding:24px;text-align:center;color:var(--muted);font-size:13px}.empty b{display:block;color:#e4e4e7;margin-bottom:5px;font-size:14px}.profile-card{display:flex;gap:16px;align-items:center;padding:18px;border:1px solid var(--line);border-radius:16px;background:#0d0d10;margin-bottom:16px}.profile-card .avatar{width:68px;height:68px;min-width:68px;min-height:68px;flex:0 0 68px;aspect-ratio:1/1;border-radius:50%}.profile-card h3{margin:0 0 3px}.profile-card p{margin:0;color:var(--muted);font-size:13px}.muted{color:var(--muted)}.small{font-size:12px}.separator{height:1px;background:var(--line);margin:20px 0}.bottomnav{display:none}footer{border-top:1px solid #ffffff0d;padding:20px 0 30px;color:#71717a;font-size:12px}.footrow{display:flex;justify-content:space-between;gap:14px}@media(max-width:760px){.wrap{width:min(100% - 22px,600px)}.topbar{height:64px}main{padding:22px 0 80px}.hero{grid-template-columns:1fr}.intro{min-height:245px}.panel{padding:20px}.features{grid-template-columns:1fr}.feature{display:flex;gap:13px;align-items:start}.feature .ico{flex-shrink:0;margin:0}.app-grid{grid-template-columns:1fr}.side{display:none}.mainpanel{padding:19px}.bottomnav{position:fixed;z-index:10;bottom:0;left:0;right:0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#0b0b0df2;border-top:1px solid var(--line);backdrop-filter:blur(18px)}.bottomnav .navbtn{display:flex;flex-direction:column;gap:3px;justify-content:center;text-align:center;padding:8px 3px;font-size:10px;margin:0}.bottomnav .ni{font-size:17px}.stats{gap:7px}.stat{padding:12px}.stat strong{font-size:18px}.app-head{align-items:flex-start}.app-head .ghost{padding:9px}.footrow{flex-direction:column}.page-head{flex-direction:column}}
-[hidden]{display:none!important}
-</style>
-</head>
-<body>
-<header class="topbar wrap"><div class="brand"><div class="brand-mark">A</div><span>AEGIS</span></div><div class="status"><span id="connectionDot" class="dot"></span><span id="connectionText">Supabase не настроен</span></div></header>
-<main class="wrap">
-<section id="authView" class="auth-view"><div class="hero">
-<div class="panel intro"><div><span class="pill">✦ Ваше цифровое пространство</span><h1>Твоя система.<br>Твои правила.</h1><p>Aegis объединяет профиль, виртуальные предметы и социальные функции в одном минималистичном пространстве.</p></div><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:28px"><span class="pill">◈ Профиль</span><span class="pill">₳ Виртуальный кошелёк</span><span class="pill">✳ Сообщество</span></div></div>
-<div class="panel auth"><div><div class="eyebrow">Добро пожаловать</div><h2 id="authTitle" style="margin-top:7px">Войти в Aegis</h2><p class="sub" id="authSubtitle">Войди, чтобы продолжить работу со своим аккаунтом.</p></div><div class="tabs"><button class="tab active" id="loginTab" type="button">Вход</button><button class="tab" id="registerTab" type="button">Регистрация</button><button class="tab" id="recoverTab" type="button">Восстановить</button></div>
-<form id="authForm" class="auth" autocomplete="on"><div class="field"><label for="username">Имя пользователя</label><input id="username" name="username" type="text" placeholder="например, aegis_user" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" required></div><div class="field" id="passwordField"><label for="password">Пароль</label><input id="password" name="password" type="password" placeholder="Не менее 8 символов" autocomplete="current-password" minlength="8" required></div><button class="primary" id="authSubmit" type="submit">Войти</button></form>
-<form id="recoverForm" class="auth" hidden autocomplete="off"><div class="field"><label for="recoverUsername">Имя пользователя</label><input id="recoverUsername" name="username" type="text" placeholder="aegis_user" minlength="3" maxlength="24" autocomplete="username" required></div><div class="field"><label for="recoveryCode">Recovery-код</label><input id="recoveryCode" name="recovery_code" type="text" placeholder="Введи сохранённый recovery-код" required autocapitalize="off" spellcheck="false"></div><div class="field"><label for="newPassword">Новый пароль</label><input id="newPassword" name="new_password" type="password" placeholder="Не менее 8 символов" minlength="8" maxlength="128" required autocomplete="new-password"></div><button class="primary" id="recoverSubmit" type="submit">Обновить пароль</button></form>
-<div id="authNotice" class="notice" role="status" aria-live="polite"></div><p class="small muted">Вход — по имени пользователя и паролю. Recovery-код показывается только после регистрации: сохрани его в безопасном месте. Не передавай его другим.</p></div></div>
-<div class="features"><article class="feature"><div class="ico">◈</div><div><h3>Твой профиль</h3><p>Имя пользователя и персональная страница — база твоего пространства.</p></div></article><article class="feature"><div class="ico">₳</div><div><h3>Виртуальный кошелёк</h3><p>Подготовлен раздел кошелька. Реальные операции требуют защищённой серверной логики.</p></div></article><article class="feature"><div class="ico">✳</div><div><h3>Социальные функции</h3><p>Основа для ленты, цветов, сообщений и рынка.</p></div></article></div></section>
-<section id="appView" class="app"><div class="app-head"><div class="userline"><div class="avatar" id="headerAvatar">A</div><div class="user-meta"><strong id="headerName">Пользователь</strong><span id="headerHandle">@username</span></div></div><button id="signOut" class="ghost" type="button">Выйти ↗</button></div>
-<div class="app-grid"><aside class="panel side" id="sideNav"><button class="navbtn active" data-page="overview"><span class="ni">⌂</span>Главная</button><button class="navbtn" data-page="wallet"><span class="ni">₳</span>Кошелёк</button><button class="navbtn" data-page="profile"><span class="ni">◉</span>Профиль</button><button class="navbtn" data-page="colors"><span class="ni">◈</span>Мои цвета</button><button class="navbtn" data-page="social"><span class="ni">✳</span>Aegis Social</button><button class="navbtn" data-page="messages"><span class="ni">↗</span>Сообщения</button><button class="navbtn" data-page="settings"><span class="ni">⚙</span>Настройки</button></aside>
-<section class="panel mainpanel"><div class="page active" id="page-overview"><div class="page-head"><div><div class="eyebrow">Панель управления</div><h2>Главная</h2><p>Добро пожаловать в Aegis.</p></div><span class="pill">✦ AEGIS</span></div><div class="profile-card"><div class="avatar" id="overviewAvatar">A</div><div><h3 id="overviewName">Пользователь</h3><p id="overviewHandle">@username</p><p class="small" style="margin-top:7px">Управляй своим цифровым пространством.</p></div></div><div class="stats"><div class="stat"><span>Баланс AGS</span><strong id="overviewBalance">—</strong></div><div class="stat"><span>Статус</span><strong style="font-size:17px">FREE</strong></div><div class="stat"><span>Подключение</span><strong id="overviewConnection" style="font-size:16px">Не настроено</strong></div></div><div class="empty"><b>Рабочее пространство создано</b>Разделы показывают заглушки до настройки схемы БД и серверных функций.</div></div>
-<div class="page" id="page-wallet"><div class="page-head"><div><div class="eyebrow">AGS</div><h2>Кошелёк</h2><p>Виртуальная единица Aegis.</p></div></div><div class="stat" style="margin-bottom:14px"><span>Доступный баланс</span><strong id="walletBalance">Не подключён</strong><p class="small muted">Баланс не подменяется демонстрационными числами.</p></div><div class="empty"><b>Операции временно не активны</b>Для переводов и списаний необходимы RLS и атомарные серверные функции. Не отправляй AGS, пока они не настроены.</div></div>
-<div class="page" id="page-profile"><div class="page-head"><div><div class="eyebrow">Аккаунт</div><h2>Профиль</h2><p>Информация о текущей сессии.</p></div></div><div class="profile-card"><div class="avatar" id="profileAvatar">A</div><div><h3 id="profileName">Пользователь</h3><p id="profileEmail">—</p><p id="profileHandle" class="small muted"></p></div></div><div class="panel" style="padding:18px;margin-top:12px"><h3 style="margin:0 0 6px">Фото профиля</h3><p class="small muted" style="margin:0 0 14px">Загрузи своё фото. Оно будет обрезано под круглую аватарку.</p><input id="avatarFile" type="file" accept="image/png,image/jpeg,image/webp" hidden><button class="primary" id="chooseAvatar" type="button">Загрузить фото</button> <button class="ghost" id="removeAvatar" type="button">Убрать фото</button><div id="avatarNotice" class="notice" role="status" aria-live="polite" style="margin-top:12px"></div></div><div class="empty" style="margin-top:14px"><b>Публичный профиль</b>Редактирование биографии и оформления подключим позже.</div></div>
-<div class="page" id="page-colors"><div class="page-head"><div><div class="eyebrow">Коллекция</div><h2>Мои цвета</h2><p>Коллекция Aegis Colors.</p></div></div><div class="empty"><b>Коллекция пока не загружена</b>Здесь появятся принадлежащие аккаунту цвета. Покупка копий и MIX требуют защищённых операций.</div></div>
-<div class="page" id="page-social"><div class="page-head"><div><div class="eyebrow">Сообщество</div><h2>Aegis Social</h2><p>Публикации и люди, на которых ты подписан.</p></div></div><div class="empty"><b>Лента пока не подключена</b>Публикации, реакции, комментарии и приватный контент требуют таблиц и правил доступа в Supabase.</div></div>
-<div class="page" id="page-messages"><div class="page-head"><div><div class="eyebrow">Общение</div><h2>Сообщения</h2><p>Личные диалоги Aegis.</p></div></div><div class="empty"><b>Сообщения пока не подключены</b>После настройки базы здесь будут диалоги, запросы на переписку и настройки приватности.</div></div>
-<div class="page" id="page-settings"><div class="page-head"><div><div class="eyebrow">Управление</div><h2>Настройки</h2><p>Параметры сессии и приложения.</p></div></div><div class="field"><label for="settingsEmail">Аккаунт</label><input id="settingsEmail" readonly></div><div class="separator"></div><button class="ghost" id="settingsSignOut" type="button">Выйти из аккаунта</button><p class="small muted" style="margin-top:15px">Баланс, роли, PRO и права Founder должны проверяться сервером.</p></div></section></div>
-<nav class="bottomnav" id="bottomNav"><button class="navbtn active" data-page="overview"><span class="ni">⌂</span>Главная</button><button class="navbtn" data-page="wallet"><span class="ni">₳</span>Кошелёк</button><button class="navbtn" data-page="colors"><span class="ni">◈</span>Цвета</button><button class="navbtn" data-page="social"><span class="ni">✳</span>Лента</button><button class="navbtn" data-page="profile"><span class="ni">◉</span>Профиль</button></nav></section>
-</main><footer><div class="wrap footrow"><span>© AEGIS · Цифровое пространство</span><span>Не является банком. AGS — внутренняя виртуальная единица.</span></div></footer>
+:root{--nav:#ececec;--bg:#fff;--fg:#000;--mut:#767676;--line:#e6e6e6;--card:#f6f6f6;--btn:#000;--btnt:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-t=light]){--nav:#1c1c1e;--bg:#000;--fg:#fff;--mut:#8a8a8a;--line:#222;--card:#111;--btn:#fff;--btnt:#000}}
+:root[data-t=dark]{--nav:#1c1c1e;--bg:#000;--fg:#fff;--mut:#8a8a8a;--line:#222;--card:#111;--btn:#fff;--btnt:#000}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:16px/1.45 "Helvetica Neue",Arial,sans-serif;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px));padding-top:env(safe-area-inset-top,0px)}
+main{max-width:620px;margin:0 auto;padding:0 14px}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 0;font-weight:800;font-size:22px;letter-spacing:-.5px}
+button,input,textarea{font:inherit;color:inherit}
+.b{background:var(--btn);color:var(--btnt);border:0;border-radius:999px;padding:9px 18px;font-weight:600;cursor:pointer}
+.b.o{background:none;color:var(--fg);border:1px solid var(--line)}.b:disabled{opacity:.5}
+input,textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:5px 0;outline:0}
+textarea{resize:none}
+.av{width:42px;height:42px;border-radius:50%;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;object-fit:cover;overflow:hidden}
+.av.big{width:92px;height:92px;font-size:34px;margin:0 auto}
+.post{display:flex;gap:11px;padding:14px 0;border-bottom:1px solid var(--line)}
+.post>div:first-child{flex:none}.post>div:last-child{min-width:0;flex:1}.u{font-weight:700;cursor:pointer}.m{color:var(--mut);font-size:14px}
+.txt{white-space:pre-wrap;word-wrap:break-word;margin:3px 0 6px}
+.act{display:flex;gap:22px;color:var(--mut)}.act button{background:none;border:0;padding:6px 0;cursor:pointer;color:var(--mut)}.act .on{color:var(--fg);font-weight:700}
+.chk{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin-left:4px}.chk svg{display:block;width:100%;height:100%}
+.chk.s{background:#c0c0c0}.chk.b{background:#1d9bf0}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:calc(100% - 24px);max-width:440px;display:flex;justify-content:space-between;gap:2px;padding:6px;border-radius:999px;background:color-mix(in srgb,var(--nav) 99%,transparent);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.25)}
+nav button{flex:1;background:none;border:0;border-radius:999px;color:var(--mut);font-size:11px;padding:7px 2px 6px;cursor:pointer;min-width:0}
+nav button b{display:flex;height:26px;align-items:center;justify-content:center;font-size:21px;font-weight:400;line-height:1}
+nav .on{color:var(--fg);background:color-mix(in srgb,var(--fg) 12%,transparent)}
+.sq{display:grid;grid-template-columns:8px 8px;gap:2px;transform:rotate(45deg)}.sq i{display:block;width:8px;height:8px;border-radius:2px}
+main{position:relative}
+.ban{position:relative;height:calc(150px + env(safe-area-inset-top,0px));border-radius:0 0 18px 18px;background:#2a2a2a center/cover no-repeat;margin:0 -14px}
+.ban::before{content:"";position:absolute;left:0;right:0;top:0;height:100px;border-radius:inherit;background:linear-gradient(rgba(0,0,0,.55),transparent)}
+body.prof{padding-top:0}
+body.prof header{position:absolute;top:0;left:0;right:0;z-index:2;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 14px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+body.prof #bal{color:#fff}
+.av.big{border:4px solid var(--bg);margin-top:-48px;position:relative}
+.bdg{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--fg);color:var(--bg);vertical-align:2px;letter-spacing:.2px}
+.pimg{display:block;width:100%;max-height:420px;object-fit:cover;border-radius:16px;margin:4px 0 8px;background:var(--card)}
+.pcol{display:flex;gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:8px;margin:4px 0 8px}.pcol i{display:block;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);flex:none}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sm{padding:7px 12px;font-size:14px}
+.sel{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:7px 10px;font:inherit;font-size:14px;max-width:130px}
+.pt{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0 0}.pt .chk{margin:0;vertical-align:baseline}.pt .bdg{vertical-align:baseline}
+.cmini{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;margin:6px 0 10px}.cmini i{display:block;height:44px;border-radius:10px;border:1px solid var(--line)}.cmini span{display:block;font-size:11px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;margin-top:2px}
+.urow{flex-wrap:wrap}
+.urow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line)}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}.cgrid i{display:block;height:64px;border-radius:12px;border:1px solid var(--line)}
+#tabs{display:flex;gap:6px;margin:14px 0}#tabs .b{flex:1;min-width:0;padding:9px 2px;font-size:14px;white-space:nowrap}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:flex;align-items:flex-end;justify-content:center}.ov.c{align-items:center;padding:16px}
+.sheet{background:var(--bg);color:var(--fg);width:100%;max-width:560px;max-height:88vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}.ov.c .sheet{border-radius:22px}
+.bub{width:fit-content;max-width:78%;padding:8px 12px;border-radius:18px;margin:4px 0;word-wrap:break-word;white-space:pre-wrap}.bub.me{margin-left:auto;background:var(--btn);color:var(--btnt)}.bub.th{background:var(--card)}.bt{font-size:11px;opacity:.6;margin-top:2px}
+.lock{background:var(--card);border-radius:14px;padding:14px;margin:6px 0 8px;text-align:center}
+.cat{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;margin-bottom:14px}.cc{background:var(--card);border-radius:14px;padding:8px;text-align:center}.cc i{display:block;height:48px;border-radius:10px;border:1px solid var(--line);margin-bottom:6px}.cc b{display:block;font-size:13px}.cc .b{width:100%;margin-top:6px}
+.crow{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;align-items:center}
+.seg{display:flex;gap:8px;margin:4px 0 8px}
+.card{background:var(--card);border-radius:18px;padding:16px;margin:12px 0}
+.c{text-align:center}.err{color:#d00;font-size:14px;min-height:18px}
+body.auth{--nav:#1c1c1e;--bg:#000;--fg:#fff;--mut:#8a8a8a;--line:#333;--card:#111;--btn:#fff;--btnt:#000}
+body.auth a{color:#fff}
+.empty{color:var(--mut);text-align:center;padding:40px 0}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--btn);color:var(--btnt);padding:10px 16px;border-radius:999px;display:none;max-width:90%}
+.cm{padding:8px 0 0 0;border-top:1px solid var(--line);margin-top:6px}
+</style></head><body>
+<main id="app"></main><div id="toast"></div>
 <script>
-/* Публичный ключ допустим во frontend. Никогда не добавляй service_role/secret key сюда. */
-const SUPABASE_URL = "https://dyupiflterjbuwqwzjdx.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_jLlWRy2qYzPHxJGLL-352g_6H4hpDNp";
-const configured = SUPABASE_URL.startsWith("https://") && SUPABASE_ANON_KEY.length > 20;
-let supabaseClient = null;
-if(configured && window.supabase?.createClient){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}
-const $=id=>document.getElementById(id);let authMode="login",currentUser=null;const AVATAR_BUCKET="aegis-avatars";
-function notice(id,msg,type=""){const e=$(id);e.textContent=msg;e.className="notice show"+(type?" "+type:"")}
-function clearNotice(id){$(id).className="notice";$(id).textContent=""}
-function setConnection(ok,text){$("connectionDot").classList.toggle("on",!!ok);$("connectionText").textContent=text;$("overviewConnection").textContent=ok?"Активно":"Не настроено"}
-function setAuthMode(mode){authMode=mode;$("loginTab").classList.toggle("active",mode==="login");$("registerTab").classList.toggle("active",mode==="register");$("recoverTab").classList.toggle("active",mode==="recover");$("authForm").hidden=mode==="recover";$("recoverForm").hidden=mode!=="recover";$("authTitle").textContent=mode==="login"?"Войти в Aegis":mode==="register"?"Создать аккаунт":"Восстановить пароль";$("authSubtitle").textContent=mode==="login"?"Войди по имени пользователя и паролю.":mode==="register"?"Создай аккаунт без email и номера телефона.":"Введи имя пользователя и сохранённый recovery-код.";$("authSubmit").textContent=mode==="login"?"Войти":"Зарегистрироваться";$("password").autocomplete=mode==="login"?"current-password":"new-password";$("password").required=mode!=="recover";clearNotice("authNotice")}
-$("loginTab").addEventListener("click",()=>setAuthMode("login"));$("registerTab").addEventListener("click",()=>setAuthMode("register"));$("recoverTab").addEventListener("click",()=>setAuthMode("recover"));
-function displayName(user){const m=user?.user_metadata||{};return m.username||(user?.email?user.email.split("@")[0]:"Пользователь")}
-function initial(s){return(s||"A").trim().slice(0,1).toUpperCase()}
-function showApp(user){currentUser=user;const name=displayName(user),handle="@"+name.replace(/[^A-Za-z0-9_]/g,"").toLowerCase();$("authView").classList.add("hide");$("appView").classList.add("show");["headerName","overviewName","profileName"].forEach(id=>$(id).textContent=name);["headerHandle","overviewHandle","profileHandle"].forEach(id=>$(id).textContent=handle);$("profileEmail").textContent="Вход по имени пользователя";$("settingsEmail").value=name;renderAvatar(user);$("overviewBalance").textContent="—";$("walletBalance").textContent="Не подключён";setConnection(!!supabaseClient,supabaseClient?"Supabase подключён":"Supabase не настроен")}
+// ===== НАСТРОЙКА: вставьте данные своего проекта Supabase (только anon/publishable ключ!) =====
+const SUPABASE_URL="https://dyupiflterjbuwqwzjdx.supabase.co", SUPABASE_ANON_KEY="sb_publishable_jLlWRy2qYzPHxJGLL-352g_6H4hpDNp";
+// =================================================================================================
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+const PC="id,username,bio,avatar_url,banner_url,balance,verified,badge,created_at";
+const $=s=>document.querySelector(s), app=$("#app");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const arr=x=>Array.isArray(x)?x:[];
+let lastErr="",pollT=null;
+let me=null, tab="feed", viewUser=null, busy=new Set();
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600)}
+const MAIL_DOMAIN="mailinator.com"; // служебный домен для Supabase Auth, письма не отправляются
+const mail=u=>"ags_"+u.toLowerCase()+"@"+MAIL_DOMAIN;
+function lockAt(i){const f=()=>{const v="@"+i.value.replace(/[^a-z0-9_]/gi,"");if(i.value!==v){i.value=v}if(i.selectionStart<1)i.setSelectionRange(1,Math.max(1,i.selectionEnd))};
+ i.value="@";["input","click","keyup"].forEach(e=>i.addEventListener(e,f));i.addEventListener("keydown",e=>{if((e.key=="Backspace"&&i.selectionStart<=1&&i.selectionEnd<=1)||(e.key=="Delete"&&i.selectionStart==0)||(e.key=="Home"))e.preventDefault()})}
+const okName=u=>/^[a-z0-9_]{3,20}$/i.test(u);
+async function sha(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+const mkCode=()=>[...crypto.getRandomValues(new Uint8Array(12))].map(x=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[x%32]).join("").replace(/(.{4})/g,"$1-").slice(0,-1);
+function ago(d){const s=(Date.now()-new Date(d))/1000;return s<60?"сейчас":s<3600?Math.floor(s/60)+" мин":s<86400?Math.floor(s/3600)+" ч":new Date(d).toLocaleDateString("ru")}
+const CK=c=>`<span class="chk" title="${c=="#1d9bf0"?"Синяя галочка":"Серебряная галочка"}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="${c}"/><path d="M6.8 12.6l3.5 3.4 6.9-7.2" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`;
+const chk=v=>v==="blue"?CK("#1d9bf0"):v==="silver"?CK("#9aa0a6"):"";
+const tag=a=>chk(a.verified)+(a.badge?` <span class="bdg">✦︎ ${esc(a.badge)}</span>`:"");
+const ava=(p,c="")=>p?.avatar_url?`<img class="av ${c}" src="${esc(p.avatar_url)}" alt="">`:`<div class="av ${c}">${esc((p?.username||"?")[0].toUpperCase())}</div>`;
 
-function renderAvatar(user){const meta=user?.user_metadata||{},url=meta.avatar_url;["headerAvatar","overviewAvatar","profileAvatar"].forEach(id=>{const el=$(id);el.replaceChildren();if(url){const img=document.createElement("img");img.src=url;img.alt="Аватар";el.appendChild(img)}else el.textContent=initial(displayName(user))})}
-$("chooseAvatar").addEventListener("click",()=>$("avatarFile").click());
-$("avatarFile").addEventListener("change",async ev=>{const file=ev.target.files?.[0];if(!file)return;ev.target.value="";if(!currentUser||!supabaseClient){notice("avatarNotice","Сначала войди в аккаунт.","error");return}if(!["image/jpeg","image/png","image/webp"].includes(file.type)){notice("avatarNotice","Выбери изображение JPG, PNG или WebP.","error");return}if(file.size>8*1024*1024){notice("avatarNotice","Файл должен быть меньше 8 МБ.","error");return}const btn=$("chooseAvatar");btn.disabled=true;btn.textContent="Загружаем…";try{const dataUrl=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error("Не удалось прочитать изображение."));reader.readAsDataURL(file)});const image=await new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error("Не удалось открыть изображение."));img.src=dataUrl});const canvas=document.createElement("canvas");canvas.width=320;canvas.height=320;const ctx=canvas.getContext("2d");const side=Math.min(image.width,image.height),sx=(image.width-side)/2,sy=(image.height-side)/2;ctx.drawImage(image,sx,sy,side,side,0,0,320,320);const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",0.84));if(!blob)throw new Error("Не удалось обработать изображение.");const path=`${currentUser.id}/avatar.jpg`;const{error:uploadError}=await supabaseClient.storage.from(AVATAR_BUCKET).upload(path,blob,{contentType:"image/jpeg",upsert:true,cacheControl:"3600"});if(uploadError)throw uploadError;const{data}=supabaseClient.storage.from(AVATAR_BUCKET).getPublicUrl(path);const avatarUrl=data.publicUrl+`?v=${Date.now()}`;const{data:updateData,error:updateError}=await supabaseClient.auth.updateUser({data:{avatar_url:avatarUrl}});if(updateError)throw updateError;currentUser=updateData.user||currentUser;renderAvatar(currentUser);notice("avatarNotice","Фото профиля обновлено.","success")}catch(err){notice("avatarNotice","Не удалось загрузить фото. Проверь настройки Storage в Supabase. "+(err?.message||""),"error")}finally{btn.disabled=false;btn.textContent="Загрузить фото"}});
-$("removeAvatar").addEventListener("click",async()=>{if(!currentUser||!supabaseClient)return;const btn=$("removeAvatar");btn.disabled=true;try{const{data,error}=await supabaseClient.auth.updateUser({data:{avatar_url:null}});if(error)throw error;currentUser=data.user||currentUser;renderAvatar(currentUser);notice("avatarNotice","Фото удалено из профиля.","success")}catch(err){notice("avatarNotice","Не удалось убрать фото: "+(err?.message||"ошибка"),"error")}finally{btn.disabled=false}});
+// ===== Авторизация =====
+function authView(mode="in"){
+ app.innerHTML=`<header>Aegis Social</header><div class="card">
+ <input id="u" value="@" placeholder="@юзернейм" autocapitalize="none" autocorrect="off" maxlength="21" autocomplete="username">
+ <input id="p" type="password" placeholder="Пароль" autocomplete="${mode=="in"?"current-password":"new-password"}">
+ ${mode=="rec"?'<input id="rc" placeholder="Код восстановления">':""}
+ <div class="err" id="e"></div>
+ <button class="b" id="go" style="width:100%">${mode=="in"?"Войти":mode=="up"?"Создать аккаунт":"Сменить пароль"}</button>
+ <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px"><button class="b" id="s1" style="width:100%">${mode=="in"?"Регистрация":"Вход"}</button>${mode=="in"?'<button class="b" id="s2" style="width:100%">Забыли пароль?</button>':""}</div></div>`;
+ document.body.className="auth";lockAt($("#u"));
+ $("#s1").onclick=e=>{e.preventDefault();authView(mode=="in"?"up":"in")};
+ if($("#s2"))$("#s2").onclick=e=>{e.preventDefault();authView("rec")};
+ $("#go").onclick=async()=>{
+  const u=$("#u").value.trim().replace(/^@+/,""),p=$("#p").value,e=$("#e");e.textContent="";
+  if(!okName(u))return e.textContent="Юзернейм: 3–20 символов, латиница, цифры и _";
+  if(p.length<8)return e.textContent="Пароль не короче 8 символов";
+  $("#go").disabled=true;
+  try{
+   if(mode=="in"){const{error}=await sb.auth.signInWithPassword({email:mail(u),password:p});if(error)throw new Error(/invalid login/i.test(error.message)?"Неверный юзернейм или пароль":"Ошибка входа: "+error.message)}
+   else if(mode=="up"){
+    const code=mkCode();
+    const av=await sb.rpc("aegis_username_available",{p_username:u});if(!av.error&&av.data===false)throw new Error("Этот юзернейм занят");
+    let{data,error}=await sb.auth.signUp({email:mail(u),password:p,options:{data:{username:u}}});
+    if(error)throw new Error(/registered|exists/i.test(error.message)?"Этот юзернейм занят":"Ошибка регистрации: "+error.message);
+    if(!data.session){const s2=await sb.auth.signInWithPassword({email:mail(u),password:p});
+     if(s2.error)throw new Error(/confirm/i.test(s2.error.message)?"Отключите Confirm email в Supabase: Authentication → Providers → Email":"Этот юзернейм занят");}
+    const r=await sb.rpc("aegis_register_profile",{p_username:u,p_recovery_hash:await sha(code)});
+    if(r.error){await sb.auth.signOut();throw new Error(/duplicate|unique/i.test(r.error.message)?"Этот юзернейм занят":"Ошибка профиля: "+r.error.message+" (выполнен ли aegis.sql?)")}
+    await loadMe();
+    alert("Сохраните код восстановления:\n\n"+code+"\n\nОн показывается один раз.");
+   }else{
+    const rc=$("#rc").value.trim();
+    const{error}=await sb.functions.invoke("aegis-recover",{body:{username:u,code:rc,new_password:p}});
+    if(error)throw new Error("Не удалось восстановить доступ. Проверьте данные.");
+    toast("Пароль изменён. Войдите.");return authView("in")
+   }
+  }catch(x){let m=x.message||"";
+   if(/load failed|failed to fetch|networkerror/i.test(m)){
+    let d="";try{const r=await fetch(SUPABASE_URL+"/auth/v1/health",{headers:{apikey:SUPABASE_ANON_KEY}});d=" Сервер отвечает ("+r.status+"), но запрос входа заблокирован: откройте страницу в обычном браузере или на GitHub Pages."}catch(_){d=" Нет связи с "+new URL(SUPABASE_URL).host+": проверьте интернет, блокировщики рекламы/VPN и что проект Supabase не на паузе."}
+    m="Нет связи с сервером."+d}
+   e.textContent=m;$("#go").disabled=false}
+ };
+}
+async function loadMe(){
+ const{data:{session}}=await sb.auth.getSession();
+ if(!session){me=null;return authView()}
+ const{data,error}=await sb.from("profiles").select(PC).eq("id",session.user.id).maybeSingle();
+ if(error||!data){me=null;await sb.auth.signOut();authView();const e=$("#e");if(e)e.textContent=error?"Ошибка загрузки профиля: "+error.message:"Профиль не найден. Зарегистрируйтесь заново.";return}
+ me=data;go("feed")
+}
+sb.auth.onAuthStateChange((ev)=>{if(ev==="SIGNED_IN"&&!me)loadMe();if(ev==="SIGNED_OUT"){me=null;authView()}});
 
-function showAuth(){currentUser=null;$("appView").classList.remove("show");$("authView").classList.remove("hide")}
-function internalEmail(username){return username.trim().toLowerCase()+"@accounts.aegis.invalid"}
-async function invokeFunction(name,body){const response=await fetch(`${SUPABASE_URL}/functions/v1/${name}`,{method:"POST",headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${SUPABASE_ANON_KEY}`},body:JSON.stringify(body)});let result={};try{result=await response.json()}catch{}if(!response.ok)throw new Error(result.error||result.message||`Запрос не выполнен (${response.status}).`);return result}
-$("authForm").addEventListener("submit",async ev=>{ev.preventDefault();clearNotice("authNotice");if(!supabaseClient){notice("authNotice","Не удалось подключить Supabase.","error");return}const username=$("username").value.trim().toLowerCase(),password=$("password").value;if(!/^[a-z0-9_]{3,24}$/.test(username)){notice("authNotice","Имя пользователя: 3–24 символа, латинские буквы, цифры и _.","error");return}if(password.length<8||password.length>128){notice("authNotice","Пароль должен содержать от 8 до 128 символов.","error");return}$("authSubmit").disabled=true;$("authSubmit").textContent="Подождите…";try{if(authMode==="login"){const{data,error}=await supabaseClient.auth.signInWithPassword({email:internalEmail(username),password});if(error)throw new Error("Не удалось войти. Проверь имя пользователя и пароль.");if(data.user)showApp(data.user)}else{const result=await invokeFunction("aegis-register",{username,password});const recoveryCode=result.recovery_code||result.recoveryCode;if(!recoveryCode)throw new Error("Аккаунт мог быть создан, но recovery-код не получен. Не повторяй регистрацию вслепую — проверь список пользователей в Supabase.");notice("authNotice","Аккаунт создан! СОХРАНИ RECOVERY-КОД СЕЙЧАС — он показывается только один раз:\n\n"+recoveryCode+"\n\nСкопируй и запиши его в безопасное место. Затем перейди во вкладку «Вход» и войди по имени пользователя и паролю.","success")}}catch(err){notice("authNotice",err?.message||"Не удалось выполнить запрос.","error")}finally{$("authSubmit").disabled=false;$("authSubmit").textContent=authMode==="login"?"Войти":"Зарегистрироваться"}});
-$("recoverForm").addEventListener("submit",async ev=>{ev.preventDefault();clearNotice("authNotice");const username=$("recoverUsername").value.trim().toLowerCase(),recovery_code=$("recoveryCode").value.trim(),new_password=$("newPassword").value;if(!/^[a-z0-9_]{3,24}$/.test(username)){notice("authNotice","Проверь имя пользователя.","error");return}if(new_password.length<8||new_password.length>128){notice("authNotice","Новый пароль должен содержать от 8 до 128 символов.","error");return}$("recoverSubmit").disabled=true;$("recoverSubmit").textContent="Проверяем…";try{await invokeFunction("aegis-recover",{username,recovery_code,new_password});$("recoverForm").reset();setAuthMode("login");notice("authNotice","Пароль обновлён. Теперь войди с новым паролем.","success")}catch(err){notice("authNotice",err?.message||"Не удалось восстановить пароль.","error")}finally{$("recoverSubmit").disabled=false;$("recoverSubmit").textContent="Обновить пароль"}});
-async function signOut(){if(supabaseClient){const{error}=await supabaseClient.auth.signOut();if(error){alert("Не удалось выйти: "+error.message);return}}showAuth()}
-$("signOut").addEventListener("click",signOut);$("settingsSignOut").addEventListener("click",signOut);
-function navigate(page){document.querySelectorAll(".page").forEach(e=>e.classList.toggle("active",e.id==="page-"+page));document.querySelectorAll("[data-page]").forEach(e=>e.classList.toggle("active",e.dataset.page===page))}
-document.querySelectorAll("[data-page]").forEach(e=>e.addEventListener("click",()=>navigate(e.dataset.page)));
-async function init(){if(!supabaseClient){setConnection(false,"Supabase не настроен");return}setConnection(true,"Supabase подключён");try{const{data:{session},error}=await supabaseClient.auth.getSession();if(error)throw error;if(session?.user)showApp(session.user);supabaseClient.auth.onAuthStateChange((_event,s)=>{if(s?.user)showApp(s.user);else showAuth()})}catch(err){setConnection(false,"Ошибка Supabase");notice("authNotice","Не удалось проверить сессию: "+(err?.message||"неизвестная ошибка"),"error")}}
-init();
+// ===== Оболочка =====
+const SQ='<span class="sq"><i style="background:#ff3b30"></i><i style="background:#34c759"></i><i style="background:#0a84ff"></i><i style="background:#ffcc00"></i></span>';
+const TABS=[["feed","≡","Лента"],["trends","↑","Тренды"],["msg","⌯⌲","Сообщения"],["colors",SQ,"Цвета"],["me","👤","Профиль"]];
+function go(t,u){clearInterval(pollT);document.body.className=(t==="me"||t==="user")?"prof":"";tab=t;viewUser=u||null;
+ app.innerHTML=`<header><span>Aegis</span><span class="m" style="font-size:15px;font-weight:600;cursor:pointer" id="bal">₳ ${Number(me.balance||0).toLocaleString("ru")}</span></header><div id="v"></div>`+
+ `<nav>${TABS.map(x=>`<button data-t="${x[0]}" class="${(tab==x[0]||(tab=="user"&&x[0]=="me"&&viewUser==me.id)||(tab=="chat"&&x[0]=="msg"))?"on":""}"><b>${x[1]}</b>${x[2]}</button>`).join("")}</nav>`;
+ document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(b.dataset.t));
+ $("#bal").onclick=()=>go("me");
+ ({chat:()=>chatView(viewUser),market:marketView,feed:()=>feedView(),trends:trendsView,me:()=>profileView(me.id),user:()=>profileView(viewUser),
+   msg:msgView,
+   colors:colorsView})[tab]();
+ window.scrollTo(0,0)
+}
+const soon=(t,d)=>$("#v").innerHTML=`<div class="card"><h2 style="margin:0 0 6px">${t}</h2><p class="m">${d}</p><p><b>Скоро</b></p></div>`;
+
+// ===== Посты =====
+const SEL="*, author:profiles!user_id(id,username,avatar_url,verified,badge), color:user_colors(id,name,hex,gradient), likes(user_id), comments(id), reposts(user_id), saves(user_id)";
+async function fetchPosts(q){
+ try{const{data,error}=await q;if(error)throw error;return arr(data)}catch(e){lastErr=e.message||String(e);return null}
+}
+function postHTML(p){
+ const a=p.author||{},likes=arr(p.likes),mine=likes.some(l=>l.user_id==me.id),rp=arr(p.reposts).some(l=>l.user_id==me.id),sv=arr(p.saves).some(l=>l.user_id==me.id);
+ return `<article class="post" data-id="${p.id}">${`<div onclick="go('user','${a.id}')" style="cursor:pointer">${ava(a)}</div>`}<div>
+ <div><span class="u" onclick="go('user','${a.id}')">${esc(a.username||"удалён")}</span>${tag(a)} <span class="m">· ${ago(p.created_at)}</span></div>
+ ${p.is_private?`<div class="lock" data-lock="${p.id}">🔒 Приватный пост · ₳${fmt(p.price)}${a.id==me.id?"":' <button class="b sm" data-a="buy" style="margin-left:8px">Открыть</button>'}</div>`:(p.content?`<div class="txt">${esc(p.content)}</div>`:"")+(p.image_url?`<img class="pimg" loading="lazy" src="${esc(p.image_url)}" alt="">`:"")}${p.color?`<div class="pcol"><i style="background:${esc(cbg(p.color))}"></i><div><b>${esc(p.color.name)}</b><br><span class="m">${esc(p.color.hex)}</span></div></div>`:""}
+ <div class="act"><button data-a="like" class="${mine?"on":""}">${mine?"\u2665\uFE0E":"\u2661"} ${likes.length}</button><button data-a="cm">💬 ${arr(p.comments).length}</button>
+ <button data-a="repost" class="${rp?"on":""}">🔄 ${arr(p.reposts).length}</button><button data-a="save" class="${sv?"on":""}">${sv?"⛊":"⛉"} ${Number(p.saves_count)||0}</button>
+ ${a.id==me.id?'<button data-a="del">✕</button>':""}</div><div class="cmbox"></div></div></article>`
+}
+function bindPosts(root){
+ root.querySelectorAll(".post").forEach(el=>{
+  const id=el.dataset.id;
+  el.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>act(el,id,b.dataset.a));
+ });
+ hydratePrivate(root)
+}
+async function hydratePrivate(root){
+ const els=[...root.querySelectorAll("[data-lock]")];if(!els.length)return;
+ try{
+  const{data,error}=await sb.from("post_private").select("post_id,content,image_path").in("post_id",els.map(e=>e.dataset.lock));if(error)throw error;
+  for(const row of arr(data)){
+   const el=root.querySelector(`[data-lock="${row.post_id}"]`);if(!el)continue;
+   let img="";if(row.image_path){const u=await sb.storage.from("private-posts").createSignedUrl(row.image_path,3600);if(u.data?.signedUrl)img=`<img class="pimg" loading="lazy" src="${esc(u.data.signedUrl)}" alt="">`}
+   el.outerHTML=(row.content?`<div class="txt">${esc(row.content)}</div>`:"")+img
+  }
+ }catch(e){}
+}
+const TBL={like:"likes",repost:"reposts",save:"saves"};
+async function act(el,id,a){
+ const k=id+a;if(busy.has(k))return;busy.add(k);
+ try{
+  if(TBL[a]){
+   const t=TBL[a],on=el.querySelector(`[data-a=${a}]`).classList.contains("on");
+   const r=on?await sb.from(t).delete().eq("post_id",id).eq("user_id",me.id):await sb.from(t).upsert({post_id:id,user_id:me.id},{onConflict:"post_id,user_id",ignoreDuplicates:true});
+   if(r.error)throw r.error;
+   const{data}=await sb.from("posts").select(SEL).eq("id",id).single();
+   if(data){const w=document.createElement("div");w.innerHTML=postHTML(data);const n=w.firstElementChild;el.replaceWith(n);bindPosts(n.parentNode)}
+  }else if(a=="del"){
+   if(!confirm("Удалить публикацию?"))return;
+   const r=await sb.from("posts").delete().eq("id",id);if(r.error)throw r.error;el.remove()
+  }else if(a=="buy"){
+   if(!confirm("Купить доступ к посту? AGS будут списаны."))return;
+   const r=await sb.rpc("aegis_buy_post",{p_post:id});if(r.error)return toast(errText(r.error.message));
+   await refreshMe();await hydratePrivate(el)
+  }else if(a=="cm")toggleComments(el,id)
+ }catch(e){toast("Не удалось выполнить действие")}finally{busy.delete(k)}
+}
+async function toggleComments(el,id){
+ const box=el.querySelector(".cmbox");if(box.innerHTML){box.innerHTML="";return}
+ box.innerHTML='<div class="cm m">Загрузка…</div>';
+ const list=await fetchPosts(sb.from("comments").select("*,author:profiles!user_id(id,username,verified,badge)").eq("post_id",id).order("created_at"));
+ if(list===null){box.innerHTML='<div class="cm err">Не удалось загрузить комментарии</div>';return}
+ box.innerHTML=list.map(c=>`<div class="cm"><span class="u">${esc(c.author?.username)}</span>${tag(c.author||{})} <span class="m">${ago(c.created_at)}</span>${c.user_id==me.id?` <a href="#" data-d="${c.id}" class="m">удалить</a>`:""}<div class="txt">${esc(c.content)}</div></div>`).join("")+
+ `<div class="cm" style="display:flex;gap:8px"><input placeholder="Ответить…" maxlength="500"><button class="b">→</button></div>`;
+ box.querySelectorAll("[data-d]").forEach(a=>a.onclick=async e=>{e.preventDefault();const r=await sb.from("comments").delete().eq("id",a.dataset.d);if(r.error)return toast("Не удалось удалить");box.innerHTML="";toggleComments(el,id)});
+ const inp=box.querySelector("input"),btn=box.querySelector("button");
+ btn.onclick=async()=>{const t=inp.value.trim();if(!t||btn.disabled)return;btn.disabled=true;
+  const r=await sb.from("comments").insert({post_id:id,user_id:me.id,content:t});
+  if(r.error){toast("Не удалось отправить");btn.disabled=false;return}
+  box.innerHTML="";toggleComments(el,id)}
+}
+async function feedView(){
+ const v=$("#v"),kind=feedView.k||"all";feedView.lim=feedView.lim||30;
+ v.innerHTML=`<div class="row" style="justify-content:space-between;margin-bottom:6px"><div class="row" style="gap:6px"><button class="b sm ${kind=="all"?"":"o"}" data-k="all">Все</button><button class="b sm ${kind=="following"?"":"o"}" data-k="following">Подписки</button></div><button class="b" id="np">Создать пост</button></div><div id="list"><div class="empty">Загрузка…</div></div>`;
+ v.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{feedView.k=b.dataset.k;feedView.lim=30;feedView()});
+ $("#np").onclick=()=>composeModal(()=>{feedView.lim=30;load()});
+ async function load(silent){
+  let q=sb.from("posts").select(SEL).order("created_at",{ascending:false}).limit(feedView.lim);
+  if(kind=="following"){
+   const f=await fetchPosts(sb.from("follows").select("following_id").eq("follower_id",me.id));
+   if(f===null)return silent?null:fail();
+   q=q.in("user_id",f.map(x=>x.following_id).concat([me.id]))
+  }
+  const d=await fetchPosts(q);if(d===null)return silent?null:fail();
+  const l=$("#list");if(!l)return;
+  if(silent&&d[0]&&l.querySelector(".post")?.dataset.id===d[0].id)return;
+  l.innerHTML=(d.length?d.map(postHTML).join(""):'<div class="empty">Пока пусто. Нажмите «Создать пост» и опубликуйте первую запись.</div>')+(d.length>=feedView.lim?'<div class="c" style="padding:14px"><button class="b o" id="more">Показать ещё</button></div>':"");
+  bindPosts(l);const m=$("#more");if(m)m.onclick=()=>{feedView.lim+=30;load()}
+ }
+ function fail(){$("#list").innerHTML=`<div class="empty">Не удалось загрузить ленту.<br><span class="m">${esc(lastErr)}</span><br><br><button class="b" id="rt">Повторить</button></div>`;$("#rt").onclick=()=>load()}
+ load();
+ pollT=setInterval(()=>{if(tab==="feed"&&!$("#ov")){load(true);refreshMe()}},25000)
+}
+function composeModal(done){
+ let priv=false;
+ openModal(`<div class="row" style="justify-content:space-between"><b style="font-size:18px">Новый пост</b><button class="b o sm" id="cx">✕</button></div>
+ <div class="row" style="margin:10px 0"><button class="b sm" data-pt="pub">Публичный</button><button class="b o sm" data-pt="priv">Приватный</button></div>
+ <textarea id="t" rows="4" maxlength="500" placeholder="Что нового?"></textarea>
+ <div id="pw" style="display:none"><input id="pp" inputmode="numeric" placeholder="Цена для читателей, AGS"><div class="m">Деньги получаете вы, комиссия 0%.</div></div>
+ <div class="m" id="att"></div>
+ <div class="row" style="margin-top:6px"><label class="b o sm" style="cursor:pointer">📷 Фото<input type="file" id="pf" accept="image/jpeg,image/png,image/webp" hidden></label><select class="sel" id="pc"><option value="">Цвет</option></select><span style="flex:1"></span><button class="b" id="pub">Опубликовать</button></div><div class="err" id="pe"></div>`);
+ $("#cx").onclick=closeModal;
+ document.querySelectorAll("[data-pt]").forEach(b=>b.onclick=()=>{priv=b.dataset.pt==="priv";document.querySelectorAll("[data-pt]").forEach(x=>x.className="b sm"+(x===b?"":" o"));$("#pw").style.display=priv?"block":"none"});
+ sb.from("user_colors").select("id,name").eq("owner_id",me.id).then(x=>{arr(x.data).forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.name;const p=$("#pc");if(p)p.appendChild(o)})},()=>{});
+ $("#pf").onchange=()=>{const f=$("#pf").files[0];$("#att").textContent=f?"Фото: "+f.name:""};
+ $("#pub").onclick=async()=>{
+  const t=$("#t").value.trim(),f=$("#pf").files[0],c=$("#pc").value,e=$("#pe");e.textContent="";
+  if(!t&&!f&&!c){e.textContent="Добавьте текст, фото или цвет";return}
+  let price=null;
+  if(priv){price=Number($("#pp").value.replace(/\s/g,""));if(!Number.isInteger(price)||price<1){e.textContent="Укажите цену: целое число от 1";return}}
+  $("#pub").disabled=true;
+  try{
+   const id=crypto.randomUUID();let img=null;
+   if(f){
+    if(!["image/jpeg","image/png","image/webp"].includes(f.type))throw new Error("Только JPG, PNG или WebP");
+    if(f.size>8*1048576)throw new Error("Файл больше 8 МБ");
+    const bucket=priv?"private-posts":"posts",path=priv?`${me.id}/${id}`:`${me.id}/post-${Date.now()}`;
+    const u=await sb.storage.from(bucket).upload(path,f,{contentType:f.type});
+    if(u.error)throw new Error("Не удалось загрузить фото ("+u.error.message+")");
+    img=priv?path:sb.storage.from("posts").getPublicUrl(path).data.publicUrl
+   }
+   const r=await sb.rpc("aegis_create_post",{p_id:id,p_content:t,p_image:img,p_color:c||null,p_private:priv,p_price:price});
+   if(r.error)throw new Error("Не удалось опубликовать: "+r.error.message);
+   closeModal();toast("Опубликовано");if(done)done()
+  }catch(x){e.textContent=x.message;const b=$("#pub");if(b)b.disabled=false}
+ }
+}
+async function colorsView(){
+ const v=$("#v");v.innerHTML='<h2>Мои цвета</h2><div id="cl" class="empty">Загрузка…</div><div id="cn"></div><h2>Каталог цветов</h2><div id="cat" class="empty">Загрузка…</div>';
+ const[d,cat]=await Promise.all([fetchPosts(sb.from("user_colors").select("id,name,hex,gradient,catalog_id").eq("owner_id",me.id).order("created_at")),fetchPosts(sb.from("color_catalog").select("*").order("id"))]);
+ const l=$("#cl");
+ if(d===null)l.innerHTML="Не удалось загрузить цвета";
+ else{l.className="";l.innerHTML=d.length?`<div class="cgrid">${d.map(c=>`<div><i style="background:${esc(cbg(c))}"></i><b>${esc(c.name)}</b><div class="m">${esc(c.hex)}</div></div>`).join("")}</div>`:'<div class="empty">У вас пока нет цветов. Купите их в каталоге ниже.</div>'}
+ if(me.badge==="CEO"){
+  $("#cn").innerHTML='<div class="card"><b>Создать цвет (CEO)</b><input id="cnn" placeholder="Название" maxlength="30"><div class="row"><input type="color" id="cnh" value="#000000" style="width:64px;padding:2px;height:44px"><span style="flex:1"></span><button class="b" id="cnb">Создать</button></div><div class="err" id="cne"></div></div>';
+  $("#cnb").onclick=async()=>{const n=$("#cnn").value.trim();if(!n)return;$("#cnb").disabled=true;
+   const x=await sb.rpc("aegis_create_color",{p_name:n,p_hex:$("#cnh").value});$("#cnb").disabled=false;
+   if(x.error)return $("#cne").textContent="Не удалось создать: "+x.error.message;colorsView()}
+ }
+ const c2=$("#cat");
+ if(cat===null||!cat.length){c2.innerHTML="Каталог недоступен"+(lastErr?'<br><span class="m">'+esc(lastErr)+"</span>":"");return}
+ const owned=new Set(arr(d).map(c=>c.catalog_id));c2.className="";
+ c2.innerHTML=["Common","Uncommon","Rare","Epic","Legendary"].map(rr=>{const g=cat.filter(c=>c.rarity===rr);
+  return g.length?`<h3>${rr} <span class="m">${g.length}</span></h3><div class="cat">${g.map(c=>`<div class="cc"><i style="background:${esc(cbg(c))}"></i><b>${esc(c.name)}</b><div class="m">${Number(c.price)?"₳"+fmt(c.price):"Бесплатно"}</div>${owned.has(c.id)?'<div class="m" style="margin-top:6px">Куплено</div>':`<button class="b sm" data-k="${c.id}" data-n="${esc(c.name)}" data-p="${c.price}">Купить</button>`}</div>`).join("")}</div>`:""}).join("");
+ c2.querySelectorAll("[data-k]").forEach(b=>b.onclick=async()=>{
+  if(Number(b.dataset.p)&&!confirm("Купить «"+b.dataset.n+"» за ₳"+fmt(b.dataset.p)+"?"))return;
+  b.disabled=true;const x=await sb.rpc("aegis_buy_color",{p_id:Number(b.dataset.k)});
+  if(x.error){b.disabled=false;return toast(errText(x.error.message))}
+  await refreshMe();toast("Цвет куплен");colorsView()})
+}
+const fmt=n=>Number(n).toLocaleString("ru");
+const ERR={balance:"Недостаточно AGS",limit:"Максимум 3 юзернейма",taken:"Этот юзернейм занят",gone:"Лот уже продан или снят",own:"Нельзя купить своё",last:"Нужно оставить хотя бы один юзернейм","bad price":"Укажите целую цену от 1 ₳",listed:"Уже выставлен на продажу","not owned":"Это вам не принадлежит",owned:"Уже куплено",paywall:"Сначала оплатите доступ",nocolor:"Цвет не найден",empty:"Пустое сообщение",self:"Нельзя писать самому себе",forbidden:"Недостаточно прав"};
+const errText=m=>{for(const k in ERR)if(String(m).includes(k))return ERR[k];return "Не удалось выполнить действие"};
+async function marketView(){
+ const v=$("#v");v.innerHTML='<button class="b o sm" id="bk">← Профиль</button><h2>Рынок юзернеймов</h2><div id="ml" class="empty">Загрузка…</div><h3>Недавние сделки</h3><div id="mh" class="m">Загрузка…</div>';
+ $("#bk").onclick=()=>go("me");
+ const d=await fetchPosts(sb.from("username_listings").select("id,username,price,seller_id,seller:profiles!seller_id(username)").eq("status","active").order("created_at",{ascending:false}).limit(50));
+ const l=$("#ml");
+ if(d===null)l.innerHTML="Не удалось загрузить рынок";
+ else{l.className="";l.innerHTML=d.length?d.map(x=>`<div class="urow"><div><b data-un="${esc(x.username)}" style="cursor:pointer">@${esc(x.username)}</b><div class="m">продавец @${esc(x.seller?.username||"—")}</div></div><div class="row"><b>${fmt(x.price)} ₳</b>${x.seller_id===me.id?`<button class="b o sm" data-c="${x.id}">Снять</button>`:`<button class="b sm" data-b="${x.id}">Купить</button>`}</div></div>`).join(""):'<div class="empty">Сейчас ничего не продаётся</div>'}
+ l.querySelectorAll("[data-c]").forEach(b=>b.onclick=async()=>{const r=await sb.rpc("aegis_cancel_listing",{p_id:b.dataset.c});if(r.error)return toast(errText(r.error.message));marketView()});
+ l.querySelectorAll("[data-b]").forEach(b=>b.onclick=async()=>{if(!confirm("Купить юзернейм? AGS будут списаны."))return;b.disabled=true;
+  const r=await sb.rpc("aegis_buy_listing",{p_id:b.dataset.b});if(r.error){b.disabled=false;return toast(errText(r.error.message))}
+  const x=await sb.from("profiles").select(PC).eq("id",me.id).single();if(x.data)me=x.data;toast("Юзернейм куплен");go("market")});
+ const h=await fetchPosts(sb.from("username_listings").select("username,price,sold_at,seller:profiles!seller_id(username),buyer:profiles!buyer_id(username)").eq("status","sold").order("sold_at",{ascending:false}).limit(10));
+ $("#mh").innerHTML=h===null?"Не удалось загрузить":h.length?h.map(x=>`<div class="urow"><span>@${esc(x.username)}: @${esc(x.seller?.username||"—")} → @${esc(x.buyer?.username||"—")}</span><b style="color:var(--fg)">${fmt(x.price)} ₳</b></div>`).join(""):"Сделок пока нет"
+}
+const fmt2=n=>Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const cbg=c=>c.gradient||c.hex;
+async function refreshMe(){const x=await sb.from("profiles").select(PC).eq("id",me.id).single();if(x.data)me=x.data;const b=$("#bal");if(b)b.textContent="₳ "+Number(me.balance||0).toLocaleString("ru")}
+function openModal(html,cls){closeModal();const o=document.createElement("div");o.className="ov "+(cls||"");o.id="ov";o.innerHTML=`<div class="sheet">${html}</div>`;o.onclick=e=>{if(e.target===o)closeModal()};document.body.appendChild(o);return o}
+function closeModal(){const o=$("#ov");if(o)o.remove()}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-un]");if(t&&me){e.preventDefault();showName(t.dataset.un)}});
+async function showName(u){
+ const o=openModal('<div class="m">Считаем стоимость…</div>',"c"),sh=o.querySelector(".sheet");
+ const x=await sb.rpc("aegis_username_value",{p_username:u});
+ if(x.error||!x.data){sh.innerHTML='<p class="err">Не удалось рассчитать стоимость.</p><button class="b" id="cl2" style="width:100%">Закрыть</button>';$("#cl2").onclick=closeModal;return}
+ const d=x.data;
+ sh.innerHTML=`<div style="font-size:20px;font-weight:800;margin-bottom:8px">@${esc(d.username)} — ₳${fmt2(d.price)}</div>
+ <div style="margin-bottom:4px">Владелец: ${d.owner_id?`<b style="cursor:pointer" id="ow">@${esc(d.owner_username)}</b>`:"<b>свободен</b>"}</div>
+ ${d.listing_price!=null?`<div style="margin-bottom:4px">На продаже: <b>₳${fmt(d.listing_price)}</b> (цена продавца)</div>`:""}
+ <div class="card" style="margin:10px 0"><div class="m" style="margin-bottom:4px">Почему такая оценка</div>${arr(d.reasons).map(t=>`<div style="margin:3px 0">• ${esc(t)}</div>`).join("")}</div>
+ <p class="m" style="font-size:12px">Расчётная стоимость не гарантирует продажу по этой цене. Просмотры профиля на неё не влияют.</p>
+ <button class="b" id="cl2" style="width:100%">Закрыть</button>`;
+ $("#cl2").onclick=closeModal;
+ if($("#ow"))$("#ow").onclick=()=>{closeModal();go(d.owner_id===me.id?"me":"user",d.owner_id)}
+}
+async function msgView(){
+ const v=$("#v");v.innerHTML='<h2>Сообщения</h2><div id="cl" class="empty">Загрузка…</div>';
+ const d=await fetchPosts(sb.from("messages").select("sender_id,recipient_id,content,created_at").or(`sender_id.eq.${me.id},recipient_id.eq.${me.id}`).order("created_at",{ascending:false}).limit(200));
+ const l=$("#cl");
+ if(d===null){l.innerHTML='Не удалось загрузить сообщения<br><span class="m">'+esc(lastErr)+"</span>";return}
+ const last=new Map();d.forEach(m=>{const o=m.sender_id===me.id?m.recipient_id:m.sender_id;if(!last.has(o))last.set(o,m)});
+ if(!last.size){l.className="m c";l.innerHTML="Пока нет переписок.<br>Откройте профиль человека и нажмите «Написать».";return}
+ const ps=await fetchPosts(sb.from("profiles").select("id,username,avatar_url,verified,badge").in("id",[...last.keys()]));
+ const pm=new Map(arr(ps).map(p=>[p.id,p]));l.className="";
+ l.innerHTML=[...last].map(([o,m])=>{const p=pm.get(o)||{};return `<div class="crow" data-o="${o}">${ava(p)}<div style="min-width:0;flex:1"><div><b>@${esc(p.username||"удалён")}</b>${tag(p)} <span class="m">· ${ago(m.created_at)}</span></div><div class="m" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.sender_id===me.id?"Вы: ":""}${esc(m.content)}</div></div></div>`}).join("");
+ l.querySelectorAll("[data-o]").forEach(e=>e.onclick=()=>go("chat",e.dataset.o))
+}
+async function chatView(oid){
+ const v=$("#v");v.innerHTML='<div class="empty">Загрузка…</div>';
+ const[r1,ac]=await Promise.all([sb.from("profiles").select(PC).eq("id",oid).maybeSingle(),sb.from("dm_access").select("payer_id").eq("payer_id",me.id).eq("ceo_id",oid).maybeSingle()]);
+ const o=r1.data;if(!o||oid===me.id){v.innerHTML='<div class="empty">Чат недоступен</div>';return}
+ const locked=o.badge==="CEO"&&me.badge!=="CEO"&&!ac.data;
+ v.innerHTML=`<div class="row" style="margin-bottom:8px"><button class="b o sm" id="bk">←</button><div class="row" id="hd" style="cursor:pointer;gap:8px">${ava(o)}<b>@${esc(o.username)}</b>${tag(o)}</div></div><div id="msgs"></div><div id="cin" style="margin-top:10px"></div>`;
+ $("#bk").onclick=()=>go("msg");$("#hd").onclick=()=>go("user",oid);
+ if(locked){
+  $("#cin").innerHTML=`<button class="b" id="unl" style="width:100%">Написать сообщение • ₳${fmt(100000)}</button><p class="m c" style="font-size:13px">Единоразовая оплата открывает переписку с @${esc(o.username)}.</p>`;
+  $("#unl").onclick=async()=>{if(!confirm("Оплатить ₳"+fmt(100000)+" за возможность писать @"+o.username+"?"))return;$("#unl").disabled=true;
+   const x=await sb.rpc("aegis_unlock_ceo_chat",{p_ceo:oid});if(x.error){$("#unl").disabled=false;return toast(errText(x.error.message))}
+   await refreshMe();chatView(oid)}
+ }else{
+  $("#cin").innerHTML='<div class="row" style="align-items:flex-end;flex-wrap:nowrap"><textarea id="mt" rows="1" maxlength="1000" placeholder="Сообщение" style="flex:1;margin:0"></textarea><button class="b" id="snd">→</button></div>';
+  $("#snd").onclick=async()=>{const t=$("#mt").value.trim();if(!t)return;$("#snd").disabled=true;
+   const x=await sb.rpc("aegis_send_message",{p_to:oid,p_text:t});$("#snd").disabled=false;
+   if(x.error)return toast(errText(x.error.message));$("#mt").value="";loadMsgs(true)}
+ }
+ let first=true;
+ async function loadMsgs(scroll){
+  const d=await fetchPosts(sb.from("messages").select("id,sender_id,content,created_at").or(`and(sender_id.eq.${me.id},recipient_id.eq.${oid}),and(sender_id.eq.${oid},recipient_id.eq.${me.id})`).order("created_at",{ascending:false}).limit(100));
+  const b=$("#msgs");if(!b||d===null)return;
+  b.innerHTML=d.length?d.slice().reverse().map(m=>`<div class="bub ${m.sender_id===me.id?"me":"th"}">${esc(m.content)}<div class="bt">${ago(m.created_at)}</div></div>`).join(""):'<div class="empty">Сообщений пока нет</div>';
+  if(first||scroll){first=false;window.scrollTo(0,document.body.scrollHeight)}
+ }
+ loadMsgs();
+ pollT=setInterval(()=>{if(tab==="chat")loadMsgs()},6000)
+}
+async function trendsView(){
+ const v=$("#v");v.innerHTML='<h2>Популярные публикации · 60 минут</h2><div id="list" class="empty">Загрузка…</div>';
+ const since=new Date(Date.now()-3600e3).toISOString();
+ const d=await fetchPosts(sb.from("posts").select(SEL).gte("created_at",since).limit(100));
+ const l=$("#list");l.className="";
+ if(d===null){l.innerHTML='<div class="empty">Не удалось загрузить тренды</div>';return}
+ d.sort((a,b)=>(arr(b.likes).length+2*arr(b.comments).length+2*arr(b.reposts).length)-(arr(a.likes).length+2*arr(a.comments).length+2*arr(a.reposts).length));
+ l.innerHTML=d.length?d.slice(0,20).map(postHTML).join(""):'<div class="empty">За последний час публикаций нет</div>';bindPosts(l)
+}
+
+// ===== Профиль =====
+async function profileView(id){
+ const v=$("#v");v.innerHTML='<div class="empty">Загрузка…</div>';
+ const{data:p,error}=await sb.from("profiles").select(PC).eq("id",id).maybeSingle();
+ if(error||!p){v.innerHTML='<div class="empty">Профиль не найден</div>';return}
+ const own=p.id==me.id;
+ const cnt=async(col)=>{const r=await sb.from("follows").select("*",{count:"exact",head:true}).eq(col,id);return r.count||0};
+ const[fr,fg,isf]=await Promise.all([cnt("following_id"),cnt("follower_id"),own?null:sb.from("follows").select("follower_id").eq("follower_id",me.id).eq("following_id",id).maybeSingle()]);
+ let following=!!isf?.data;
+ const allNames=(await fetchPosts(sb.from("usernames").select("username").eq("user_id",id).order("created_at")))||[];
+ const cols=(await fetchPosts(sb.from("user_colors").select("id,name,hex,gradient,owner_id,created_by").or(`owner_id.eq.${id},created_by.eq.${id}`)))||[];
+ const mkc=a=>`<div class="cmini">${a.map(c=>`<div title="${esc(c.name)} ${esc(c.hex)}"><i style="background:${esc(cbg(c))}"></i><span>${esc(c.name)}</span></div>`).join("")}</div>`;
+ let cb="";
+ if(p.badge==="CEO"){const cr=cols.filter(c=>c.created_by===id),bo=cols.filter(c=>c.owner_id===id&&c.created_by!==id);
+  if(cr.length)cb+=`<div class="m">Созданные цвета</div>${mkc(cr)}`;if(bo.length)cb+=`<div class="m">Купленные цвета</div>${mkc(bo)}`}
+ else{const ow=cols.filter(c=>c.owner_id===id);if(ow.length)cb=`<div class="m">Цвета</div>${mkc(ow)}`}
+ const others=allNames.map(n=>n.username).filter(n=>n.toLowerCase()!==p.username.toLowerCase());
+ v.innerHTML=`<div class="ban" ${p.banner_url?`style="background-image:url('${esc(p.banner_url)}')"`:""}></div><div class="c" style="padding:0 0 4px">${ava(p,"big")}
+ <h2 class="pt"><span data-un="${esc(p.username)}" style="cursor:pointer">@${esc(p.username)}</span>${tag(p)}</h2>
+ ${others.length?`<div class="m" style="margin-top:2px">${others.map(n=>`<span data-un="${esc(n)}" style="cursor:pointer">@${esc(n)}</span>`).join(" · ")}</div>`:""}
+ <p class="m" style="margin:4px 0">${esc(p.bio||"")}</p>
+ <p><b id="frc">${fr}</b> <span class="m">подписчиков</span> · <b>${fg}</b> <span class="m">подписок</span></p>
+ ${own?'<button class="b o" id="ed">Редактировать</button>':`<div class="row" style="justify-content:center"><button class="b" id="fl">${following?"Отписаться":"Подписаться"}</button><button class="b o" id="wm">Написать</button></div>`}</div>
+ ${cb}${own?'<div id="own"></div>':""}<div id="tabs"><button class="b" data-k="p">Публикации</button>${own?'<button class="b o" data-k="s">Сохранённое</button>':""}<button class="b o" data-k="r">Репосты</button></div><div id="list"></div>`;
+ async function list(k){
+  const l=$("#list");l.innerHTML='<div class="empty">Загрузка…</div>';
+  let d;
+  if(k=="p")d=await fetchPosts(sb.from("posts").select(SEL).eq("user_id",id).order("created_at",{ascending:false}).limit(30));
+  else{const t=k=="s"?"saves":"reposts";const ids=await fetchPosts(sb.from(t).select("post_id").eq("user_id",id).limit(30));
+   d=ids===null?null:ids.length?await fetchPosts(sb.from("posts").select(SEL).in("id",ids.map(x=>x.post_id))):[]}
+  if(d===null)return l.innerHTML='<div class="empty">Не удалось загрузить</div>';
+  l.innerHTML=d.length?d.map(postHTML).join(""):'<div class="empty">Здесь пока ничего нет</div>';bindPosts(l)
+ }
+ document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#tabs button").forEach(x=>x.className="b o");b.className="b";list(b.dataset.k)});
+ list("p");
+ if(!own)$("#wm").onclick=()=>go("chat",id);
+ if(!own)$("#fl").onclick=async()=>{const b=$("#fl");if(b.disabled)return;b.disabled=true;
+  const r=following?await sb.from("follows").delete().eq("follower_id",me.id).eq("following_id",id):await sb.from("follows").upsert({follower_id:me.id,following_id:id},{ignoreDuplicates:true});
+  b.disabled=false;if(r.error)return toast("Не удалось выполнить действие");
+  following=!following;b.textContent=following?"Отписаться":"Подписаться";$("#frc").textContent=await cnt("following_id")};
+ if(own){
+  $("#ed").onclick=()=>{$("#own").innerHTML=`<div class="card"><label class="m">Шапка (JPG, PNG, WebP, до 8 МБ)</label><input type="file" id="fb" accept="image/jpeg,image/png,image/webp"><label class="m">Аватар (JPG, PNG, WebP, до 8 МБ)</label><input type="file" id="f" accept="image/jpeg,image/png,image/webp"><label class="m">Описание</label><textarea id="bio" rows="3" maxlength="160">${esc(p.bio||"")}</textarea><div class="err" id="e"></div><button class="b" id="sv">Сохранить</button></div>`;
+   $("#sv").onclick=async()=>{const e=$("#e"),btn=$("#sv");e.textContent="";btn.disabled=true;
+    const up=async(f,name)=>{
+     if(!f)return null;
+     if(!["image/jpeg","image/png","image/webp"].includes(f.type))throw new Error("Только JPG, PNG или WebP");
+     if(f.size>8*1048576)throw new Error("Файл больше 8 МБ");
+     const path=`${me.id}/${name}-${Date.now()}`;
+     const u=await sb.storage.from("avatars").upload(path,f,{contentType:f.type});
+     if(u.error)throw new Error("Не удалось загрузить фото: "+u.error.message+" (создан ли бакет avatars и выполнен ли aegis_patch.sql?)");
+     return sb.storage.from("avatars").getPublicUrl(path).data.publicUrl};
+    try{
+     const av=await up($("#f").files[0],"avatar"),bn=await up($("#fb").files[0],"banner");
+     const upd={bio:$("#bio").value.trim()};if(av)upd.avatar_url=av;if(bn)upd.banner_url=bn;
+     const r=await sb.from("profiles").update(upd).eq("id",me.id).select(PC).single();
+     if(r.error)throw new Error("Не удалось сохранить: "+r.error.message+" (выполнен ли aegis_patch.sql?)");
+     me={...me,...r.data};toast("Сохранено");go("me")
+    }catch(x){e.textContent=x.message;btn.disabled=false}}};
+  const isCEO=me.badge==="CEO";
+  const names=allNames.length?allNames:[{username:p.username}];
+  const myL=(await fetchPosts(sb.from("username_listings").select("id,username,price").eq("seller_id",me.id).eq("status","active")))||[];
+  const canAdd=isCEO||names.length<3;
+  const vblock=p.verified==="blue"?"":`<div class="card" style="margin-top:14px"><b>Верификация</b><p class="m" style="margin:4px 0 10px">${p.verified?"Синяя галочка — следующий уровень.":"Начните с серебряной. Синяя открывается после неё."}</p>${p.verified?'<button class="b" id="vb">Синяя · 100 000 ₳</button>':'<button class="b" id="vs">Серебряная · 50 000 ₳</button>'}</div>`;
+  $("#own").insertAdjacentHTML("afterend",`<div class="card" style="margin-top:14px"><b>Юзернеймы</b> <span class="m">${names.length}${isCEO?"":" из 3"}</span>
+   ${names.map(n=>{const act=n.username.toLowerCase()===p.username.toLowerCase(),L=myL.find(x=>x.username.toLowerCase()===n.username.toLowerCase());
+    return `<div class="urow"><span><span data-un="${esc(n.username)}" style="cursor:pointer">@${esc(n.username)}</span>${act?' <span class="m">· основной</span>':""}${L?` <span class="m">· ${fmt(L.price)} ₳</span>`:""}</span><span class="row" style="gap:6px">${act?"":`<button class="b o sm" data-u="${esc(n.username)}">Основной</button>`}${names.length>1?(L?`<button class="b o sm" data-c="${L.id}">Снять</button>`:`<button class="b o sm" data-s="${esc(n.username)}">Продать</button>`)+`<button class="b o sm" data-x="${esc(n.username)}">Удалить</button>`:""}</span></div>`}).join("")}
+   ${canAdd?`<div class="urow" style="display:block"><input id="nu" maxlength="21" autocapitalize="none" autocorrect="off"><div class="err" id="ue"></div><button class="b" id="ub" style="width:100%">${isCEO?"Добавить":"Купить за 1 000 ₳"}</button></div>`:'<p class="m" style="margin:8px 0 0">Достигнут лимит: 3 юзернейма.</p>'}<button class="b o" id="mk" style="width:100%;margin-top:10px">Рынок юзернеймов</button></div>
+   ${vblock}
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="b o" id="th">Тема</button><button class="b o" id="lo">Выйти</button><button class="b o" id="dl">Удалить аккаунт</button></div>`);
+  const refresh=async()=>{const x=await sb.from("profiles").select(PC).eq("id",me.id).single();if(x.data)me=x.data;go("me")};
+  const buy=l=>async()=>{if(!confirm("Списать AGS и выдать галочку?"))return;const r=await sb.rpc("aegis_buy_verification",{p_level:l});
+   if(r.error)return toast(/balance/i.test(r.error.message)?"Недостаточно AGS":"Покупка недоступна");await refresh()};
+  if($("#vs"))$("#vs").onclick=buy("silver");if($("#vb"))$("#vb").onclick=buy("blue");
+  document.querySelectorAll("[data-u]").forEach(b=>b.onclick=async()=>{const r=await sb.rpc("aegis_set_username",{p_username:b.dataset.u});if(r.error)return toast("Не удалось сменить юзернейм");await refresh()});
+  $("#mk").onclick=()=>go("market");
+  const run=(fn,args,ok)=>async()=>{const r=await sb.rpc(fn,args);if(r.error)return toast(errText(r.error.message));if(ok)toast(ok);await refresh()};
+  document.querySelectorAll("[data-x]").forEach(b=>b.onclick=()=>{if(confirm("Удалить юзернейм @"+b.dataset.x+"? Его сможет занять другой пользователь."))run("aegis_delete_username",{p_username:b.dataset.x},"Юзернейм удалён")()});
+  document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const v=prompt("Цена продажи @"+b.dataset.s+" в AGS (целое число):");if(v===null)return;const n=Number(String(v).replace(/\s/g,""));if(!Number.isInteger(n)||n<1)return toast("Укажите целую цену от 1 ₳");run("aegis_list_username",{p_username:b.dataset.s,p_price:n},"Выставлено на продажу")()});
+  document.querySelectorAll("[data-c]").forEach(b=>b.onclick=run("aegis_cancel_listing",{p_id:b.dataset.c},"Снято с продажи"));
+  if($("#nu")){lockAt($("#nu"));$("#ub").onclick=async()=>{const u=$("#nu").value.replace(/^@+/,""),e=$("#ue");e.textContent="";
+   if(!okName(u))return e.textContent="3–20 символов: латиница, цифры и _";
+   if(!isCEO&&!confirm("Списать 1 000 ₳ за юзернейм @"+u+"?"))return;
+   $("#ub").disabled=true;const r=await sb.rpc("aegis_buy_username",{p_username:u});$("#ub").disabled=false;
+   if(r.error){const m=r.error.message;return e.textContent=/taken/.test(m)?"Этот юзернейм занят":/limit/.test(m)?"Максимум 3 юзернейма":/balance/.test(m)?"Недостаточно AGS":"Не удалось добавить: "+m}
+   toast("Юзернейм добавлен");await refresh()}}
+  $("#th").onclick=()=>{const d=document.documentElement;d.dataset.t=(d.dataset.t=="dark"||(!d.dataset.t&&matchMedia("(prefers-color-scheme:dark)").matches))?"light":"dark"};
+  $("#lo").onclick=()=>{me=null;sb.auth.signOut()};
+  $("#dl").onclick=async()=>{if(!confirm("Удалить аккаунт? Это может быть необратимо."))return;if(prompt("Введите ваш юзернейм для подтверждения (@"+me.username+")").replace(/^@/,"")!==me.username)return;
+   const r=await sb.functions.invoke("aegis-delete-account");if(r.error)return toast("Удаление недоступно: функция не развёрнута");me=null;await sb.auth.signOut()}
+ }
+}
+loadMe();
 </script></body></html>
